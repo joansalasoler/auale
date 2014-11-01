@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python2
+
+override_dh_auto_install:
+	cd ./src/auale && python setup.py install \
+		--root=../../debian/auale \
+		--install-layout=deb \
+		--install-lib=/usr/share/auale
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 755 debian/auale/usr/share/auale/__main__.py
+
+override_dh_clean:
+	cd ./src/auale && python setup.py clean --all
+	dh_clean

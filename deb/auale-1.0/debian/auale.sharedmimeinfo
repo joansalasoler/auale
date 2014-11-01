@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+    <mime-type type="text/x-oware-ogn">
+      <comment>Oware Match</comment>
+      <comment xml:lang="ca">Partida d'aualé</comment>
+      <comment xml:lang="es">Partidas de oware</comment>
+      <generic-icon name="text-x-oware-ogn"/>
+      <glob pattern="*.ogn"/>
+      <sub-class-of type="text/plain"/>
+    </mime-type>
+</mime-info>
