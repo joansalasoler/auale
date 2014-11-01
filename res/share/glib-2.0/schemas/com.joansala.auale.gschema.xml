@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="com.joansala.auale" path="/com/joansala/auale/" gettext-domain="auale">
+    <key type="b" name="mute-sound">
+      <default>false</default>
+      <summary>Start the game with sound disabled.</summary>
+    </key>
+    <key type="i" name="strength">
+      <range min="0" max="3"/>
+      <default>0</default>
+      <summary>Default engine strength.</summary>
+    </key>
+  </schema>
+</schemalist>

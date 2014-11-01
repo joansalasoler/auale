@@ -1,0 +1,20 @@
+[Desktop Entry]
+Version=1.0
+Name=Aualé
+Name[ca]=Aualé
+Name[es]=Aualé
+GenericName=Oware Game
+GenericName[ca]=Joc d'aualé
+GenericName[es]=Juego de oware
+Comment=A graphical user interface for oware
+Comment[ca]=Una interfície gràfica per a l'aualé
+Comment[es]=Una interfaz gráfica per a oware
+Type=Application
+Icon=auale.png
+Path=/usr/share/auale
+Exec=auale %f
+StartupNotify=true
+Terminal=false
+Categories=Game;BoardGame;GTK;
+MimeType=text/x-oware-ogn
+Keywords=oware;mancala;awari;abapa;wari
