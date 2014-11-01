@@ -1,0 +1,17 @@
+Installation of Aualé
+
+  Copyright (C) 2014 Joan Sala Soler
+
+  Copying and distribution of this file, with or without modification,
+  are permitted in any medium without royalty provided the copyright
+  notice and this notice are preserved.
+
+Basic installation
+======================================================================
+
+This software may be packaged using the standard Python Distribution
+Utilities. Please check the official Python documentation [1] for
+installation instructions.
+
+[1] https://docs.python.org/2/install/
+

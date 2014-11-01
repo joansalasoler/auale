@@ -1,0 +1,17 @@
+.header-label {
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid #198033;
+    border-radius: 3px;
+    background: linear-gradient(
+        to bottom,
+        #a8e500 0%,
+        #8cc000 50%,
+        #79a500 51%,
+        #ace500 100%
+    );
+}
+
+.match-infobar {
+    color: #333;
+}

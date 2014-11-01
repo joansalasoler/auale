@@ -1,0 +1,681 @@
+# Copyright (C) Joan Sala Soler, 2014 <contact@joansala.com>
+# This file is distributed under the same license as the Aualé package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Aualé 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-16 16:21+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /usr/lib/python2.7/argparse.py:2242
+#, python-format
+msgid "%r is not callable"
+msgstr "%r no és invocable"
+
+#: /usr/lib/python2.7/argparse.py:2361
+#, python-format
+msgid "%s: error: %s\n"
+msgstr "%s: error: %s\n"
+
+#: /usr/lib/python2.7/argparse.py:1374
+msgid "'required' is an invalid argument for positionals"
+msgstr "'required' no és un argument de posició vàlid"
+
+#: /usr/lib/python2.7/argparse.py:800
+msgid ".__call__() not defined"
+msgstr ".__call__() no s'ha definit"
+
+#: ../src/auale/res/glade/auale.ui:203 ../src/auale/__main__.py:49
+msgid "A graphical user interface for oware"
+msgstr "Una interfície gràfica per a l'aualé"
+
+#: ../src/auale/res/glade/auale.ui:1196
+msgid ""
+"A new match will be created where you will be able to move as either player."
+msgstr ""
+"Es crearà una nova partida en la qual podreu moure qualsevol dels jugadors."
+
+#: ../src/auale/res/glade/auale.ui:196
+msgid "About Aualé"
+msgstr "Quant a Aualé"
+
+#: ../src/auale/gui/view.py:459
+msgid "Any files"
+msgstr "Tots els fitxers"
+
+#: ../src/auale/res/glade/auale.ui:58 ../src/auale/res/glade/auale.ui:465
+#: ../src/auale/res/glade/auale.ui:753
+msgid "Asks the engine to make a move"
+msgstr "Demana a l'ordinador que faci un moviment"
+
+#: ../src/auale/res/glade/auale.ui:67 ../src/auale/res/glade/auale.ui:473
+#: ../src/auale/res/glade/auale.ui:762
+msgid "Asks the engine to stop thinking"
+msgstr "Demana a l'ordinador que deixi de pensar"
+
+#: ../src/auale/res/glade/auale.ui:19
+msgid "Aualé home page"
+msgstr "Pàgina principal d'Aualé"
+
+#: ../src/auale/gui/view.py:1237
+msgid "Cannot save current match"
+msgstr "No es pot desar la partida"
+
+#: ../src/auale/gui/view.py:285
+msgid "Close without saving"
+msgstr "Tanca sense desar"
+
+#: ../src/auale/res/glade/auale.ui:510
+msgid "Computer _player"
+msgstr "_Jugador de l'ordinador"
+
+#: ../src/auale/gui/view.py:229
+msgid "Computer player is disabled"
+msgstr "El jugador de l'ordinador s'ha inhabilitat"
+
+#: ../src/auale/gui/view.py:228 ../src/auale/gui/view.py:231
+msgid "Could not start the engine"
+msgstr "No s'ha pogut iniciar el motor"
+
+#: game/match.py:31
+msgid "Date"
+msgstr "Data"
+
+#: game/match.py:31
+msgid "Description"
+msgstr "Descripció"
+
+#: ../src/auale/res/glade/auale.ui:84
+msgid "Disable sound"
+msgstr "Desactiva els sons"
+
+#: ../src/auale/res/glade/auale.ui:85 ../src/auale/res/glade/auale.ui:641
+msgid "Disables sound effects"
+msgstr "Desactiva els efectes de so"
+
+#: ../src/auale/gui/view.py:403 ../src/auale/gui/view.py:435
+#: ../src/auale/gui/view.py:525
+msgid "Discard unsaved changes"
+msgstr "Descarta les modificacions"
+
+#: ../src/auale/gui/view.py:400 ../src/auale/gui/view.py:432
+#: ../src/auale/gui/view.py:522
+msgid "Do you want to save the current match?"
+msgstr "Voleu desar la partida actual?"
+
+#: ../src/auale/gui/view.py:282
+msgid "Do you want to save the match before closing?"
+msgstr "Voleu desar la partida abans de sortir?"
+
+#: ../src/auale/res/glade/auale.ui:611
+msgid "E_xpert"
+msgstr "_Experta"
+
+#: ../src/auale/res/glade/auale.ui:1178
+msgid "Edit a match"
+msgstr "Editar una partida"
+
+#: ../src/auale/res/glade/auale.ui:93 ../src/auale/res/glade/auale.ui:785
+msgid "Edit current match tags"
+msgstr "Edita les etiquetes de la partida actual"
+
+#: uci/client.py:545
+msgid "Engine is not responding"
+msgstr "El motor no està responent"
+
+#: ../src/auale/gui/view.py:886
+msgid "Error"
+msgstr "Error"
+
+#: ../src/auale/gui/view.py:1214
+msgid "Error opening match"
+msgstr "Errada en obrir la partida"
+
+#: ../src/auale/gui/view.py:1236
+msgid "Error saving match"
+msgstr "Errada en desar la partida"
+
+#: game/match.py:31
+msgid "Event"
+msgstr "Esdeveniment"
+
+#: ../src/auale/res/glade/auale.ui:175 ../src/auale/res/glade/auale.ui:827
+msgid "First"
+msgstr "Primera"
+
+#: ../src/auale/res/glade/auale.ui:27
+msgid "Get answers to your questions"
+msgstr "Obteniu resposta a les vostres qüestions"
+
+#: ../src/auale/res/glade/auale.ui:176 ../src/auale/res/glade/auale.ui:826
+msgid "Goes to the first position"
+msgstr "Va fins a la primera posició"
+
+#: ../src/auale/res/glade/auale.ui:129 ../src/auale/res/glade/auale.ui:868
+msgid "Goes to the last position"
+msgstr "Va fins a la darrera posició"
+
+#: ../src/auale/res/glade/auale.ui:139 ../src/auale/res/glade/auale.ui:854
+msgid "Goes to the next position"
+msgstr "Va a la posició següent"
+
+#: ../src/auale/res/glade/auale.ui:186 ../src/auale/res/glade/auale.ui:840
+msgid "Goes to the previous position"
+msgstr "Va a la posició anterior"
+
+#: ../src/auale/res/glade/auale.ui:26
+msgid "Help"
+msgstr "Ajuda"
+
+#: ../src/auale/res/glade/auale.ui:18
+msgid "Home"
+msgstr "Inici"
+
+#: ../src/auale/res/glade/auale.ui:128 ../src/auale/res/glade/auale.ui:869
+msgid "Last"
+msgstr "Última"
+
+#: ../src/auale/res/glade/auale.ui:35 ../src/auale/res/glade/auale.ui:799
+msgid "Learn how to play oware"
+msgstr "Apreneu a jugar a l'aualé"
+
+#: ../src/auale/gui/view.py:992
+msgid "Match"
+msgstr "Partida"
+
+#: ../src/auale/gui/view.py:1215
+msgid "Match file cannot be opened"
+msgstr "La partida no es pot obrir"
+
+#: ../src/auale/res/glade/auale.ui:1335
+msgid "Match tags"
+msgstr "Etiquetes de la partida"
+
+#: ../src/auale/gui/view.py:1164
+msgid "Match with unsaved changes"
+msgstr "Partida amb modificacions no desades"
+
+#: ../src/auale/res/glade/auale.ui:57
+msgid "Move now"
+msgstr "Mou ara"
+
+#: ../src/auale/res/glade/auale.ui:553
+msgid "N_either player"
+msgstr "_Cap dels jugadors"
+
+#: ../src/auale/res/glade/auale.ui:47 ../src/auale/res/glade/auale.ui:725
+msgid "New match"
+msgstr "Nova partida"
+
+#: ../src/auale/res/glade/auale.ui:138 ../src/auale/res/glade/auale.ui:855
+msgid "Next"
+msgstr "Següent"
+
+#: game/match.py:31
+msgid "North"
+msgstr "Nord"
+
+#: ../src/auale/gui/view.py:1004
+msgid "North has won"
+msgstr "El nord ha guanyat"
+
+#: game/match.py:366
+msgid "Not a valid match file"
+msgstr "El fitxer de partida no és vàlid"
+
+#: ../src/auale/gui/view.py:444
+msgid "Open an oware match"
+msgstr "Obre una partida d'aualé"
+
+#: ../src/auale/res/glade/auale.ui:103 ../src/auale/res/glade/auale.ui:739
+msgid "Open match"
+msgstr "Obre una partida"
+
+#: ../src/auale/res/glade/auale.ui:112 ../src/auale/res/glade/auale.ui:113
+msgid "Open recent"
+msgstr "Obre un recent"
+
+#: ../src/auale/res/glade/auale.ui:104 ../src/auale/res/glade/auale.ui:738
+msgid "Opens a match file"
+msgstr "Obre una partida desada"
+
+#: ../src/auale/res/glade/auale.ui:114 ../src/auale/res/glade/auale.ui:376
+msgid "Opens a recently used match file"
+msgstr "Obre una partida utilitzada recentment"
+
+#: ../src/auale/gui/view.py:454 ../src/auale/gui/view.py:498
+msgid "Oware match files"
+msgstr "Fitxers de partides d'aualé"
+
+#: ../src/auale/res/glade/auale.ui:1095
+msgid "Play as north"
+msgstr "Jugar com a nord"
+
+#: ../src/auale/res/glade/auale.ui:1012
+msgid "Play as south"
+msgstr "Jugar com a sud"
+
+#: ../src/auale/gui/view.py:1008
+msgid "Players gathered an equal number of seeds"
+msgstr "Els jugadors han recollit el mateix nombre de llavors"
+
+#: ../src/auale/res/glade/auale.ui:185 ../src/auale/res/glade/auale.ui:841
+msgid "Previous"
+msgstr "Anterior"
+
+#: ../src/auale/res/glade/auale.ui:373
+msgid "Recent _files"
+msgstr "_Fitxers recents"
+
+#: game/match.py:31
+msgid "Result"
+msgstr "Resultat"
+
+#: ../src/auale/res/glade/auale.ui:75
+msgid "Rotate"
+msgstr "Capgira"
+
+#: ../src/auale/res/glade/auale.ui:76 ../src/auale/res/glade/auale.ui:633
+#: ../src/auale/res/glade/auale.ui:777
+msgid "Rotates the board"
+msgstr "Capgira el tauler"
+
+#: game/match.py:31
+msgid "Round"
+msgstr "Ronda"
+
+#: ../src/auale/res/glade/auale.ui:34
+msgid "Rules"
+msgstr "Reglament"
+
+#: ../src/auale/res/glade/auale.ui:33
+msgid "Rules of _oware"
+msgstr "_Reglament de l'aualé"
+
+#: ../src/auale/res/glade/auale.ui:151
+msgid "Save"
+msgstr "Desa"
+
+#: ../src/auale/res/glade/auale.ui:150
+msgid "Save _match"
+msgstr "_Desa la partida"
+
+#: ../src/auale/res/glade/auale.ui:161
+msgid "Save as..."
+msgstr "Anomena i desa..."
+
+#: ../src/auale/gui/view.py:488
+msgid "Save current match"
+msgstr "Desa la partida actual"
+
+#: ../src/auale/res/glade/auale.ui:160
+msgid "Save match _as..."
+msgstr "_Anomena i desa la partida..."
+
+#: ../src/auale/res/glade/auale.ui:152
+msgid "Saves the current match"
+msgstr "Desa la partida actual"
+
+#: ../src/auale/res/glade/auale.ui:162
+msgid "Saves the current match to a file"
+msgstr "Desa la partida actual a un fitxer"
+
+#: game/match.py:31
+msgid "Site"
+msgstr "Lloc"
+
+#: game/match.py:31
+msgid "South"
+msgstr "Sud"
+
+#: ../src/auale/gui/view.py:1001
+msgid "South has won"
+msgstr "El sud ha guanyat"
+
+#: ../src/auale/res/glade/auale.ui:912
+msgid "Start new match"
+msgstr "Comença una nova partida"
+
+#: ../src/auale/res/glade/auale.ui:48 ../src/auale/res/glade/auale.ui:724
+msgid "Starts a new match"
+msgstr "Comença una nova partida"
+
+#: ../src/auale/res/glade/auale.ui:66
+msgid "Stop thinking"
+msgstr "Deixa de pensar"
+
+#: ../src/auale/res/glade/auale.ui:1417
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: ../src/auale/res/glade/auale.ui:1279
+msgid ""
+"The computer will play both as south and north while you can watch the match."
+msgstr ""
+"L'ordinador jugarà com a sud i també com a nord mentre podeu observar la "
+"partida."
+
+#: ../src/auale/gui/view.py:283 ../src/auale/gui/view.py:401
+#: ../src/auale/gui/view.py:433 ../src/auale/gui/view.py:523
+msgid ""
+"The current match has unsaved changes. Your changes will be lost if you "
+"don't save them."
+msgstr ""
+"No s'han desat els canvis fets a la partida actual. Si no deseu la partida "
+"les modificacions es perdran."
+
+#: ../src/auale/gui/view.py:1002 ../src/auale/gui/view.py:1005
+msgid "The player gathered more than 24 seeds"
+msgstr "El jugador ha recollit més de 24 llavors"
+
+#: ../src/auale/gui/view.py:887
+msgid "The received move is not valid"
+msgstr "El moviment rebut no és vàlid"
+
+#: ../src/auale/gui/view.py:1007
+msgid "This match was drawn"
+msgstr "La partida ha acabat en empat"
+
+#: ../src/auale/res/glade/auale.ui:204
+msgid ""
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 3 of the License, or (at your option) "
+"any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for "
+"more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place - Suite 330, Boston, MA 02111-1307, USA."
+msgstr ""
+
+#: ../src/auale/gui/view.py:1217
+msgid "Unable to open file"
+msgstr "No es pot obrir el fitxer"
+
+#: ../src/auale/gui/view.py:550
+msgid "Unsaved match"
+msgstr "Partida no desada"
+
+#: ../src/auale/gui/view.py:1253
+msgid "Untitled"
+msgstr "Sense títol"
+
+#: ../src/auale/res/glade/auale.ui:1431
+msgid "Value"
+msgstr "Valor"
+
+#: game/match.py:31
+msgid "Variant"
+msgstr "Variant"
+
+#: ../src/auale/res/glade/auale.ui:1261
+msgid "Watch the computer play"
+msgstr "Observar com juga l'ordinador"
+
+#: ../src/auale/res/glade/auale.ui:953
+msgid "What do you want to do?"
+msgstr "Què voleu fer?"
+
+#: ../src/auale/res/glade/auale.ui:1113
+msgid ""
+"You will play a new match against the computer. Computer will move first."
+msgstr "Jugareu una nova partida contra l'ordinador. L'ordinador mourà primer."
+
+#: ../src/auale/res/glade/auale.ui:1030
+msgid "You will play a new match against the computer. You will move first."
+msgstr "Jugareu una nova partida contra l'ordinador. Vostè mourà primer."
+
+#: ../src/auale/res/glade/auale.ui:542
+msgid "_Both players"
+msgstr "_Ambdós jugadors"
+
+#: ../src/auale/res/glade/auale.ui:568
+msgid "_Computer strength"
+msgstr "_Destresa de l'ordinador"
+
+#: ../src/auale/res/glade/auale.ui:83
+msgid "_Disable sound"
+msgstr "Desactiva els _sons"
+
+#: ../src/auale/res/glade/auale.ui:578
+msgid "_Easy"
+msgstr "_Fàcil"
+
+#: ../src/auale/res/glade/auale.ui:91
+msgid "_Edit match tags..."
+msgstr "_Etiquetes de la partida..."
+
+#: ../src/auale/res/glade/auale.ui:341
+msgid "_File"
+msgstr "_Fitxer"
+
+#: ../src/auale/res/glade/auale.ui:174
+msgid "_First move"
+msgstr "_Primer moviment"
+
+#: ../src/auale/res/glade/auale.ui:600
+msgid "_Hard"
+msgstr "_Difícil"
+
+#: ../src/auale/res/glade/auale.ui:652
+msgid "_Help"
+msgstr "_Ajuda"
+
+#: ../src/auale/res/glade/auale.ui:25
+msgid "_Help and support"
+msgstr "_Ajuda i suport"
+
+#: ../src/auale/res/glade/auale.ui:17
+msgid "_Home page"
+msgstr "_Pàgina principal"
+
+#: ../src/auale/res/glade/auale.ui:127
+msgid "_Last move"
+msgstr "_Darrer moviment"
+
+#: ../src/auale/res/glade/auale.ui:454
+msgid "_Match"
+msgstr "_Partida"
+
+#: ../src/auale/res/glade/auale.ui:589
+msgid "_Medium"
+msgstr "_Mitjana"
+
+#: ../src/auale/res/glade/auale.ui:56
+msgid "_Move now"
+msgstr "_Mou ara"
+
+#: ../src/auale/res/glade/auale.ui:46
+msgid "_New match"
+msgstr "_Nova partida"
+
+#: ../src/auale/res/glade/auale.ui:137
+msgid "_Next move"
+msgstr "_Següent moviment"
+
+#: ../src/auale/res/glade/auale.ui:530
+msgid "_North"
+msgstr "_Nord"
+
+#: ../src/auale/res/glade/auale.ui:102
+msgid "_Open match..."
+msgstr "_Obre una partida..."
+
+#: ../src/auale/res/glade/auale.ui:184
+msgid "_Previous move"
+msgstr "_Anterior moviment"
+
+#: ../src/auale/res/glade/auale.ui:74
+msgid "_Rotate board"
+msgstr "_Capgira el tauler"
+
+#: ../src/auale/res/glade/auale.ui:520
+msgid "_South"
+msgstr "_Sud"
+
+#: ../src/auale/res/glade/auale.ui:65
+msgid "_Stop thinking"
+msgstr "_Deixa de pensar"
+
+#: ../src/auale/res/glade/auale.ui:92
+msgid "_Tags"
+msgstr "_Etiquetes"
+
+#: ../src/auale/__main__.py:62
+msgid "a match file to open on startup"
+msgstr "un fitxer de partida per a obrir a l'inici"
+
+#: /usr/lib/python2.7/argparse.py:2076
+#, python-format
+msgid "ambiguous option: %s could match %s"
+msgstr "opció ambigua: %s podria coincidir amb %s"
+
+#: /usr/lib/python2.7/argparse.py:1125
+#, python-format
+msgid "argument \"-\" with mode %r"
+msgstr "argument \"-\" amb mode %r"
+
+#: /usr/lib/python2.7/argparse.py:1944
+#, python-format
+msgid "argument %s is required"
+msgstr "l'argument %s és obligatori"
+
+#: /usr/lib/python2.7/argparse.py:1132
+#, python-format
+msgid "can't open '%s': %s"
+msgstr "no es pot obrir '%s': %s"
+
+#: /usr/lib/python2.7/argparse.py:1638
+msgid "cannot have multiple subparser arguments"
+msgstr "no hi pot haver múltiples arguments de subanalitzador"
+
+#: /usr/lib/python2.7/argparse.py:1336
+#, python-format
+msgid "cannot merge actions - two groups are named %r"
+msgstr "no es poden combinar les accions - dos grups s'anomenen %r"
+
+#: /usr/lib/python2.7/argparse.py:1450
+#, python-format
+msgid "conflicting option string(s): %s"
+msgstr "cadenes d'opcions en conflicte: %s"
+
+#: /usr/lib/python2.7/argparse.py:1415
+#, python-format
+msgid "dest= is required for options like %r"
+msgstr "dest= és obligatori per a opcions com ara %r"
+
+#: /usr/lib/python2.7/argparse.py:2019
+#, python-format
+msgid "expected %s argument(s)"
+msgstr "s'esperava l'argument %s"
+
+#: /usr/lib/python2.7/argparse.py:2017
+msgid "expected at least one argument"
+msgstr "s'esperava almenys un argument"
+
+#: /usr/lib/python2.7/argparse.py:2016
+msgid "expected at most one argument"
+msgstr "s'esperava com a molt un argument"
+
+#: /usr/lib/python2.7/argparse.py:2015
+msgid "expected one argument"
+msgstr "s'esperava un argument"
+
+#: /usr/lib/python2.7/argparse.py:1833 /usr/lib/python2.7/argparse.py:1847
+#, python-format
+msgid "ignored explicit argument %r"
+msgstr "argument explícit ignorat %r"
+
+#: /usr/lib/python2.7/argparse.py:2258
+#, python-format
+msgid "invalid %s value: %r"
+msgstr "valor %s no vàlid: %r"
+
+#: /usr/lib/python2.7/argparse.py:2268
+#, python-format
+msgid "invalid choice: %r (choose from %s)"
+msgstr "opció no vàlida: %r (pot ser %s)"
+
+#: /usr/lib/python2.7/argparse.py:1432
+#, python-format
+msgid "invalid conflict_resolution value: %r"
+msgstr "valor conflict_resolution no vàlid: %r"
+
+#: /usr/lib/python2.7/argparse.py:1394
+#, python-format
+msgid "invalid option string %r: must start with a character %r"
+msgstr ""
+"la cadena d'opció %r no és vàlida: hauria de començar amb un caràcter %r"
+
+#: ../src/auale/__main__.py:63
+msgid "match_file"
+msgstr "fitxer_de_partida"
+
+#: /usr/lib/python2.7/argparse.py:1514
+msgid "mutually exclusive arguments must be optional"
+msgstr "els arguments mútuament excloents han de ser opcionals"
+
+#: /usr/lib/python2.7/argparse.py:1787
+#, python-format
+msgid "not allowed with argument %s"
+msgstr "no es permet amb l'argument %s"
+
+#: /usr/lib/python2.7/argparse.py:1969
+#, python-format
+msgid "one of the arguments %s is required"
+msgstr "un dels arguments %s és obligatori"
+
+#: /usr/lib/python2.7/argparse.py:1585
+msgid "optional arguments"
+msgstr "arguments opcionals"
+
+#: /usr/lib/python2.7/argparse.py:1584
+msgid "positional arguments"
+msgstr "arguments de posició"
+
+#: ../src/auale/__main__.py:55 /usr/lib/python2.7/argparse.py:1606
+msgid "show program's version number and exit"
+msgstr "mostra el nombre de versió del programa i surt"
+
+#: /usr/lib/python2.7/argparse.py:1600
+msgid "show this help message and exit"
+msgstr "mostra aquest missatge d'ajuda i surt"
+
+#: /usr/lib/python2.7/argparse.py:1937
+msgid "too few arguments"
+msgstr "massa pocs arguments"
+
+#: /usr/lib/python2.7/argparse.py:2138
+#, python-format
+msgid "unexpected option string: %s"
+msgstr "no s'esperava la cadena d'opció: %s"
+
+#: /usr/lib/python2.7/argparse.py:1084
+#, python-format
+msgid "unknown parser %r (choices: %s)"
+msgstr "no es pot reconèixer l'analitzador %r (opcions: %s"
+
+#: /usr/lib/python2.7/argparse.py:1690
+#, python-format
+msgid "unrecognized arguments: %s"
+msgstr "no es poden reconèixer els arguments: %s"
+
+#: ../src/auale/gui/view.py:504
+msgid "untitled.ogn"
+msgstr "sense-nom.ogn"
+
+#: /usr/lib/python2.7/argparse.py:292
+msgid "usage: "
+msgstr "ús: "

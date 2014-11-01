@@ -1,0 +1,48 @@
+README of Aualé
+
+  Copyright (C) 2014 Joan Sala Soler
+
+  Copying and distribution of this file, with or without modification,
+  are permitted in any medium without royalty provided the copyright
+  notice and this notice are preserved.
+
+======================================================================
+
+  What is it?
+  -----------
+
+  Aualé - Play oware abapa against the computer or annotate your games
+  
+  Aualé is a graphical user interface for the popular Oware Abapa board
+  game. It may be used to analyze, record and share your own mancala
+  games or to play against the computer.
+
+  This interface communicates with an oware engine through an adapted
+  version of the Universal Chess Interface protocol, which makes it
+  suitable for use with multiple mancala playing programs. Although,
+  currently only the Aalina game engine supports this protocol.
+
+  Some of its main features include:
+
+   * Play against the computer or watch how it plays.
+   * Easily configurable computer strength.
+   * Annotate your matches with an easy to use interface.
+   * Save your games using a portable format which resembles that of
+     the popular Portable Game Notation format.
+
+  The Latest Version
+  ------------------
+
+  Information on the latest version of this software and its current
+  development can be found on http://www.joansala.com/auale/
+
+  Installation
+  ------------
+
+  Please see the INSTALL file.
+
+  Licensing
+  ---------
+
+  Please see the COPYING file.
+
