@@ -356,7 +356,6 @@ class Board(Gtk.DrawingArea):
         
         context.translate(x, y)
         context.rotate(-self._angle)
-        context.move_to(-16.0, -16.0)
         
         turn = char.islower() and 'n' or 's'
         label = '#%s%s' % (char.lower(), turn)
@@ -380,9 +379,8 @@ class Board(Gtk.DrawingArea):
         context.move_to(width / -2.0, height / -2.0)
         context.set_source_rgb(*color)
         
-        PangoCairo.layout_path(context, layout)
+        PangoCairo.show_layout(context, layout)
         
-        context.fill()
         context.rotate(self._angle)
         context.translate(-x, -y)
         
