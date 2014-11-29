@@ -597,7 +597,7 @@ class GTKView(object):
     def on_quit_activate(self, widget):
         """Quits this interface"""
         
-        event = Gdk.Event(Gdk.EventType.DELETE)
+        event = Gdk.Event.new(Gdk.EventType.DELETE)
         
         if not self._main_window.emit('delete-event', event):
             self._main_window.destroy()
