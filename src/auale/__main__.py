@@ -35,7 +35,6 @@ def set_textdomain(domain, path):
     """Sets the text domain"""
     
     try:
-        locale.setlocale(locale.LC_TIME, '')
         gettext.bindtextdomain(domain, path)
         gettext.textdomain(domain)
     except:
