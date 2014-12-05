@@ -21,52 +21,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
 import os, sys
 import argparse
-import locale, gettext
 import util
 
-from gettext import gettext as _
 from gui import App, GTKView
 
 
-__MESSAGES_PATH = util.resource_path('./res/messages/')
-
-
-def set_textdomain(domain, path):
-    """Sets the text domain"""
+def __(message):
+    """Return an unicode translation as a string"""
     
-    try:
-        gettext.bindtextdomain(domain, path)
-        gettext.textdomain(domain)
-    except:
-        pass
+    return _(message).encode('utf-8')
 
 
 def parse_arguments():
     """Initializes the arguments parser"""
     
     parser = argparse.ArgumentParser(
-        description = _("A graphical user interface for oware")
+        description = __("A graphical user interface for oware")
     )
     
     parser.add_argument(
         '-v', '--version', action = 'version',
         version = '%s %s' % (App.NAME, App.VERSION),
-        help = _("show program's version number and exit")
+        help = __("show program's version number and exit")
     )
     
     parser.add_argument(
         'filepath', action = 'store', nargs = '?',
         default = None,
         type = str,
-        help = _("a match file to open on startup"),
-        metavar = _("match_file")
+        help = __("a match file to open on startup"),
+        metavar = __("match_file")
     )
     
     return parser.parse_args()
     
 
 if __name__ == "__main__":
-    set_textdomain(App.DOMAIN, __MESSAGES_PATH)
+    util.install_gettext(App.DOMAIN)
     args = parse_arguments()
     
     if args.filepath is not None:

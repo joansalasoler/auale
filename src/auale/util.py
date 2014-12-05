@@ -8,6 +8,10 @@ information.
 """
 
 import os, sys
+import gettext
+import locale
+
+__MESSAGES_PATH = './res/messages/'
 
 
 def _which(cmd, mode=os.F_OK | os.X_OK, path=None):
@@ -88,6 +92,44 @@ def resource_path(path):
     
     return os.path.normcase(
         os.path.realpath(os.path.join(folder, path)))
+
+
+def install_gettext(domain):
+    """Sets the text domain and installs it"""
+    
+    # LANG must be set on some platforms (e.g. Windows)
+    
+    if 'LANG' not in os.environ:
+        lang, enc = locale.getdefaultlocale()
+        os.environ['LANG'] = lang
+    
+    # Use the standard system path for messages if possible,
+    # otherwise default to __MESSAGES_PATH
+    
+    path = None
+    
+    if not gettext.find(domain):
+        path = resource_path(__MESSAGES_PATH)
+    
+    # Set text domain for Python code
+    
+    gettext.bindtextdomain(domain, path)
+    gettext.textdomain(domain)
+    
+    # Set text domain for non Python code. On Windows 'libintl'
+    # must be loaded to do so
+    
+    if hasattr(locale, 'bindtextdomain'):
+        locale.bindtextdomain(domain, path)
+    else:
+        from ctypes import cdll
+        intl = cdll.LoadLibrary('libintl-8.dll')
+        intl.bind_textdomain_codeset(domain, 'UTF-8')
+        intl.bindtextdomain(domain, path)
+    
+    # Install gettext's _() method in __builtins__
+    
+    gettext.install(domain, path, unicode = True)
 
 
 # With Python 3 use shutil

@@ -203,10 +203,10 @@ class Match(object):
         self._tags = {}
         
         for tag in self.__TAG_ROSTER:
-            self._tags[tag] = u'?'
+            self._tags[tag] = '?'
         
         self._tags['Variant'] = self._game.get_ruleset_name()
-        self._tags['Result'] = u'*'
+        self._tags['Result'] = '*'
         
         # Set start position tag
         
@@ -301,10 +301,10 @@ class Match(object):
         """Tags this match with a value"""
         
         if type(name) != str:
-            raise ValueError("Not a valid tag")
+            raise ValueError("Tag name must be a string")
             
         if type(value) != str:
-            raise ValueError("Not a valid value")
+            raise ValueError("Tag value must be a string")
             
         self._tags[name.strip()] = value.strip()
         
