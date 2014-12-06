@@ -8,6 +8,10 @@ class App:
     DOMAIN  = 'auale'
     ICON    = 'auale'
     ROLE    = 'game'
+    
+    HOME_URL  = 'http://www.joansala.com/auale/'
+    HELP_URL  = 'http://www.joansala.com/auale/help/'
+    RULES_URL = 'http://www.joansala.com/auale/rules/'
 
 from gui.animator import Animator
 from gui.canvas import Board

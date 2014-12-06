@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aualé 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-16 16:21+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-12-06 21:17+0100\n"
+"PO-Revision-Date: 2014-12-06 21:17+0100\n"
+"Last-Translator: Joan Sala Soler <contact@joansala.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -176,6 +176,10 @@ msgstr "Ayuda"
 #: ../src/auale/res/glade/auale.ui:18
 msgid "Home"
 msgstr "Inicio"
+
+#: ../src/auale/gui/view.py:265
+msgid "How to play oware"
+msgstr "Como jugar al oware"
 
 #: ../src/auale/res/glade/auale.ui:128 ../src/auale/res/glade/auale.ui:869
 msgid "Last"
@@ -425,6 +429,15 @@ msgstr "Ver al ordenador jugando"
 #: ../src/auale/res/glade/auale.ui:953
 msgid "What do you want to do?"
 msgstr "¿Qué desea hacer?"
+
+#: ../src/auale/gui/view.py:266
+#, python-format
+msgid ""
+"You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the game</a> "
+"on our website. Have fun playing!"
+msgstr ""
+"Puede encontrar el <a href=\"%s\" title=\"Reglamento del oware abapa\">reglamento "
+"del juego</a> en nuestro sitio web. Diviértase!"
 
 #: ../src/auale/res/glade/auale.ui:1113
 msgid ""

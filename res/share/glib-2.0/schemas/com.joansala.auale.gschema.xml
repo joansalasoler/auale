@@ -10,5 +10,9 @@
       <default>0</default>
       <summary>Default engine strength.</summary>
     </key>
+    <key type="b" name="show-tips">
+      <default>true</default>
+      <summary>Show application tips at startup.</summary>
+    </key>
   </schema>
 </schemalist>

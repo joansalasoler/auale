@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# AUALÉ TRANSLATIONS.
+# Copyright (C) Joan Sala Soler, 2014 <contact@joansala.com>
+# This file is distributed under the same license as the Aualé package.
+# Joan Sala Soler <contact@joansala.com>, 2014.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-16 16:21+0200\n"
+"POT-Creation-Date: 2014-12-06 21:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,6 +178,10 @@ msgstr ""
 
 #: ../src/auale/res/glade/auale.ui:18
 msgid "Home"
+msgstr ""
+
+#: ../src/auale/gui/view.py:265
+msgid "How to play oware"
 msgstr ""
 
 #: ../src/auale/res/glade/auale.ui:128 ../src/auale/res/glade/auale.ui:869
@@ -424,6 +428,13 @@ msgstr ""
 
 #: ../src/auale/res/glade/auale.ui:953
 msgid "What do you want to do?"
+msgstr ""
+
+#: ../src/auale/gui/view.py:266
+#, python-format
+msgid ""
+"You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the game</a> "
+"on our website. Have fun playing!"
 msgstr ""
 
 #: ../src/auale/res/glade/auale.ui:1113
