@@ -129,7 +129,13 @@ def install_gettext(domain):
     
     # Install gettext's _() method in __builtins__
     
-    gettext.install(domain, path, unicode = True)
+    if sys.version_info.major < 3:
+        import __builtin__
+        t = gettext.translation(domain, path)
+        __builtin__.__dict__['_'] = lambda m : \
+            t.ugettext(m).encode('utf-8')
+    else:
+        gettext.install(domain, path)
 
 
 # With Python 3 use shutil

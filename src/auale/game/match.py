@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import re
+import os, sys, re
 import codecs
 
 
@@ -182,7 +182,7 @@ class Match(object):
     def set_comment(self, comment):
         """Adds a comment to the current move"""
         
-        self._comments[self._current_move] = comment.encode('utf-8')
+        self._comments[self._current_move] = comment
         
         
     def set_position(self, board, turn):
@@ -213,7 +213,7 @@ class Match(object):
         if self._board != self._game.get_initial_board() \
         and self._turn != self._game.SOUTH:
             notation = self._game.to_board_notation(self._board, self._turn)
-            self._tags['FEN'] = u'%s' % notation
+            self._tags['FEN'] = '%s' % notation
         
         
     def add_move(self, move):
@@ -317,7 +317,7 @@ class Match(object):
         for tag in self.__TAG_ROSTER:
             tags.append((tag, self._tags[tag]))
         
-        for tag, value in sorted(self._tags.iteritems()):
+        for tag, value in sorted(self._tags.items()):
             if tag not in self.__TAG_ROSTER:
                 tags.append((tag, value))
         
@@ -352,24 +352,24 @@ class Match(object):
             
             if next_turn == self._game.NORTH:
                 if board[12] != next_board[12]:
-                    captures = u'+%d' % (
+                    captures = '+%d' % (
                         next_board[12] - board[12])
             elif board[13] != next_board[13]:
-                captures = u'+%d' % (
+                captures = '+%d' % (
                     next_board[13] - board[13])
             
             alpha = self._game.to_move_notation(move)
-            tokens.append(u'%s%s' % (alpha, captures))
+            tokens.append('%s%s' % (alpha, captures))
             
             if comment is not None:
-                tokens.append(u'{')
+                tokens.append('{')
                 tokens.extend(comment.split())
-                tokens.append(u'}')
+                tokens.append('}')
             
             board = next_board
             count += 0.5
         
-        if self._tags['Result'] != u'*':
+        if self._tags['Result'] != '*':
             tokens.append(self._tags['Result'])
         
         return tuple(tokens)
@@ -381,7 +381,7 @@ class Match(object):
         with codecs.open(path, 'w', 'utf-8') as fileo:
             self._write_tags(fileo)
             if len(self._moves) > 0:
-                fileo.write('\n')
+                self._write(fileo, '\n')
                 self._write_moves(fileo)
         
         
@@ -392,9 +392,9 @@ class Match(object):
         
         try:
             with codecs.open(path, 'r', 'utf-8') as fileo:
-                header = fileo.read(8)
-                if header != u'[Variant': raise ValueError()
-                string = header + fileo.read()
+                header = self._read(fileo, 8)
+                if header != '[Variant': raise ValueError()
+                string = header + self._read(fileo)
             
             (tags, index) = self._read_tags(string, 0)
             (moves, comments, index) = self._read_moves(string, index)
@@ -440,8 +440,30 @@ class Match(object):
         value = value.replace('\"', '\\"')
         
         return value
+    
+    
+    def _read(self, fileo, size = -1):
+        """Read a string from a file. If an unicode string is returned
+           this method converts it to an utf-8 string"""
         
+        string = fileo.read(size)
         
+        if sys.version_info.major < 3:
+            string = string.encode('utf-8')
+        
+        return string
+    
+    
+    def _write(self, fileo, string):
+        """Writes a string to a file. If an unicode string is provided
+           this method converts it to an utf-8 string"""
+        
+        if sys.version_info.major < 3:
+            string = string.decode('utf-8')
+        
+        fileo.write(string)
+    
+    
     def _read_tags(self, string, index):
         """Reads all header tags from the string"""
         
@@ -452,10 +474,10 @@ class Match(object):
         tags = {}
         
         for tag in self.__TAG_ROSTER:
-            tags[tag] = u'?'
+            tags[tag] = '?'
         
         tags['Variant'] = self._game.get_ruleset_name()
-        tags['Result'] = u'*'
+        tags['Result'] = '*'
         
         # Parse tags from the string
         
@@ -464,7 +486,7 @@ class Match(object):
             if m is None: break
             tag = m.group(1)
             value = self._unescape(m.group(2))
-            tags[tag] = value.encode('utf-8')
+            tags[tag] = value
             index = m.end(0)
         
         return (tags, index)
@@ -486,7 +508,7 @@ class Match(object):
             else:
                 m = move_pattern.match(string, index)
                 if m is not None:
-                    notation = m.group(1).encode('ascii')
+                    notation = m.group(1)
                     move = self._game.to_move(notation)
                     comments.append(None)
                     moves.append(move)
@@ -506,7 +528,7 @@ class Match(object):
             
             if m is not None:
                 index = m.end(1)
-                comment = u' '.join(m.group(1).split())
+                comment = ' '.join(m.group(1).split())
         
         return (comment, index)
         
@@ -532,16 +554,14 @@ class Match(object):
         
         for tag in self.__TAG_ROSTER:
             value = self._escape(self._tags[tag])
-            value = value.decode('utf-8')
-            string = u'[%s "%s"]\n' % (tag, value)
-            fileo.write(string)
+            string = '[%s "%s"]\n' % (tag, value)
+            self._write(fileo, string)
         
         for tag in self._tags:
             if tag not in self.__TAG_ROSTER:
                 value = self._escape(self._tags[tag])
-                value = value.decode('utf-8')
-                string = u'[%s "%s"]\n' % (tag, value)
-                fileo.write(string)
+                string = '[%s "%s"]\n' % (tag, value)
+                self._write(fileo, string)
     
     
     def _write_moves(self, fileo):
@@ -552,11 +572,11 @@ class Match(object):
         
         for token in tokens[1:]:
             if 1 + len(line) + len(token) < 80:
-                line = u'%s %s' % (line, token)
+                line = '%s %s' % (line, token)
                 continue
             
-            fileo.write(u'%s\n' % line)
+            self._write(fileo, '%s\n' % line)
             line = str(token)
         
-        fileo.write(u'%s\n' % line)
+        self._write(fileo, '%s\n' % line)
     

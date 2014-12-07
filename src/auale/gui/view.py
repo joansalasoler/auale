@@ -209,7 +209,7 @@ class GTKView(object):
             self.show_error_dialog(
                 _('Could not start the engine'),
                 _('Computer player is disabled'),
-                u'%s: %s' % (
+                '%s: %s' % (
                     _('Could not start the engine'),
                     _(message)
                 )
@@ -550,7 +550,7 @@ class GTKView(object):
         self._match_changed = False
         
         if path is None:
-            name = _("Unsaved match").encode('utf-8')
+            name = _("Unsaved match")
             title = '%s - %s' % (App.NAME, name)
             self._main_window.set_title(title)
             return
@@ -989,8 +989,10 @@ class GTKView(object):
                 message = '%s (%s)' % (message, result)
             
             if title or message:
-                if not title: title = _("Match").encode('utf-8')
+                if not title: title = _("Match")
                 self.show_info_bar(title, message, 'document-open')
+            elif self._infobar.is_visible():
+                self._infobar.set_visible(False)
         
         # If the game ended, show a result message
         
@@ -1058,9 +1060,9 @@ class GTKView(object):
         label = self._builder.get_object('infobar-label')
         image = self._builder.get_object('infobar-image')
         
-        if title == None or title == '':
+        if not title:
             markup = '%s' % message
-        elif message == None or message == '':
+        elif not message:
             markup = '<b>%s</b>' % title
         else:
             markup = '<b>%s</b>: %s' % (title, message)
@@ -1213,9 +1215,9 @@ class GTKView(object):
             self.show_error_dialog(
                 _("Error opening match"),
                 _("Match file cannot be opened"),
-                u'%s «%s»: %s' % (
+                '%s «%s»: %s' % (
                     _("Unable to open file"),
-                    path.decode('utf-8'), _(message)
+                    path, _(message)
                 )
             )
         
@@ -1250,7 +1252,7 @@ class GTKView(object):
         
         user = GLib.get_real_name()
         date = time.strftime('%Y.%m.%d')
-        event = _("Untitled").encode('utf-8')
+        event = _("Untitled")
         
         self._match.set_tag('Event', event)
         self._match.set_tag('Date', date)
@@ -1289,4 +1291,5 @@ class GTKView(object):
         self._engine.new_match()
         self._engine.set_strength(self._strength)
         self._engine.set_position(self._match)
-
+    
+    

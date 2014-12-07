@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 """
 Aualé oware graphic user interface.
 Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
@@ -535,7 +537,7 @@ class UCIClient():
         self._output.flush()
         
         if self._debug:
-            print "> %s" % message
+            print("> %s" % message)
     
     
     def receive(self):
@@ -555,7 +557,7 @@ class UCIClient():
             self._evaluate_input(message)
         
         if self._debug:
-            print "< %s" % message
+            print("< %s" % message)
         
         return message
 

@@ -49,6 +49,15 @@ class Mixer():
     __ROTATE_PATH = util.resource_path('./res/sound/rotate.wav')
     __START_PATH = util.resource_path('./res/sound/start.wav')
     
+    # WA: Fixes a 'TypeError' when using pySDL2 & Python3
+    
+    if sys.version_info.major > 2:
+        __DROP_PATH = __DROP_PATH.encode('utf-8')
+        __GATHER_PATH = __GATHER_PATH.encode('utf-8')
+        __PICK_UP_PATH = __PICK_UP_PATH.encode('utf-8')
+        __ROTATE_PATH = __ROTATE_PATH.encode('utf-8')
+        __START_PATH = __START_PATH.encode('utf-8')
+    
     
     def __init__(self):
         """Initializes a new mixer object"""

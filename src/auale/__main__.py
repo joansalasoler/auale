@@ -26,35 +26,29 @@ import util
 from gui import App, GTKView
 
 
-def __(message):
-    """Return an unicode translation as a string"""
-    
-    return _(message).encode('utf-8')
-
-
 def parse_arguments():
     """Initializes the arguments parser"""
     
     parser = argparse.ArgumentParser(
-        description = __("A graphical user interface for oware")
+        description = _("A graphical user interface for oware")
     )
     
     parser.add_argument(
         '-v', '--version', action = 'version',
         version = '%s %s' % (App.NAME, App.VERSION),
-        help = __("show program's version number and exit")
+        help = _("show program's version number and exit")
     )
     
     parser.add_argument(
         'filepath', action = 'store', nargs = '?',
         default = None,
         type = str,
-        help = __("a match file to open on startup"),
-        metavar = __("match_file")
+        help = _("a match file to open on startup"),
+        metavar = _("match_file")
     )
     
     return parser.parse_args()
-    
+
 
 if __name__ == "__main__":
     util.install_gettext(App.DOMAIN)
