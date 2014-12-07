@@ -1215,7 +1215,7 @@ class GTKView(object):
                 _("Match file cannot be opened"),
                 u'%s «%s»: %s' % (
                     _("Unable to open file"),
-                    path, _(message)
+                    path.decode('utf-8'), _(message)
                 )
             )
         
