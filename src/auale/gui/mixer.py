@@ -1,25 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Aualé oware graphic user interface.
+# Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from __future__ import with_statement
-
-"""
-Aualé oware graphic user interface.
-Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
 
 import os, sys
 import math, threading
@@ -42,6 +40,13 @@ from gui import App
 
 class Mixer():
     """Plays sounds according to received events"""
+    
+    # Total number of open mixer objects. This is used to quit SDL
+    # when no mixer objects are in use
+    
+    __OPENED_COUNT = 0
+    
+    # Audio files path
     
     __DROP_PATH = util.resource_path('./res/sound/drop.wav')
     __GATHER_PATH = util.resource_path('./res/sound/gather.wav')
@@ -82,7 +87,8 @@ class Mixer():
         
         # Initialize SDL audio and mixer
         
-        sdl.SDL_Init(sdl.SDL_INIT_AUDIO)
+        if not sdl.SDL_WasInit(sdl.SDL_INIT_AUDIO):
+            sdl.SDL_Init(sdl.SDL_INIT_AUDIO)
         
         mixer.Mix_OpenAudio(
             mixer.MIX_DEFAULT_FREQUENCY,
@@ -101,6 +107,8 @@ class Mixer():
         self._wav_rotate = mixer.Mix_LoadWAV(Mixer.__ROTATE_PATH)
         self._wav_start  = mixer.Mix_LoadWAV(Mixer.__START_PATH)
         
+        Mixer.__OPENED_COUNT += 1
+        
         
     def is_disabled(self):
         """Tells if the mixer is disabled"""
@@ -116,7 +124,11 @@ class Mixer():
         
         mixer.Mix_CloseAudio()
         mixer.Mix_Quit()
-        sdl.SDL_Quit()
+        
+        Mixer.__OPENED_COUNT -= 1
+        
+        if not Mixer.__OPENED_COUNT:
+            sdl.SDL_Quit()
     
     
     def toggle_mute(self):

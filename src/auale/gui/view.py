@@ -1,25 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import with_statement
-
-"""
-Aualé oware graphic user interface.
-Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+# Aualé oware graphic user interface.
+# Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, math, time, sys
 import threading
@@ -39,7 +35,7 @@ class GTKView(object):
     __ENGINE_PATH = util.resource_path('./res/engine/Aalina.jar')
     
     
-    def __init__(self, path = None):
+    def __init__(self):
         """Builds this interface and runs it"""
         
         # Game state attributes
@@ -111,37 +107,12 @@ class GTKView(object):
         self._loop.connect('state-changed', self.on_state_changed)
         self._loop.connect('move-received', self.on_move_received)
         
-        # Settings and persistence
-        
-        self._initialize_settings()
-        
         # Let's start everything
         
-        self._main_window.show_all()
-        
-        if self._mixer.is_disabled():
-            mitem = self._builder.get_object('mute_menuitem')
-            mitem.set_sensitive(False)
-        
+        self._load_settings()
         self._start_engine()
-        self.start_match()
-        
-        # Open the provided file on the command line
-        
-        if path is not None:
-            self.open_match(path)
-        
-        self.refresh_view()
-        
-        # Show help messages if any
-        
-        if path is None:
-            self._show_tips()
-        
-        # Start the game and interface loops
-        
         self._loop.start()
-        Gtk.main()
+        self.start_match()
     
     
     # Utility methods
@@ -161,8 +132,8 @@ class GTKView(object):
             pass
     
     
-    def _initialize_settings(self):
-        """Initialitzes application settings"""
+    def _load_settings(self):
+        """Loads application settings"""
         
         try:
             self._settings = Gio.Settings(App.ID)
@@ -175,6 +146,12 @@ class GTKView(object):
                 'mute-sound', mute_action, 'active',
                 Gio.SettingsBindFlags.DEFAULT
             )
+            
+            # Disable sound menu if SDL is not available
+            
+            if self._mixer.is_disabled():
+                mitem = self._builder.get_object('mute_menuitem')
+                mitem.set_sensitive(False)
             
             # Retrieve last used computer strength
             
@@ -233,7 +210,7 @@ class GTKView(object):
             item.activate()
     
     
-    def _user_can_move(self):
+    def user_can_move(self):
         """Returns true if the user is allowed to move"""
         
         return not (
@@ -243,7 +220,7 @@ class GTKView(object):
         )
     
     
-    def _get_current_player(self):
+    def get_current_player(self):
         """Returns the player to move"""
         
         if self._match.has_ended():
@@ -255,7 +232,7 @@ class GTKView(object):
         return self._north
     
     
-    def _show_tips(self):
+    def show_tips(self):
         """Shows help messages at startup"""
         
         if self._settings is None:
@@ -272,6 +249,12 @@ class GTKView(object):
         )
         
         self._settings.set_boolean('show-tips', False)
+    
+    
+    def get_window(self):
+        """Return the main window for this view"""
+        
+        return self._main_window
     
     
     # Event handlers
@@ -301,9 +284,6 @@ class GTKView(object):
             self._settings.sync()
         
         self._mixer.stop_mixer()
-        
-        
-        Gtk.main_quit()
     
     
     def on_main_window_key_press_event(self, widget, event):
@@ -330,7 +310,7 @@ class GTKView(object):
         
         # Interpret the move
         
-        if not self._user_can_move():
+        if not self.user_can_move():
             return
         
         move_keys = (
@@ -355,7 +335,7 @@ class GTKView(object):
     def on_house_button_press_event(self, widget, house):
         """Catches mouse press events on a house"""
         
-        if self._user_can_move():
+        if self.user_can_move():
             if self._match.is_legal_move(house):
                 self.on_move_received(self._loop, house)
     
@@ -363,7 +343,7 @@ class GTKView(object):
     def on_house_enter_notify_event(self, widget, house):
         """Catches mouse enter notifications on a house"""
         
-        if not self._user_can_move():
+        if not self.user_can_move():
             return
         
         window = self._main_window.get_window()
@@ -419,7 +399,7 @@ class GTKView(object):
             
             self._mixer.on_game_start()
             
-            player = self._get_current_player()
+            player = self.get_current_player()
             
             if player is None:
                 self._locked.clear()
@@ -864,7 +844,7 @@ class GTKView(object):
         
         self._rotate_action.set_sensitive(True)
         
-        if self._user_can_move():
+        if self.user_can_move():
             self._canvas.update_hovered()
             self.refresh_active_house()
     
@@ -893,7 +873,7 @@ class GTKView(object):
     def on_move_animation_finished(self, animator):
         """Called after a move animation"""
         
-        player = self._get_current_player()
+        player = self.get_current_player()
         
         self._engine.set_strength(self._strength)
         self._engine.set_position(self._match)
@@ -941,7 +921,7 @@ class GTKView(object):
         window.set_cursor(None)
         self._canvas.set_active(None)
         
-        if self._user_can_move():
+        if self.user_can_move():
             house = self._canvas.get_hovered()
             
             if self._match.is_legal_move(house):
@@ -1030,7 +1010,7 @@ class GTKView(object):
             self.refresh_actions()
             self.refresh_infobar()
             
-            if self._user_can_move():
+            if self.user_can_move():
                 self._canvas.update_hovered()
                 self.refresh_active_house()
     
