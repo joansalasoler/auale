@@ -731,111 +731,64 @@ class GTKView(object):
         self._locked.clear()
     
     
-    def on_south_side_toggled(self, widget):
-        """Sets the engine player as south"""
+    def on_side_menuitem_toggled(self, widget):
+        """Emitted when the user sets the engine player"""
         
-        if widget.get_active():
+        if not widget.get_active(): return
+        name = widget.get_name()
+        
+        if name == 'south-side-menuitem':
             self._south = self._engine
             self._north = None
-    
-    
-    def on_north_side_toggled(self, widget):
-        """Sets the engine player as north"""
-        
-        if widget.get_active():
+        elif name == 'north-side-menuitem':
             self._south = None
             self._north = self._engine
-    
-    
-    def on_both_side_toggled(self, widget):
-        """Sets the engine player as south and north"""
-        
-        if widget.get_active():
+        elif name == 'both-side-menuitem':
             self._south = self._engine
             self._north = self._engine
-    
-    
-    def on_neither_side_toggled(self, widget):
-        """Sets all players as human"""
-        
-        if widget.get_active():
+        elif name == 'neither-side-menuitem':
             self._south = None
             self._north = None
     
     
-    def on_easy_strength_toggled(self, widget):
-        """Sets engine player strength as easy"""
+    def on_strength_menuitem_toggled(self, widget):
+        """Emitted when the user sets the engine strength"""
         
-        if widget.get_active():
+        if not widget.get_active(): return
+        name = widget.get_name()
+        
+        if name == 'easy-menuitem':
             self._strength = UCIPlayer.Strength.EASY
-            if self._settings is not None:
-                self._settings.set_int('strength', self._strength)
-    
-    
-    def on_medium_strength_toggled(self, widget):
-        """Sets engine player strength as medium"""
-        
-        if widget.get_active():
+        elif name == 'medium-menuitem':
             self._strength = UCIPlayer.Strength.MEDIUM
-            if self._settings is not None:
-                self._settings.set_int('strength', self._strength)
-    
-    
-    def on_hard_strength_toggled(self, widget):
-        """Sets engine player strength as hard"""
-        
-        if widget.get_active():
+        elif name == 'hard-menuitem':
             self._strength = UCIPlayer.Strength.HARD
-            if self._settings is not None:
-                self._settings.set_int('strength', self._strength)
-    
-    
-    def on_expert_strength_toggled(self, widget):
-        """Sets engine player strength as expert"""
-        
-        if widget.get_active():
+        elif name == 'expert-menuitem':
             self._strength = UCIPlayer.Strength.EXPERT
-            if self._settings is not None:
-                self._settings.set_int('strength', self._strength)
-    
-    
-    def on_south_button_clicked(self, widget):
-        """Setups a match against the engine"""
         
-        item = self._builder.get_object('north_side_radiomenuitem')
+        if self._settings is not None:
+            self._settings.set_int('strength', self._strength)
+    
+    
+    def on_newgame_button_clicked(self, widget):
+        """Emitted on a new game button activation"""
+        
+        name = widget.get_name()
+        
+        if name == 'newgame-south-button':
+            item = self._builder.get_object('north_side_radiomenuitem')
+            item.set_active(True)
+        elif name == 'newgame-north-button':
+            item = self._builder.get_object('south_side_radiomenuitem')
+            item.set_active(True)
+        elif name == 'newgame-edit-button':
+            item = self._builder.get_object('neither_side_radiomenuitem')
+            item.set_active(True)
+        elif name == 'newgame-watch-button':
+            item = self._builder.get_object('both_side_radiomenuitem')
+            item.set_active(True)
+        
         dialog = self._builder.get_object('newmatch_dialog')
-        
-        item.set_active(True)
-        dialog.response(Gtk.ResponseType.OK)
-    
-    
-    def on_north_button_clicked(self, widget):
-        """Setups a match against the engine"""
-        
-        item = self._builder.get_object('south_side_radiomenuitem')
-        dialog = self._builder.get_object('newmatch_dialog')
-        
-        item.set_active(True)
-        dialog.response(Gtk.ResponseType.OK)
-    
-    
-    def on_edit_button_clicked(self, widget):
-        """Setups the edit mode"""
-        
-        item = self._builder.get_object('neither_side_radiomenuitem')
-        dialog = self._builder.get_object('newmatch_dialog')
-        
-        item.set_active(True)
-        dialog.response(Gtk.ResponseType.OK)
-    
-    
-    def on_watch_button_clicked(self, widget):
-        """Setups a match between engines"""
-        
-        item = self._builder.get_object('both_side_radiomenuitem')
-        dialog = self._builder.get_object('newmatch_dialog')
-        
-        item.set_active(True)
         dialog.response(Gtk.ResponseType.OK)
     
     
@@ -1271,5 +1224,4 @@ class GTKView(object):
         self._engine.new_match()
         self._engine.set_strength(self._strength)
         self._engine.set_position(self._match)
-    
-    
+

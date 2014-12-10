@@ -520,16 +520,18 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                             <property name="can_focus">False</property>
                             <child>
                               <object class="GtkRadioMenuItem" id="south_side_radiomenuitem">
+                                <property name="name">south-side-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_South</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
-                                <signal name="toggled" handler="on_south_side_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_side_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkRadioMenuItem" id="north_side_radiomenuitem">
+                                <property name="name">north-side-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_North</property>
@@ -537,29 +539,31 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="active">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">south_side_radiomenuitem</property>
-                                <signal name="toggled" handler="on_north_side_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_side_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkRadioMenuItem" id="both_side_radiomenuitem">
+                                <property name="name">both-side-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_Both players</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">south_side_radiomenuitem</property>
-                                <signal name="toggled" handler="on_both_side_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_side_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkRadioMenuItem" id="neither_side_radiomenuitem">
+                                <property name="name">neither-side-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">N_either player</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">south_side_radiomenuitem</property>
-                                <signal name="toggled" handler="on_neither_side_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_side_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                           </object>
@@ -578,46 +582,50 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                             <property name="can_focus">False</property>
                             <child>
                               <object class="GtkRadioMenuItem" id="easy_strength_radiomenuitem">
+                                <property name="name">easy-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_Easy</property>
                                 <property name="use_underline">True</property>
                                 <property name="active">True</property>
                                 <property name="draw_as_radio">True</property>
-                                <signal name="toggled" handler="on_easy_strength_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_strength_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkRadioMenuItem" id="medium_strength_radiomenuitem">
+                                <property name="name">medium-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_Medium</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">easy_strength_radiomenuitem</property>
-                                <signal name="toggled" handler="on_medium_strength_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_strength_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkRadioMenuItem" id="hard_strength_radiomenuitem">
+                                <property name="name">hard-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_Hard</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">easy_strength_radiomenuitem</property>
-                                <signal name="toggled" handler="on_hard_strength_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_strength_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                             <child>
                               <object class="GtkRadioMenuItem" id="expert_strength_radiomenuitem">
+                                <property name="name">expert-menuitem</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">E_xpert</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">easy_strength_radiomenuitem</property>
-                                <signal name="toggled" handler="on_expert_strength_toggled" swapped="no"/>
+                                <signal name="toggled" handler="on_strength_menuitem_toggled" swapped="no"/>
                               </object>
                             </child>
                           </object>
@@ -976,6 +984,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                 <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkButton" id="south_button">
+                    <property name="name">newgame-south-button</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
@@ -985,7 +994,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <style>
                       <class name="option-button"/>
                     </style>
-                    <signal name="clicked" handler="on_south_button_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="south-hbox">
                         <property name="width_request">60</property>
@@ -1060,6 +1069,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                 </child>
                 <child>
                   <object class="GtkButton" id="north_button">
+                    <property name="name">newgame-north-button</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
@@ -1068,7 +1078,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <style>
                       <class name="option-button"/>
                     </style>
-                    <signal name="clicked" handler="on_north_button_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="north-hbox">
                         <property name="width_request">60</property>
@@ -1142,90 +1152,8 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="edit_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="can_default">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="hexpand">True</property>
-                    <style>
-                      <class name="option-button"/>
-                    </style>
-                    <signal name="clicked" handler="on_edit_button_clicked" swapped="no"/>
-                    <child>
-                      <object class="GtkBox" id="edit-hbox">
-                        <property name="width_request">60</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="spacing">10</property>
-                        <child>
-                          <object class="GtkImage" id="edit-image">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="pixbuf">../image/edit.svg</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkBox" id="edit-vbox">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkLabel" id="edit-option-label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Edit a match</property>
-                                <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="edit-description-label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">A new match will be created where you will be able to move as either player.</property>
-                                <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkButton" id="watch_button">
+                    <property name="name">newgame-watch-button</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="can_default">True</property>
@@ -1234,7 +1162,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <style>
                       <class name="option-button"/>
                     </style>
-                    <signal name="clicked" handler="on_watch_button_clicked" swapped="no"/>
+                    <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="watch-hbox">
                         <property name="width_request">60</property>
@@ -1282,6 +1210,90 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">The computer will play both as south and north while you can watch the match.</property>
+                                <property name="wrap">True</property>
+                                <property name="max_width_chars">30</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="edit_button">
+                    <property name="name">newgame-edit-button</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="can_default">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="hexpand">True</property>
+                    <style>
+                      <class name="option-button"/>
+                    </style>
+                    <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
+                    <child>
+                      <object class="GtkBox" id="edit-hbox">
+                        <property name="width_request">60</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkImage" id="edit-image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">../image/edit.svg</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="edit-vbox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel" id="edit-option-label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Edit a match</property>
+                                <property name="wrap">True</property>
+                                <property name="max_width_chars">30</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="edit-description-label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">A new match will be created where you will be able to move as either player.</property>
                                 <property name="wrap">True</property>
                                 <property name="max_width_chars">30</property>
                               </object>
