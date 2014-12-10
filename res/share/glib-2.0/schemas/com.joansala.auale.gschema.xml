@@ -5,14 +5,26 @@
       <default>false</default>
       <summary>Start the game with sound disabled.</summary>
     </key>
+    <key type="b" name="show-tips">
+      <default>true</default>
+      <summary>Show application tips at startup.</summary>
+    </key>
     <key type="i" name="strength">
       <range min="0" max="3"/>
       <default>0</default>
       <summary>Default engine strength.</summary>
     </key>
-    <key type="b" name="show-tips">
-      <default>true</default>
-      <summary>Show application tips at startup.</summary>
+    <key type="i" name="window-width">
+      <default>-1</default>
+      <summary>Default main window width.</summary>
+    </key>
+    <key type="i" name="window-height">
+      <default>-1</default>
+      <summary>Default main window height.</summary>
+    </key>
+    <key type="b" name="window-maximize">
+      <default>false</default>
+      <summary>Default main window maximized state.</summary>
     </key>
   </schema>
 </schemalist>

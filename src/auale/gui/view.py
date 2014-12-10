@@ -56,13 +56,13 @@ class GTKView(object):
         self._mixer = Mixer()
         self._animator = Animator(self._canvas, self._mixer)
         self._builder = Gtk.Builder()
-        self._settings = None
+        self._settings = Gio.Settings(App.ID)
         
         # Initialize this Gtk interface
         
-        self._set_css_povider(GTKView.__CSS_PATH)
+        self._add_css_provider(GTKView.__CSS_PATH)
         self._builder.set_translation_domain(App.DOMAIN)
-        self._builder.add_from_file(os.path.abspath(GTKView.__GLADE_PATH))
+        self._builder.add_from_file(GTKView.__GLADE_PATH)
         self._builder.connect_signals(self)
         
         # Save references to the main objects
@@ -90,22 +90,14 @@ class GTKView(object):
         self._canvas.grab_focus()
         self._canvas.set_board(self._match.get_board())
         
-        # Connect event signals
+        # Connect event signals for custom objects
+        
+        self._connect_signals(self._animator)
+        self._connect_signals(self._loop)
+        self._connect_signals(self._canvas)
         
         self._canvas.connect('leave-notify-event',
             self.on_canvas_leave_notify_event)
-        self._canvas.connect('house-button-press-event',
-            self.on_house_button_press_event)
-        self._canvas.connect('house-enter-notify-event',
-            self.on_house_enter_notify_event)
-        self._canvas.connect('house-leave-notify-event',
-            self.on_house_leave_notify_event)
-        self._animator.connect('rotate-animation-finished',
-            self.on_rotate_animation_finished)
-        self._animator.connect('move-animation-finished',
-            self.on_move_animation_finished)
-        self._loop.connect('state-changed', self.on_state_changed)
-        self._loop.connect('move-received', self.on_move_received)
         
         # Let's start everything
         
@@ -117,48 +109,49 @@ class GTKView(object):
     
     # Utility methods
     
-    def _set_css_povider(self, css_path):
-        """Initializes the CSS provider"""
+    def _connect_signals(self, cobject):
+        """Automatically connects the signals of an object"""
         
-        try:
-            provider = Gtk.CssProvider()
-            provider.load_from_path(css_path)
+        for name in GObject.signal_list_names(cobject):
+            attr = 'on_%s' % name.replace('-', '_')
+            method = getattr(self, attr)
+            cobject.connect(name, method)
+    
+    
+    def _add_css_provider(self, path):
+        """Adds a new class provider for the screen"""
+        
+        provider = Gtk.CssProvider()
+        provider.load_from_path(path)
             
-            Gtk.StyleContext.add_provider_for_screen(
-                Gdk.Screen.get_default(), provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-            )
-        except:
-            pass
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
     
     
     def _load_settings(self):
         """Loads application settings"""
         
-        try:
-            self._settings = Gio.Settings(App.ID)
-            
-            # Remember and restore sound mute
-            
-            mute_action = self._builder.get_object('mute_toggleaction')
-            
-            self._settings.bind(
-                'mute-sound', mute_action, 'active',
-                Gio.SettingsBindFlags.DEFAULT
-            )
-            
-            # Disable sound menu if SDL is not available
-            
-            if self._mixer.is_disabled():
-                mitem = self._builder.get_object('mute_menuitem')
-                mitem.set_sensitive(False)
-            
-            # Retrieve last used computer strength
-            
-            strength = self._settings.get_int('strength')
-            self._update_strength_menu(strength)
-        except:
-            self._settings = None
+        # Remember and restore sound mute
+        
+        mute_action = self._builder.get_object('mute_toggleaction')
+        
+        self._settings.bind(
+            'mute-sound', mute_action, 'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        
+        # Disable sound menu if SDL is not available
+        
+        if self._mixer.is_disabled():
+            mitem = self._builder.get_object('mute_menuitem')
+            mitem.set_sensitive(False)
+        
+        # Retrieve last used computer strength
+        
+        strength = self._settings.get_int('strength')
+        self._update_strength_menu(strength)
     
     
     def _start_engine(self):
@@ -235,9 +228,6 @@ class GTKView(object):
     def show_tips(self):
         """Shows help messages at startup"""
         
-        if self._settings is None:
-            return
-            
         if not self._settings.get_boolean('show-tips'):
             return
         
@@ -280,9 +270,7 @@ class GTKView(object):
         if self._engine is not None:
             self._engine.quit()
         
-        if self._settings is not None:
-            self._settings.sync()
-        
+        self._settings.sync()
         self._mixer.stop_mixer()
     
     
@@ -766,8 +754,7 @@ class GTKView(object):
         elif name == 'expert-menuitem':
             self._strength = UCIPlayer.Strength.EXPERT
         
-        if self._settings is not None:
-            self._settings.set_int('strength', self._strength)
+        self._settings.set_int('strength', self._strength)
     
     
     def on_newgame_button_clicked(self, widget):
