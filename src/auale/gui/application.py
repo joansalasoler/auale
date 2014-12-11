@@ -51,7 +51,6 @@ class GTKApplication(Gtk.Application):
         self.connect("shutdown", self.on_shutdown)
         self.connect("activate", self.on_activate)
         self.connect("open", self.on_open)
-        self.connect("window-added", self.on_window_added)
         self.connect("handle-local-options", self.on_handle_options)
     
     
@@ -96,30 +95,8 @@ class GTKApplication(Gtk.Application):
         return -1
     
     
-    def on_window_added(self, application, window):
-        """Emitted on window addition"""
-        
-        # Restore the last closed window size
-        
-        width = self._settings.get_int('window-width')
-        height = self._settings.get_int('window-height')
-        
-        if (width, height) >= window.get_size_request():
-            window.set_default_size(width, height)
-        
-        # Restore the last maximization state
-        
-        if self._settings.get_boolean('window-maximize'):
-            window.maximize()
-    
-    
-    def on_window_change(self, window, event):
+    def on_window_delete(self, window, event):
         """Emitted on a window delete or configure event"""
-        
-        # WA: Save the state only on resize events
-        
-        if window._size == (event.width, event.height): return
-        window._size = (event.width, event.height)
         
         # Save the window size and maximization state
         
@@ -135,13 +112,43 @@ class GTKApplication(Gtk.Application):
             self._settings.set_boolean('window-maximize', False)
     
     
+    def set_window_size(self, window):
+        """Sets a window width and height"""
+        
+        # Copy the current or last maximization state
+        
+        active = self.get_active_window()
+        maximize = self._settings.get_boolean('window-maximize')
+        
+        if active is not None:
+            maximized = Gdk.WindowState.MAXIMIZED
+            state = active.get_window().get_state()
+            maximize = (maximized == state & maximized)
+        
+        # Copy the active or last closed window size
+        
+        if maximize or not active:
+            width = self._settings.get_int('window-width')
+            height = self._settings.get_int('window-height')
+        else:
+            (width, height) = active.get_size()
+        
+        # Set the window size and maximization state
+        
+        if (width, height) >= window.get_size_request():
+            window.set_default_size(width, height)
+        
+        if maximize:
+            window.maximize()
+    
+    
     def show_view(self, view):
         """Adds a view to the application and shows it"""
         
         window = view.get_window()
-        window.connect('configure-event', self.on_window_change)
-        window._size = (-1, -1)
+        window.connect('delete-event', self.on_window_delete)
         
+        self.set_window_size(window)
         self.add_window(window)
         
         window.show_all()
