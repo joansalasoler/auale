@@ -1,23 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-Aualé oware graphic user interface.
-Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+# Aualé oware graphic user interface.
+# Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
@@ -30,21 +28,17 @@ except:
 
 from distutils.core import setup
 from distutils import dir_util
+from gui import App
 
-# Add gnome to the path
+# Distutils configuration
 
-sys.path.append(
-    os.path.join(site.getsitepackages()[1], "gnome"))
-
-# Setup configuration
-
-setup(
-    name             = 'auale',
-    version          = '1.0.0',
+PACKAGE_CONFIG = dict(
+    name             = App.DOMAIN,
+    version          = App.VERSION,
+    url              = App.HOME_URL,
     author           = 'Joan Sala Soler',
     author_email     = 'contact@joansala.com',
-    url              = 'http://www.joansala.com/auale/',
-    license          = 'GPL2',
+    license          = 'GPL3+',
     description      = 'Graphic user interface for oware',
     long_description = """Aualé is a graphic user interface for the oware abapa
         board game. Allows the users to analyse and record their own matches
@@ -83,7 +77,18 @@ setup(
     },
 )
 
-# Copy resource and gtk files
+# Add the 'gnome' package to the path
+
+gnome_path = os.path.join(site.getsitepackages()[1], "gnome")
+sys.path.append(gnome_path)
+
+# Do the distutils setup thing
+
+setup(**PACKAGE_CONFIG)
+
+# Copy resource and GTK files to the distribution folder when building
+# binaries for Windows. This assumes the required binary libraries and
+# configuration files for GTK and SDL are stored on /bin/win32/
 
 if 'py2exe' in sys.argv and 'win' in sys.platform:
     dir_util.copy_tree('./res', './dist/res')
