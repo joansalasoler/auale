@@ -8,6 +8,9 @@ override_dh_auto_install:
 		--root=../../debian/auale \
 		--install-layout=deb \
 		--install-lib=/usr/share/auale
+	mv -v debian/auale/usr/share/auale/res/messages \
+		debian/auale/usr/share/locale
+	rm -f debian/auale/usr/share/auale/*.egg-info
 
 override_dh_fixperms:
 	dh_fixperms
