@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from gi.repository import Gio, GLib, Gdk, Gtk, GObject
 
 
 class GTKView(object):
+    """Represents an oware window"""
     
     __GLADE_PATH = util.resource_path('./res/glade/auale.ui')
     __CSS_PATH = util.resource_path('./res/glade/auale.css')

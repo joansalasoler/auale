@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,10 @@ from gi.repository import Gtk
 
 
 class GTKApplication(Gtk.Application):
+    """
+    This GTK application parses command line arguments and creates new
+    views on request.
+    """
     
     def __init__(self):
         """Starts the application"""
