@@ -18,6 +18,10 @@ from gui.canvas import Board
 from gui.loop import GameLoop
 from gui.mixer import Mixer
 from gui.view import GTKView
+from gui.application import GTKApplication
 
-__all__ = ['App', 'Animator', 'Board', 'GameLoop', 'GTKView', 'Mixer']
+__all__ = [
+    'App', 'Animator', 'Board', 'GameLoop',
+    'GTKApplication', 'GTKView', 'Mixer'
+]
 
