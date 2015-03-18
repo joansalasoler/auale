@@ -27,8 +27,6 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import cairo
-from gi.repository import Pango
-from gi.repository import PangoCairo
 from gi.repository import GdkPixbuf
 from gi.repository import Rsvg
 
@@ -78,6 +76,7 @@ class Board(Gtk.DrawingArea):
     }
     
     __LABELS_PATH = util.resource_path('./res/image/labels.svg')
+    __NUMBERS_PATH = util.resource_path('./res/image/numbers.svg')
     __BACKGROUND_PATH = util.resource_path('./res/image/background.png')
     
     
@@ -96,13 +95,12 @@ class Board(Gtk.DrawingArea):
         )
         
         self._COLOR = {
-            'HOUSE': (1.0, 1.0, 1.0),
-            'HOUSE_ACTIVE': (1.0, 1.0, 0.55),
+            'HOUSE':           (0.96, 0.96, 0.96),
+            'HOUSE_ACTIVE':    (1.0, 1.0, 0.55),
             'HOUSE_HIGHLIGHT': (0.88, 0.95, 1.0),
-            'HOUSE_STROKE': (0.0, 0.0, 0.0),
-            'SEED': (0.55, 0.75, 0.0),
-            'SEED_STROKE': (0.10, 0.5, 0.2),
-            'SEED_TEXT': (0.0, 0.0, 0.0)
+            'HOUSE_STROKE':    (0.2, 0.2, 0.2),
+            'SEED':            (0.55, 0.75, 0.0),
+            'SEED_STROKE':     (0.10, 0.5, 0.2)
         }
         
         self._context = None
@@ -117,19 +115,13 @@ class Board(Gtk.DrawingArea):
         # Initialize graphic components
         
         try:
-            cpath = os.path.dirname(__file__)
-            lpath = os.path.join(cpath, self.__LABELS_PATH)
-            wpath = os.path.join(cpath, self.__BACKGROUND_PATH)
-            lpath = os.path.normpath(lpath)
-            wpath = os.path.normpath(wpath)
-            
-            self._fontdesc = Pango.FontDescription('Sans Bold 14')
-            self._labels = Rsvg.Handle().new_from_file(lpath)
-            self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(wpath)
-            
-            self._background_path = wpath
+            self._labels = Rsvg.Handle().new_from_file(self.__LABELS_PATH)
+            self._numbers = Rsvg.Handle().new_from_file(self.__NUMBERS_PATH)
+            self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(self.__BACKGROUND_PATH)
+            self._background_path = self.__BACKGROUND_PATH
         except:
             self._labels = None
+            self._numbers = None
             self._wallpaper = None
         
         self.add_events(
@@ -324,13 +316,8 @@ class Board(Gtk.DrawingArea):
             # Draw a big numbered seed
             
             seeds = 9
-            self.draw_seed(context, x, y, 18.0)
-            self.draw_text(
-                context,
-                x, y,
-                str(number),
-                self._COLOR['SEED_TEXT']
-            )
+            self.draw_seed(context, x, y, 19.0)
+            self.draw_number(context, x, y, number)
         
         # Remaining seeds
         
@@ -363,21 +350,16 @@ class Board(Gtk.DrawingArea):
         context.translate(-x, -y)
         
         
-    def draw_text(self, context, x, y, text, color):
-        """Draws a text on the specified position"""
+    def draw_number(self, context, x, y, number):
+        """Draws a seed number"""
         
-        layout = PangoCairo.create_layout(context)
-        layout.set_font_description(self._fontdesc)
-        layout.set_text(text, -1)
-        
-        width, height = (n / Pango.SCALE for n in layout.get_size())
+        if self._numbers is None:
+            return
         
         context.translate(x, y)
         context.rotate(-self._angle)
-        context.move_to(width / -2.0, height / -2.0)
-        context.set_source_rgb(*color)
         
-        PangoCairo.show_layout(context, layout)
+        self._numbers.render_cairo_sub(context, '#%d' % number)
         
         context.rotate(self._angle)
         context.translate(-x, -y)
