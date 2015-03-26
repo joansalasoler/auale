@@ -3,7 +3,7 @@
 class App:
     
     NAME    = 'Aualé'
-    VERSION = '1.0.0'
+    VERSION = '1.1.0'
     ID      = 'com.joansala.auale'
     DOMAIN  = 'auale'
     ICON    = 'auale'

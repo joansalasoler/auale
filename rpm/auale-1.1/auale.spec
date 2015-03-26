@@ -1,5 +1,5 @@
 Name:             auale
-Version:          1.0
+Version:          1.1.0
 Release:          1%{?dist}
 Summary:          Play oware abapa against the computer or annotate your games
 Packager:	      Joan Sala Soler <contact@joansala.com>
@@ -18,7 +18,7 @@ Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
 
 Requires:         python >= 2.6
-Requires:         gtk3 >= 3.8
+Requires:         gtk3 >= 3.10
 Requires:         jre >= 1.6
 
 %if %{defined fedora}
