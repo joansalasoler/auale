@@ -49,18 +49,17 @@ PACKAGE_CONFIG = dict(
         'game',
         'gui',
         'uci',
-        'res',
         'sdl2',
     ],
     
     package_data = {
-        'res' : [
-            'engine/*',
-            'glade/*',
-            'image/*',
-            'other/*',
-            'sound/*',
-            'messages/*/*/*'
+        '.' : [
+            'res/engine/*',
+            'res/glade/*',
+            'res/image/*',
+            'res/other/*',
+            'res/sound/*',
+            'res/messages/*/*/*'
         ],
     },
     
