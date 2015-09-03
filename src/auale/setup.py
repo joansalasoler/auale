@@ -28,14 +28,13 @@ except:
 
 from distutils.core import setup
 from distutils import dir_util
-from gui import App
 
 # Distutils configuration
 
 PACKAGE_CONFIG = dict(
-    name             = App.DOMAIN,
-    version          = App.VERSION,
-    url              = App.HOME_URL,
+    name             = 'auale',
+    version          = '1.1.0',
+    url              = 'http://www.joansala.com/auale/',
     author           = 'Joan Sala Soler',
     author_email     = 'contact@joansala.com',
     license          = 'GPL3+',
