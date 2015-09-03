@@ -13,7 +13,7 @@ Priority: optional
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python-gi, python-gi-cairo,
  python-cairo, default-jre (>= 1.6) | java7-runtime (>= 1.6), gir1.2-rsvg-2.0,
- libglib2.0-bin, libgtk-3-0 (>= 3.8)
+ libglib2.0-bin, libgtk-3-0 (>= 3.10)
 Recommends: libsdl2-2.0-0, libsdl2-mixer-2.0-0,
 Description: Play oware abapa against the computer or annotate your games
  Aualé is a graphical user interface for the popular Oware Abapa board game. It
