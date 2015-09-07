@@ -132,6 +132,17 @@ def install_gettext(domain):
     gettext.install(domain, path, codeset = 'utf-8')
 
 
+def putenv(varname, value):
+    """Sets an environment variable making sure it is encoded as utf-8 if
+       the version of Python > 2 (see os.putenv)"""
+    
+    if sys.version_info.major > 2:
+        varname = varname.encode('utf-8')
+        value = value.encode('utf-8')
+    
+    os.putenv(varname, value)
+
+
 # With Python 3 use shutil
 
 try:

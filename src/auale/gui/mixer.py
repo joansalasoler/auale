@@ -80,10 +80,10 @@ class Mixer():
         
         # Set PulseAudio environment variables
         
-        if hasattr(os, "putenv"):
-            os.putenv("PULSE_PROP_application.name", App.NAME)
-            os.putenv("PULSE_PROP_application.icon_name", App.ICON)
-            os.putenv("PULSE_PROP_media.role", App.ROLE)
+        if hasattr(os, 'putenv'):
+            util.putenv('PULSE_PROP_application.name', App.NAME)
+            util.putenv('PULSE_PROP_application.icon_name', App.ICON)
+            util.putenv('PULSE_PROP_media.role', App.ROLE)
         
         # Initialize SDL audio and mixer
         
