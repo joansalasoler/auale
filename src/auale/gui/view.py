@@ -66,9 +66,11 @@ class GTKView(object):
         self._builder.add_from_file(GTKView.__GLADE_PATH)
         self._builder.connect_signals(self)
         
-        # Save references to the main objects
+        # References to the main objects
         
         self._hand_cursor = Gdk.Cursor(Gdk.CursorType.HAND2)
+        self._window_group = Gtk.WindowGroup()
+        
         self._main_window = self._builder.get_object('main_window')
         self._undo_group = self._builder.get_object('undo_actiongroup')
         self._redo_group = self._builder.get_object('redo_actiongroup')
@@ -77,6 +79,9 @@ class GTKView(object):
         self._rotate_action = self._builder.get_object('rotate_toggleaction')
         self._spinner = self._builder.get_object('spinner')
         self._infobar = self._builder.get_object('infobar')
+        self._about_dialog = self._builder.get_object('about_dialog')
+        self._newmatch_dialog = self._builder.get_object('newmatch_dialog')
+        self._properties_dialog = self._builder.get_object('properties_dialog')
         
         # Pack the objects together
         
@@ -91,6 +96,11 @@ class GTKView(object):
         self._canvas.grab_focus()
         self._canvas.set_board(self._match.get_board())
         
+        self._window_group.add_window(self._main_window)
+        self._window_group.add_window(self._about_dialog)
+        self._window_group.add_window(self._newmatch_dialog)
+        self._window_group.add_window(self._properties_dialog)
+        
         # Connect event signals for custom objects
         
         self._connect_signals(self._animator)
@@ -99,6 +109,10 @@ class GTKView(object):
         
         self._canvas.connect('leave-notify-event',
             self.on_canvas_leave_notify_event)
+        
+        self._about_dialog.connect('delete-event', self.hide_on_delete)
+        self._newmatch_dialog.connect('delete-event', self.hide_on_delete)
+        self._properties_dialog.connect('delete-event', self.hide_on_delete)
         
         # Let's start everything
         
@@ -204,6 +218,13 @@ class GTKView(object):
             item.activate()
     
     
+    def hide_on_delete(self, widget, event):
+        """Hides a window and prevents it from being destroyed"""
+        
+        widget.hide()
+        
+        return True
+    
     def user_can_move(self):
         """Returns true if the user is allowed to move"""
         
@@ -250,17 +271,53 @@ class GTKView(object):
     
     # Event handlers
     
-    def on_main_window_delete(self, widget, p):
+    def on_main_window_delete(self, widget, event):
         """Confirm to save changes if any"""
         
-        canceled = self.show_unsaved_confirmation(
+        if self._match_changed == False:
+            return False
+        
+        dialog = self.new_unsaved_confirmation_dialog(
             _("Do you want to save the match before closing?"),
             _("The current match has unsaved changes. Your changes will "
               "be lost if you don't save them."),
             _("Close without saving")
         )
         
-        return canceled
+        dialog.connect('response', self.on_main_window_delete_response)
+        dialog.show()
+        
+        return True
+    
+    
+    def on_main_window_delete_response(self, dialog, response):
+        """Main window delete-event response handler"""
+        
+        dialog.destroy()
+        
+        if response == Gtk.ResponseType.ACCEPT:
+            self._main_window.destroy()
+        elif response == Gtk.ResponseType.REJECT:
+            dialog = self.new_save_dialog()
+            
+            if self._filename is not None:
+                dialog.set_filename(self._filename)
+            
+            dialog.connect('response', self.on_save_and_quit_response)
+            dialog.show()
+    
+    
+    def on_save_and_quit_response(self, dialog, response):
+        """Main window save and quit dialog response handler"""
+        
+        if response == Gtk.ResponseType.ACCEPT:
+            self.save_match(dialog.get_filename())
+            
+            if self._match_changed == False:
+                dialog.destroy()
+                self._main_window.destroy()
+        elif response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
     
     
     def on_main_window_destroy(self, widget):
@@ -366,19 +423,55 @@ class GTKView(object):
     def on_new_activate(self, widget):
         """On new game activate"""
         
-        canceled = self.show_unsaved_confirmation(
+        if self._match_changed == False:
+            self._newmatch_dialog.show()
+            return
+        
+        dialog = self.new_unsaved_confirmation_dialog(
             _("Do you want to save the current match?"),
             _("The current match has unsaved changes. Your changes will "
               "be lost if you don't save them."),
             _("Discard unsaved changes")
         )
         
-        if canceled == True:
-            return
+        dialog.connect('response', self.on_new_activate_response)
+        dialog.show()
+    
+    
+    def on_new_activate_response(self, dialog, response):
+        """New match action response handler"""
         
-        dialog = self._builder.get_object("newmatch_dialog")
+        dialog.destroy()
         
-        if dialog.run() == Gtk.ResponseType.OK:
+        if response == Gtk.ResponseType.REJECT:
+            dialog = self.new_save_dialog()
+            
+            if self._filename is not None:
+                dialog.set_filename(self._filename)
+            
+            dialog.connect('response', self.on_save_and_new_response)
+            dialog.show()
+        elif response != Gtk.ResponseType.CANCEL:
+            self._newmatch_dialog.show()
+    
+    
+    def on_save_and_new_response(self, dialog, response):
+        """New match response handler"""
+        
+        if response == Gtk.ResponseType.ACCEPT:
+            self.save_match(dialog.get_filename())
+            
+            if self._match_changed == False:
+                dialog.destroy()
+                self._newmatch_dialog.show()
+        elif response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+    
+    
+    def on_newmatch_dialog_response(self, dialog, response):
+        """Handles the new match dialog responses"""
+        
+        if response == Gtk.ResponseType.OK:
             self._loop.abort()
             self._animator.stop_move()
             
@@ -394,47 +487,49 @@ class GTKView(object):
                 self._locked.clear()
             self._loop.request_move(player)
         
-        dialog.hide()
+        self._newmatch_dialog.hide()
     
     
     def on_open_activate(self, widget):
         """Open a match file dialog"""
         
-        canceled = self.show_unsaved_confirmation(
+        if self._match_changed == False:
+            return
+        
+        dialog = self.new_unsaved_confirmation_dialog(
             _("Do you want to save the current match?"),
             _("The current match has unsaved changes. Your changes will "
               "be lost if you don't save them."),
             _("Discard unsaved changes")
         )
         
-        if canceled == True:
-            return
+        dialog.connect('response', self.on_open_activate_response)
+        dialog.show()
+    
+    
+    def on_open_activate_response(self, dialog, response):
+        """Open match action response handler"""
         
-        self._main_window.set_sensitive(False)
+        dialog.destroy()
         
-        dialog = Gtk.FileChooserDialog(
-            title = _("Open an oware match"),
-            parent = self._main_window,
-            action = Gtk.FileChooserAction.OPEN,
-            buttons = (
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                Gtk.STOCK_OPEN, Gtk.ResponseType.ACCEPT
-            )
-        )
+        if response == Gtk.ResponseType.REJECT:
+            dialog = self.new_save_dialog()
+            
+            if self._filename is not None:
+                dialog.set_filename(self._filename)
+            
+            dialog.connect('response', self.on_save_and_open_response)
+            dialog.show()
+        elif response != Gtk.ResponseType.CANCEL:
+            dialog = self.new_open_dialog()
+            dialog.connect('response', self.on_open_dialog_response)
+            dialog.show()
+    
+    
+    def on_open_dialog_response(self, dialog, response):
+        """Handles open dialogs responses"""
         
-        oware_filter = Gtk.FileFilter()
-        oware_filter.set_name(_("Oware match files"))
-        oware_filter.add_mime_type('text/x-oware-ogn')
-        oware_filter.add_pattern('*.ogn')
-        
-        files_filter = Gtk.FileFilter()
-        files_filter.set_name(_("Any files"))
-        files_filter.add_pattern('*')
-        
-        dialog.add_filter(oware_filter)
-        dialog.add_filter(files_filter)
-        
-        if dialog.run() == Gtk.ResponseType.ACCEPT:
+        if response == Gtk.ResponseType.ACCEPT:
             self._loop.abort()
             self._animator.stop_move()
             self.open_match(dialog.get_filename())
@@ -442,8 +537,21 @@ class GTKView(object):
             self.refresh_view()
         
         dialog.destroy()
+    
+    
+    def on_save_and_open_response(self, dialog, response):
+        """Open match response handler"""
         
-        self._main_window.set_sensitive(True)
+        if response == Gtk.ResponseType.ACCEPT:
+            self.save_match(dialog.get_filename())
+            
+            if self._match_changed == False:
+                dialog.destroy()
+                dialog = self.new_open_dialog()
+                dialog.connect('response', self.on_open_dialog_response)
+                dialog.show()
+        elif response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
     
     
     def on_save_activate(self, widget):
@@ -454,52 +562,79 @@ class GTKView(object):
                 self.save_match(self._filename)
                 return
         
-        self._main_window.set_sensitive(False)
+        dialog = self.new_save_dialog()
         
-        dialog = Gtk.FileChooserDialog(
-            title = _("Save current match"),
-            parent = self._main_window,
-            action = Gtk.FileChooserAction.SAVE,
-            buttons = (
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                Gtk.STOCK_SAVE, Gtk.ResponseType.ACCEPT
-            )
-        )
+        if widget.get_name() == 'saveas_action':
+            if self._filename is not None:
+                dialog.set_filename(self._filename)
         
-        oware_filter = Gtk.FileFilter()
-        oware_filter.set_name(_("Oware match files"))
-        oware_filter.add_mime_type('text/x-oware-ogn')
-        oware_filter.add_pattern('*.ogn')
+        dialog.connect('response', self.on_save_dialog_response)
+        dialog.show()
+    
+    
+    def on_save_dialog_response(self, dialog, response):
+        """Handles save dialogs responses"""
         
-        dialog.add_filter(oware_filter)
-        dialog.set_do_overwrite_confirmation(True)
-        dialog.set_current_name(_("untitled.ogn"))
-        
-        if widget.get_name() == 'saveas_action' \
-        and self._filename is not None:
-            dialog.set_filename(self._filename)
-        
-        if dialog.run() == Gtk.ResponseType.ACCEPT:
+        if response == Gtk.ResponseType.ACCEPT:
             self.save_match(dialog.get_filename())
         
-        dialog.destroy()
-        
-        self._main_window.set_sensitive(True)
+        if response == Gtk.ResponseType.CANCEL \
+        or self._match_changed == False:
+            dialog.destroy()
     
     
     def on_open_recent_item_activated(self, widget):
         """Open a recently used file"""
         
-        canceled = self.show_unsaved_confirmation(
+        if self._match_changed == False:
+            self.open_recent_match()
+            return
+        
+        dialog = self.new_unsaved_confirmation_dialog(
             _("Do you want to save the current match?"),
             _("The current match has unsaved changes. Your changes will "
               "be lost if you don't save them."),
             _("Discard unsaved changes")
         )
         
-        if canceled == True:
-            return
+        dialog.connect('response', self.on_open_recent_response)
+        dialog.show()
+    
+    
+    def on_open_recent_response(self, dialog, response):
+        """Open recent match action response handler"""
         
+        dialog.destroy()
+        
+        if response == Gtk.ResponseType.REJECT:
+            dialog = self.new_save_dialog()
+            
+            if self._filename is not None:
+                dialog.set_filename(self._filename)
+            
+            dialog.connect('response', self.on_save_and_open_recent)
+            dialog.show()
+        elif response != Gtk.ResponseType.CANCEL:
+            self.open_recent_match()
+    
+    
+    def on_save_and_open_recent(self, dialog, response):
+        """Open match response handler"""
+        
+        if response == Gtk.ResponseType.ACCEPT:
+            self.save_match(dialog.get_filename())
+            
+            if self._match_changed == False:
+                dialog.destroy()
+                self.open_recent_match()
+        elif response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+    
+    
+    def open_recent_match(self):
+        """Open the last chosen recent match file"""
+        
+        widget = self._builder.get_object('open_recent_action')
         uri = widget.get_current_uri()
         path = GLib.filename_from_uri(uri)[0]
         
@@ -593,7 +728,6 @@ class GTKView(object):
         
         protected_tags = ('FEN', 'Result', 'Variant')
         
-        dialog = self._builder.get_object('properties_dialog')
         store = self._builder.get_object('properties_liststore')
         view = self._builder.get_object('properties_treeview')
         tags = self._match.get_tags()
@@ -607,7 +741,18 @@ class GTKView(object):
         view.set_cursor(0)
         view.grab_focus()
         
-        if dialog.run() == Gtk.ResponseType.ACCEPT:
+        self._properties_dialog.show()
+    
+    
+    def on_properties_dialog_response(self, widget, response):
+        """Handles the properties dialog responses"""
+        
+        if response == Gtk.ResponseType.ACCEPT:
+            protected_tags = ('FEN', 'Result', 'Variant')
+            
+            store = self._builder.get_object('properties_liststore')
+            tags = self._match.get_tags()
+            
             path = 0
             
             for tag, value in tags:
@@ -626,7 +771,7 @@ class GTKView(object):
             
             self.refresh_infobar()
         
-        dialog.hide()
+        self._properties_dialog.hide()
     
     
     def on_properties_treeview_row_activated(self, widget, path, column):
@@ -649,13 +794,13 @@ class GTKView(object):
     def on_about_activate(self, widget):
         """Shows the about dialog"""
         
-        self._main_window.set_sensitive(False)
+        self._about_dialog.show()
+    
+    
+    def on_about_dialog_response(self, widget, response):
+        """Handles the about dialog response"""
         
-        dialog = self._builder.get_object('about_dialog')
-        dialog.run()
-        dialog.hide()
-        
-        self._main_window.set_sensitive(True)
+        self._about_dialog.hide()
     
     
     def on_move_now_activate(self, widget):
@@ -776,8 +921,7 @@ class GTKView(object):
             item = self._builder.get_object('both_side_radiomenuitem')
             item.set_active(True)
         
-        dialog = self._builder.get_object('newmatch_dialog')
-        dialog.response(Gtk.ResponseType.OK)
+        self._newmatch_dialog.response(Gtk.ResponseType.OK)
     
     
     def on_rotate_animation_finished(self, animator):
@@ -1011,25 +1155,39 @@ class GTKView(object):
     def show_info_dialog(self, title, message, text = None):
         """Shows an information message to the user"""
         
-        self.show_message_dialog(
+        dialog = self.new_message_dialog(
             Gtk.MessageType.INFO, title, message, text)
+        
+        dialog.connect('response', self.on_message_dialog_response)
+        dialog.show()
     
     
     def show_error_dialog(self, title, message, text = None):
         """Shows an error message to the user"""
         
-        self.show_message_dialog(
+        dialog = self.new_message_dialog(
             Gtk.MessageType.ERROR, title, message, text)
+        
+        dialog.connect('response', self.on_message_dialog_response)
+        dialog.show()
     
     
-    def show_message_dialog(self, type, title, message, text = None):
-        """Shows a message dialog to the user"""
+    def on_message_dialog_response(self, dialog, response):
+        """Default handler for message dialogs"""
+        
+        dialog.destroy()
+    
+    
+    def new_message_dialog(self, type, title, message, text = None):
+        """Creates a new message dialog"""
         
         dialog = Gtk.MessageDialog(
             parent = self._main_window,
             flags = Gtk.DialogFlags.MODAL,
             buttons = Gtk.ButtonsType.OK
         )
+        
+        self._window_group.add_window(dialog)
         
         dialog.set_property('message-type', type)
         dialog.set_property('title', title)
@@ -1044,18 +1202,19 @@ class GTKView(object):
         if text is not None:
             dialog.set_property('secondary-text', text)
         
-        dialog.run()
-        dialog.destroy()
+        return dialog
     
     
-    def show_confirmation(self, title, message, text, discard):
-        """Shows a confirmation dialog"""
+    def new_confirmation_dialog(self, title, message, text, discard):
+        """Creates a new confirmation dialog"""
         
         dialog = Gtk.MessageDialog(
             parent = self._main_window,
             flags = Gtk.DialogFlags.MODAL,
             message_type = Gtk.MessageType.QUESTION,
         )
+        
+        self._window_group.add_window(dialog)
         
         dialog.add_button(discard, Gtk.ResponseType.ACCEPT)
         dialog.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
@@ -1071,31 +1230,77 @@ class GTKView(object):
             if isinstance(child, Gtk.Label):
                 child.set_property("max-width-chars", 48)
         
-        response = dialog.run()
-        dialog.destroy()
-        
-        return response
+        return dialog
         
         
-    def show_unsaved_confirmation(self, message, text, discard):
-        """Shows a confirmation dialog to save current file"""
+    def new_unsaved_confirmation_dialog(self, message, text, discard):
+        """Creates a new unsaved-match confirmation dialog"""
         
-        if self._match_changed == False:
-            return False
-        
-        response = self.show_confirmation(
+        dialog = self.new_confirmation_dialog(
             _("Match with unsaved changes"),
             message, text, discard
         )
         
-        if response == Gtk.ResponseType.ACCEPT:
-            return False
-        elif response == Gtk.ResponseType.REJECT:
-            action = self._builder.get_object('saveas_action')
-            action.activate()
-            return self._match_changed
+        return dialog
+    
+    
+    def new_open_dialog(self):
+        """Create a new open match file dialog"""
         
-        return True
+        dialog = Gtk.FileChooserDialog(
+            title = _("Open an oware match"),
+            parent = self._main_window,
+            action = Gtk.FileChooserAction.OPEN,
+            buttons = (
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OPEN, Gtk.ResponseType.ACCEPT
+            )
+        )
+        
+        self._window_group.add_window(dialog)
+        
+        oware_filter = Gtk.FileFilter()
+        oware_filter.set_name(_("Oware match files"))
+        oware_filter.add_mime_type('text/x-oware-ogn')
+        oware_filter.add_pattern('*.ogn')
+        
+        files_filter = Gtk.FileFilter()
+        files_filter.set_name(_("Any files"))
+        files_filter.add_pattern('*')
+        
+        dialog.add_filter(oware_filter)
+        dialog.add_filter(files_filter)
+        dialog.set_modal(True)
+        
+        return dialog
+    
+    
+    def new_save_dialog(self):
+        """Create a new save match file dialog"""
+        
+        dialog = Gtk.FileChooserDialog(
+            title = _("Save current match"),
+            parent = self._main_window,
+            action = Gtk.FileChooserAction.SAVE,
+            buttons = (
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_SAVE, Gtk.ResponseType.ACCEPT
+            )
+        )
+        
+        self._window_group.add_window(dialog)
+        
+        oware_filter = Gtk.FileFilter()
+        oware_filter.set_name(_("Oware match files"))
+        oware_filter.add_mime_type('text/x-oware-ogn')
+        oware_filter.add_pattern('*.ogn')
+        
+        dialog.add_filter(oware_filter)
+        dialog.set_do_overwrite_confirmation(True)
+        dialog.set_current_name(_("untitled.ogn"))
+        dialog.set_modal(True)
+        
+        return dialog
     
     
     # Match manipulation methods

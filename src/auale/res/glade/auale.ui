@@ -1,13 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkRecentFilter" id="match_recentfilter">
-    <mime-types>
-      <mime-type>text/x-oware-ogn</mime-type>
-    </mime-types>
-    <patterns>
-      <pattern>*.ogn</pattern>
-    </patterns>
+  <requires lib="gtk+" version="3.6"/>
+  <object class="GtkInfoBar" id="infobar">
+    <property name="app_paintable">True</property>
+    <property name="can_focus">False</property>
+    <property name="no_show_all">True</property>
+    <property name="valign">start</property>
+    <child internal-child="action_area">
+      <object class="GtkButtonBox" id="infobar-action_area">
+        <property name="can_focus">False</property>
+        <property name="valign">center</property>
+        <property name="spacing">5</property>
+        <property name="layout_style">start</property>
+        <child>
+          <object class="GtkLabel" id="infobar-links">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="use_markup">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+            <property name="non_homogeneous">True</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child internal-child="content_area">
+      <object class="GtkBox" id="infobar-content_area">
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkImage" id="infobar-image">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-dialog-info</property>
+            <property name="use_fallback">True</property>
+            <property name="icon_size">1</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="infobar-label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="use_markup">True</property>
+            <property name="ellipsize">end</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <style>
+      <class name="match-infobar"/>
+    </style>
   </object>
   <object class="GtkAccelGroup" id="main_accelgroup"/>
   <object class="GtkActionGroup" id="help_actiongroup">
@@ -95,30 +162,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkActionGroup" id="open_actiongroup">
-    <property name="accel_group">main_accelgroup</property>
-    <child>
-      <object class="GtkAction" id="open_action">
-        <property name="label" translatable="yes">_Open match...</property>
-        <property name="short_label" translatable="yes">Open match</property>
-        <property name="tooltip" translatable="yes">Opens a match file</property>
-        <property name="stock_id">gtk-open</property>
-        <signal name="activate" handler="on_open_activate" swapped="no"/>
-      </object>
-      <accelerator key="o" modifiers="GDK_CONTROL_MASK"/>
-    </child>
-    <child>
-      <object class="GtkRecentAction" id="open_recent_action">
-        <property name="label" translatable="yes">Open recent</property>
-        <property name="short_label" translatable="yes">Open recent</property>
-        <property name="tooltip" translatable="yes">Opens a recently used match file</property>
-        <property name="filter">match_recentfilter</property>
-        <property name="limit">12</property>
-        <property name="sort_type">mru</property>
-        <signal name="item-activated" handler="on_open_recent_item_activated" swapped="no"/>
-      </object>
-    </child>
-  </object>
   <object class="GtkActionGroup" id="redo_actiongroup">
     <property name="sensitive">False</property>
     <property name="accel_group">main_accelgroup</property>
@@ -190,128 +233,36 @@
       <accelerator key="Page_Up"/>
     </child>
   </object>
-  <object class="GtkAboutDialog" id="about_dialog">
-    <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">About Aualé</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="type_hint">dialog</property>
-    <property name="transient_for">main_window</property>
-    <property name="program_name">Aualé</property>
-    <property name="version">1.1.0</property>
-    <property name="copyright">Copyright © 2014 Joan Sala Soler</property>
-    <property name="comments" translatable="yes">A graphical user interface for oware</property>
-    <property name="license" translatable="no">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</property>
-    <property name="authors">Joan Sala Soler &lt;contact@joansala.com&gt;</property>
-    <property name="artists">Arnau Sala Soler &lt;contact@arnausalasoler.com&gt; (sound recording)
-Accademia di Belle Arti di Urbino &lt;direzione@accademiadiurbino.it&gt; (titillum typeface)
-Dalton Maag &lt;info@daltonmaag.com&gt; (ubuntu typeface)
-Daniel Foré &lt;Daniel.p.Fore@gmail.com&gt; (elementary icons)
-Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
-</property>
-    <property name="translator-credits">Joan Sala Soler &lt;contact@joansala.com&gt;</property>
-    <property name="logo">../image/logo.svg</property>
-    <property name="wrap_license">True</property>
-    <property name="website">http://www.joansala.com/auale/</property>
-    <property name="website-label">http://www.joansala.com/auale/</property>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="aboutdialog-vbox">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="aboutdialog-action_area">
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
+  <object class="GtkRecentFilter" id="match_recentfilter">
+    <mime-types>
+      <mime-type>text/x-oware-ogn</mime-type>
+    </mime-types>
+    <patterns>
+      <pattern>*.ogn</pattern>
+    </patterns>
   </object>
-  <object class="GtkInfoBar" id="infobar">
-    <property name="app_paintable">True</property>
-    <property name="can_focus">False</property>
-    <property name="no_show_all">True</property>
-    <property name="valign">start</property>
-    <style>
-      <class name="match-infobar"/>
-    </style>
-    <child internal-child="content_area">
-      <object class="GtkBox" id="infobar-content_area">
-        <property name="can_focus">False</property>
-        <property name="halign">start</property>
-        <property name="spacing">10</property>
-        <child>
-          <object class="GtkImage" id="infobar-image">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-dialog-info</property>
-            <property name="use_fallback">True</property>
-            <property name="icon-size">1</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="infobar-label">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="use_markup">True</property>
-            <property name="ellipsize">end</property>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
+  <object class="GtkActionGroup" id="open_actiongroup">
+    <property name="accel_group">main_accelgroup</property>
+    <child>
+      <object class="GtkAction" id="open_action">
+        <property name="label" translatable="yes">_Open match...</property>
+        <property name="short_label" translatable="yes">Open match</property>
+        <property name="tooltip" translatable="yes">Opens a match file</property>
+        <property name="stock_id">gtk-open</property>
+        <signal name="activate" handler="on_open_activate" swapped="no"/>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
+      <accelerator key="o" modifiers="GDK_CONTROL_MASK"/>
     </child>
-    <child internal-child="action_area">
-      <object class="GtkButtonBox" id="infobar-action_area">
-        <property name="can_focus">False</property>
-        <property name="valign">center</property>
-        <property name="spacing">5</property>
-        <property name="layout_style">start</property>
-        <child>
-          <object class="GtkLabel" id="infobar-links">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="use_markup">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-            <property name="non_homogeneous">True</property>
-          </packing>
-        </child>
+    <child>
+      <object class="GtkRecentAction" id="open_recent_action">
+        <property name="label" translatable="yes">Open recent</property>
+        <property name="short_label" translatable="yes">Open recent</property>
+        <property name="tooltip" translatable="yes">Opens a recently used match file</property>
+        <property name="filter">match_recentfilter</property>
+        <property name="limit">12</property>
+        <property name="sort_type">mru</property>
+        <signal name="item-activated" handler="on_open_recent_item_activated" swapped="no"/>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
   <object class="GtkApplicationWindow" id="main_window">
@@ -328,9 +279,9 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
     <accel-groups>
       <group name="main_accelgroup"/>
     </accel-groups>
+    <signal name="delete-event" handler="on_main_window_delete" swapped="no"/>
     <signal name="destroy" handler="on_main_window_destroy" swapped="no"/>
     <signal name="key-press-event" handler="on_main_window_key_press_event" swapped="no"/>
-    <signal name="delete-event" handler="on_main_window_delete" swapped="no"/>
     <child>
       <object class="GtkVBox" id="window_vbox">
         <property name="visible">True</property>
@@ -389,7 +340,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="limit">12</property>
-                            <property name="related_action">open_recent_action</property>
                             <property name="show_tips">True</property>
                           </object>
                         </child>
@@ -446,8 +396,8 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                        <accelerator key="q" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                         <signal name="activate" handler="on_quit_activate" swapped="no"/>
+                        <accelerator key="q" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                   </object>
@@ -728,9 +678,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
           <object class="GtkToolbar" id="toolbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <style>
-              <class name="primary-toolbar"/>
-            </style>
             <child>
               <object class="GtkToolButton" id="new_toolbutton">
                 <property name="related_action">new_action</property>
@@ -753,9 +700,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                 <property name="tooltip_text" translatable="yes">Opens a match file</property>
                 <property name="label" translatable="yes">Open match</property>
                 <property name="use_underline">True</property>
-                <style>
-                  <class name="linked"/>
-                </style>
                 <child type="menu">
                   <object class="GtkMenu" id="actions_menu">
                     <property name="visible">True</property>
@@ -818,9 +762,13 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="linked"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="homogeneous">False</property>
               </packing>
             </child>
             <child>
@@ -908,11 +856,61 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <style>
+              <class name="primary-toolbar"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="about_dialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">About Aualé</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="transient_for">main_window</property>
+    <property name="program_name">Aualé</property>
+    <property name="version">1.1.0</property>
+    <property name="copyright">Copyright © 2014-2015 Joan Sala Soler</property>
+    <property name="comments" translatable="yes">A graphical user interface for oware</property>
+    <property name="website">http://www.joansala.com/auale/</property>
+    <property name="website_label">http://www.joansala.com/auale/</property>
+    <property name="authors">Joan Sala Soler &lt;contact@joansala.com&gt;</property>
+    <property name="translator_credits">Joan Sala Soler &lt;contact@joansala.com&gt;</property>
+    <property name="artists">Arnau Sala Soler &lt;contact@arnausalasoler.com&gt; (sound recording)
+Accademia di Belle Arti di Urbino &lt;direzione@accademiadiurbino.it&gt; (titillum typeface)
+Dalton Maag &lt;info@daltonmaag.com&gt; (ubuntu typeface)
+Daniel Foré &lt;Daniel.p.Fore@gmail.com&gt; (elementary icons)
+Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
+</property>
+    <property name="logo">../image/logo.svg</property>
+    <property name="license_type">gpl-3-0</property>
+    <signal name="response" handler="on_about_dialog_response" swapped="no"/>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="aboutdialog-vbox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="aboutdialog-action_area">
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
@@ -932,6 +930,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
     <property name="type_hint">dialog</property>
     <property name="transient_for">main_window</property>
     <property name="has_resize_grip">False</property>
+    <signal name="response" handler="on_newmatch_dialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="newmatchdialog-vbox">
         <property name="can_focus">False</property>
@@ -993,9 +992,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <property name="has_default">True</property>
                     <property name="receives_default">True</property>
                     <property name="hexpand">True</property>
-                    <style>
-                      <class name="option-button"/>
-                    </style>
                     <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="south-hbox">
@@ -1062,6 +1058,9 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="option-button"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -1077,9 +1076,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <property name="can_default">True</property>
                     <property name="receives_default">True</property>
                     <property name="hexpand">True</property>
-                    <style>
-                      <class name="option-button"/>
-                    </style>
                     <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="north-hbox">
@@ -1146,6 +1142,9 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="option-button"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -1161,9 +1160,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <property name="can_default">True</property>
                     <property name="receives_default">True</property>
                     <property name="hexpand">True</property>
-                    <style>
-                      <class name="option-button"/>
-                    </style>
                     <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="watch-hbox">
@@ -1230,6 +1226,9 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="option-button"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -1245,9 +1244,6 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                     <property name="can_default">True</property>
                     <property name="receives_default">True</property>
                     <property name="hexpand">True</property>
-                    <style>
-                      <class name="option-button"/>
-                    </style>
                     <signal name="clicked" handler="on_newgame_button_clicked" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="edit-hbox">
@@ -1314,6 +1310,9 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="option-button"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -1359,6 +1358,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
     <property name="type_hint">dialog</property>
     <property name="transient_for">main_window</property>
     <property name="has_resize_grip">False</property>
+    <signal name="response" handler="on_properties_dialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="propertiesdialog-vbox">
         <property name="can_focus">False</property>
