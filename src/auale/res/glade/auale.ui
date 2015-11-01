@@ -886,8 +886,17 @@
     <property name="comments" translatable="yes">A graphical user interface for oware</property>
     <property name="website">http://www.joansala.com/auale/</property>
     <property name="website_label">http://www.joansala.com/auale/</property>
-    <property name="authors">Joan Sala Soler &lt;contact@joansala.com&gt;</property>
-    <property name="translator_credits">Joan Sala Soler &lt;contact@joansala.com&gt;</property>
+    <property name="authors">Joan Sala Soler &lt;contact@joansala.com&gt;
+</property>
+    <property name="translator_credits">Launchpad Translators http://translations.launchpad.net/auale
+abuyop http://launchpad.net/~abuyop
+Andi Chandler http://launchpad.net/~bing
+fossfreedom http://launchpad.net/~fossfreedom
+Jean-Marc http://launchpad.net/~m-balthazar
+Joan Sala Soler http://launchpad.net/~joansalasoler
+Xuacu Saturio http://launchpad.net/~xuacusk8
+Yuri Chornoivan http://launchpad.net/~yurchor-gmail
+</property>
     <property name="artists">Arnau Sala Soler &lt;contact@arnausalasoler.com&gt; (sound recording)
 Accademia di Belle Arti di Urbino &lt;direzione@accademiadiurbino.it&gt; (titillum typeface)
 Dalton Maag &lt;info@daltonmaag.com&gt; (ubuntu typeface)

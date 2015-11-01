@@ -1,4 +1,4 @@
-# Indonesian translation for auale
+# Thai translation for auale
 # Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the auale package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
@@ -6,194 +6,194 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: auale\n"
-"Report-Msgid-Bugs-To: contact@joansala.com\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-09-08 22:00+0200\n"
-"PO-Revision-Date: 2015-09-06 13:16+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"PO-Revision-Date: 2015-10-01 07:24+0000\n"
+"Last-Translator: Rockworld <sumoisrock@gmail.com>\n"
+"Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-11-01 10:20+0000\n"
 "X-Generator: Launchpad (build 17838)\n"
-"Language: id\n"
 
 #: src/auale/res/glade/auale.ui:203
 msgid "A graphical user interface for oware"
-msgstr ""
+msgstr "ส่วนติดต่อผู้ใช้สำหรับ oware"
 
 #: src/auale/res/glade/auale.ui:1298
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr ""
+"คู่ใหม่จะถูกสร้างขึ้นไว้ในที่ที่คุณสามารถเปลี่ยนไปเป็นผู้เล่นคนอื่นได้"
 
 #: src/auale/res/glade/auale.ui:196
 msgid "About Aualé"
-msgstr ""
+msgstr "เกี่ยวกับเกม Aualé"
 
 #: src/auale/gui/view.py:431
 msgid "Any files"
-msgstr ""
+msgstr "บางไฟล์"
 
 #: src/auale/res/glade/auale.ui:58 src/auale/res/glade/auale.ui:472
 #: src/auale/res/glade/auale.ui:768
 msgid "Asks the engine to make a move"
-msgstr ""
+msgstr "ร้องขอให้เครื่องจำลองผู้เล่นทำการเคลื่อนย้าย"
 
 #: src/auale/res/glade/auale.ui:67 src/auale/res/glade/auale.ui:480
 #: src/auale/res/glade/auale.ui:777
 msgid "Asks the engine to stop thinking"
-msgstr ""
+msgstr "ร้องขอให้เครื่องจำลองผู้เล่นหยุดคิด"
 
 #: src/auale/res/glade/auale.ui:19
 msgid "Aualé home page"
-msgstr ""
+msgstr "หน้าหลักของ Aualé"
 
 #: src/auale/gui/view.py:1160
 msgid "Cannot save current match"
-msgstr ""
+msgstr "ไม่สามารถบันทึกคู่ปัจจุบันได้"
 
 #: src/auale/gui/view.py:260
 msgid "Close without saving"
-msgstr ""
+msgstr "ออกจากเกมโดยไม่บันทึกข้อมูล"
 
 #: src/auale/res/glade/auale.ui:517
 msgid "Computer _player"
-msgstr ""
+msgstr "คอมพิวเตอร์จำลองผู้เล่นเกม"
 
 #: src/auale/gui/view.py:182
 msgid "Computer player is disabled"
-msgstr ""
+msgstr "คอมพิวเตอร์จำลองผู้เล่นถูกปิดอยู่"
 
 #: src/auale/gui/view.py:181 src/auale/gui/view.py:184
 msgid "Could not start the engine"
-msgstr ""
+msgstr "ไม่สามารถเริ่มเครื่องจำลองผู้เล่นได้"
 
 #: src/auale/game/match.py:31
 msgid "Date"
-msgstr ""
+msgstr "วันที่"
 
 #: src/auale/game/match.py:31
 msgid "Description"
-msgstr ""
+msgstr "รายละเอียด"
 
 #: src/auale/res/glade/auale.ui:84
 msgid "Disable sound"
-msgstr ""
+msgstr "ปิดระบบเสียง"
 
 #: src/auale/res/glade/auale.ui:85 src/auale/res/glade/auale.ui:656
 msgid "Disables sound effects"
-msgstr ""
+msgstr "ปิดเอฟเฟกต์เสียง"
 
 #: src/auale/gui/view.py:373 src/auale/gui/view.py:407
 #: src/auale/gui/view.py:497
 msgid "Discard unsaved changes"
-msgstr ""
+msgstr "ละทิ้งการเปลี่ยนแปลงที่ยังไม่ได้บันทึก"
 
 #: src/auale/gui/view.py:370 src/auale/gui/view.py:404
 #: src/auale/gui/view.py:494
 msgid "Do you want to save the current match?"
-msgstr ""
+msgstr "คุณต้องการบันทึกคู่ปัจจุบันหรือไม่"
 
 #: src/auale/gui/view.py:257
 msgid "Do you want to save the match before closing?"
-msgstr ""
+msgstr "คุณต้องการบันทึกคู่ปัจจุบันก่อนปิดโปรแกรมหรือไม่"
 
 #: src/auale/res/glade/auale.ui:626
 msgid "E_xpert"
-msgstr ""
+msgstr "โหมด_ผู้เชี่ยวชาญ"
 
 #: src/auale/res/glade/auale.ui:1280
 msgid "Edit a match"
-msgstr ""
+msgstr "แก้ไขคู่"
 
 #: src/auale/res/glade/auale.ui:93 src/auale/res/glade/auale.ui:800
 msgid "Edit current match tags"
-msgstr ""
+msgstr "แก้ไขป้ายชื่อของคู่ปัจจุบัน"
 
 #: src/auale/uci/client.py:545
 msgid "Engine is not responding"
-msgstr ""
+msgstr "เครื่องจำลองผู้เล่นไม่มีการตอบสนอง"
 
 #: src/auale/gui/view.py:807
 msgid "Error"
-msgstr ""
+msgstr "เกิดข้อผิดพลาด"
 
 #: src/auale/gui/view.py:1137
 msgid "Error opening match"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการเปิดคู่"
 
 #: src/auale/gui/view.py:1159
 msgid "Error saving match"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการบันทึกคู่"
 
 #: src/auale/game/match.py:31
 msgid "Event"
-msgstr ""
+msgstr "เหตุการณ์"
 
 #: src/auale/res/glade/auale.ui:175 src/auale/res/glade/auale.ui:842
 msgid "First"
-msgstr ""
+msgstr "แรกสุด"
 
 #: src/auale/res/glade/auale.ui:27
 msgid "Get answers to your questions"
-msgstr ""
+msgstr "ขอรับคำตอบเกี่ยวกับคำถามของคุณ"
 
 #: src/auale/res/glade/auale.ui:176 src/auale/res/glade/auale.ui:841
 msgid "Goes to the first position"
-msgstr ""
+msgstr "ไปยังจุดแรก"
 
 #: src/auale/res/glade/auale.ui:129 src/auale/res/glade/auale.ui:883
 msgid "Goes to the last position"
-msgstr ""
+msgstr "ไปยังจุดสุดท้าย"
 
 #: src/auale/res/glade/auale.ui:139 src/auale/res/glade/auale.ui:869
 msgid "Goes to the next position"
-msgstr ""
+msgstr "ไปยังจุดต่อไป"
 
 #: src/auale/res/glade/auale.ui:186 src/auale/res/glade/auale.ui:855
 msgid "Goes to the previous position"
-msgstr ""
+msgstr "ไปยังจุดที่แล้ว"
 
 #: src/auale/res/glade/auale.ui:26
 msgid "Help"
-msgstr ""
+msgstr "วิธีใช้"
 
 #: src/auale/res/glade/auale.ui:18
 msgid "Home"
-msgstr ""
+msgstr "ตำแหน่งหลัก"
 
 #: src/auale/gui/view.py:236
 msgid "How to play oware"
-msgstr ""
+msgstr "วิธีเล่น oware"
 
 #: src/auale/res/glade/auale.ui:128 src/auale/res/glade/auale.ui:884
 msgid "Last"
-msgstr ""
+msgstr "ล่าสุด"
 
 #: src/auale/res/glade/auale.ui:35 src/auale/res/glade/auale.ui:814
 msgid "Learn how to play oware"
-msgstr ""
+msgstr "เรียนรู้วิธีการเล่น oware"
 
 #: src/auale/gui/view.py:913
 msgid "Match"
-msgstr ""
+msgstr "เข้าคู่"
 
 #: src/auale/gui/view.py:1138
 msgid "Match file cannot be opened"
-msgstr ""
+msgstr "ไม่สามารถเปิดไฟล์คู่ได้"
 
 #: src/auale/res/glade/auale.ui:1354
 msgid "Match tags"
-msgstr ""
+msgstr "จับคู่แท็ก"
 
 #: src/auale/gui/view.py:1087
 msgid "Match with unsaved changes"
-msgstr ""
+msgstr "จับคู่ด้วยการเปลี่ยนแปลงที่ยังไม่ได้บันทึก"
 
 #: src/auale/res/glade/auale.ui:57
 msgid "Move now"
-msgstr ""
+msgstr "ย้ายไปเดี๋ยวนี้"
 
 #: src/auale/res/glade/auale.ui:564
 msgid "N_either player"
@@ -201,15 +201,15 @@ msgstr ""
 
 #: src/auale/res/glade/auale.ui:47 src/auale/res/glade/auale.ui:740
 msgid "New match"
-msgstr ""
+msgstr "การจับคู่ใหม่"
 
 #: src/auale/res/glade/auale.ui:138 src/auale/res/glade/auale.ui:870
 msgid "Next"
-msgstr ""
+msgstr "ถัดไป"
 
 #: src/auale/game/match.py:31
 msgid "North"
-msgstr ""
+msgstr "เหนือ"
 
 #: src/auale/gui/view.py:927
 msgid "North has won"
@@ -217,39 +217,39 @@ msgstr ""
 
 #: src/auale/game/match.py:366
 msgid "Not a valid match file"
-msgstr ""
+msgstr "ไม่ใช่แฟ้มคู่ที่ถูกต้อง"
 
 #: src/auale/gui/view.py:416
 msgid "Open an oware match"
-msgstr ""
+msgstr "เปิดคู่ของ oware"
 
 #: src/auale/res/glade/auale.ui:103 src/auale/res/glade/auale.ui:754
 msgid "Open match"
-msgstr ""
+msgstr "เปิดคู่"
 
 #: src/auale/res/glade/auale.ui:112 src/auale/res/glade/auale.ui:113
 msgid "Open recent"
-msgstr ""
+msgstr "เปิดรายการล่าสุด"
 
 #: src/auale/res/glade/auale.ui:104 src/auale/res/glade/auale.ui:753
 msgid "Opens a match file"
-msgstr ""
+msgstr "เปิดไฟล์คู่"
 
 #: src/auale/res/glade/auale.ui:114 src/auale/res/glade/auale.ui:383
 msgid "Opens a recently used match file"
-msgstr ""
+msgstr "เปิดไฟล์คู่ที่เพิ่งใช้"
 
 #: src/auale/gui/view.py:426 src/auale/gui/view.py:470
 msgid "Oware match files"
-msgstr ""
+msgstr "ไฟล์คู่ของ Oware"
 
 #: src/auale/res/glade/auale.ui:1112
 msgid "Play as north"
-msgstr ""
+msgstr "เล่นเป็น North"
 
 #: src/auale/res/glade/auale.ui:1028
 msgid "Play as south"
-msgstr ""
+msgstr "เล่นเป็น South"
 
 #: src/auale/gui/view.py:931
 msgid "Players gathered an equal number of seeds"
@@ -257,32 +257,32 @@ msgstr ""
 
 #: src/auale/res/glade/auale.ui:185 src/auale/res/glade/auale.ui:856
 msgid "Previous"
-msgstr ""
+msgstr "ก่อนหน้านี้"
 
 #: src/auale/res/glade/auale.ui:380
 msgid "Recent _files"
-msgstr ""
+msgstr "_ไฟล์ล่าสุด"
 
 #: src/auale/game/match.py:31
 msgid "Result"
-msgstr ""
+msgstr "ผลลัพธ์"
 
 #: src/auale/res/glade/auale.ui:75
 msgid "Rotate"
-msgstr ""
+msgstr "หมุนภาพ"
 
 #: src/auale/res/glade/auale.ui:76 src/auale/res/glade/auale.ui:648
 #: src/auale/res/glade/auale.ui:792
 msgid "Rotates the board"
-msgstr ""
+msgstr "หมุนกระดาน"
 
 #: src/auale/game/match.py:31
 msgid "Round"
-msgstr ""
+msgstr "ปัดเศษ"
 
 #: src/auale/res/glade/auale.ui:34
 msgid "Rules"
-msgstr ""
+msgstr "กฏ"
 
 #: src/auale/res/glade/auale.ui:33
 msgid "Rules of _oware"
@@ -290,7 +290,7 @@ msgstr ""
 
 #: src/auale/res/glade/auale.ui:151
 msgid "Save"
-msgstr ""
+msgstr "บันทึก"
 
 #: src/auale/res/glade/auale.ui:150
 msgid "Save _match"
@@ -298,7 +298,7 @@ msgstr ""
 
 #: src/auale/res/glade/auale.ui:161
 msgid "Save as..."
-msgstr ""
+msgstr "บันทึกเป็น..."
 
 #: src/auale/gui/view.py:460
 msgid "Save current match"
@@ -322,11 +322,11 @@ msgstr ""
 
 #: src/auale/game/match.py:31
 msgid "Site"
-msgstr ""
+msgstr "เว็บไซต์"
 
 #: src/auale/game/match.py:31
 msgid "South"
-msgstr ""
+msgstr "ใต้"
 
 #: src/auale/gui/view.py:924
 msgid "South has won"
@@ -346,7 +346,7 @@ msgstr ""
 
 #: src/auale/res/glade/auale.ui:1436
 msgid "Tag"
-msgstr ""
+msgstr "แท็ก"
 
 #: src/auale/res/glade/auale.ui:1214
 msgid ""
@@ -374,7 +374,7 @@ msgstr ""
 
 #: src/auale/gui/view.py:1140
 msgid "Unable to open file"
-msgstr ""
+msgstr "ไม่สามารถเปิดแฟ้มได้"
 
 #: src/auale/gui/view.py:522
 msgid "Unsaved match"
@@ -382,11 +382,11 @@ msgstr ""
 
 #: src/auale/gui/view.py:1176
 msgid "Untitled"
-msgstr ""
+msgstr "ยังไม่กำหนดชื่อ"
 
 #: src/auale/res/glade/auale.ui:1450
 msgid "Value"
-msgstr ""
+msgstr "มูลค่า"
 
 #: src/auale/game/match.py:31
 msgid "Variant"

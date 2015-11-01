@@ -75,10 +75,20 @@ if os.path.isdir(OUTPUT_FOLDER):
 if os.path.exists(OUTPUT_FOLDER):
     raise Exception("Output folder could not be emptied")
 
+LINGUAS = [
+    x for x in re.findall(
+        '(?:#.*)|([^\s]+)',
+        open('po/LINGUAS').read()
+    ) if x
+]
+
 for name in os.listdir('po'):
     match = re.match(r'^([^.]+)[.]po$', name)
     if not match: continue
     code = match.group(1)
+    
+    if code not in LINGUAS:
+        continue
     
     print("-- Updating translation: %s." % code)
     
