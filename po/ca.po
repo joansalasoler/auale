@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aualé 1.1.0\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-01 13:47+0100\n"
+"POT-Creation-Date: 2015-11-03 14:57+0100\n"
 "PO-Revision-Date: 2015-09-03 13:03+0000\n"
 "Last-Translator: Joan Sala Soler <contact@joansala.com>\n"
 "Language-Team: \n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "A graphical user interface for oware"
 msgstr "Una interfície gràfica per a l'aualé"
 
-#: src/auale/res/glade/auale.ui:1294
+#: src/auale/res/glade/auale.ui:1304
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr ""
@@ -104,7 +104,7 @@ msgstr "Voleu desar la partida abans de sortir?"
 msgid "E_xpert"
 msgstr "_Experta"
 
-#: src/auale/res/glade/auale.ui:1276
+#: src/auale/res/glade/auale.ui:1286
 msgid "Edit a match"
 msgstr "Editar una partida"
 
@@ -184,7 +184,7 @@ msgstr "Partida"
 msgid "Match file cannot be opened"
 msgstr "La partida no es pot obrir"
 
-#: src/auale/res/glade/auale.ui:1353
+#: src/auale/res/glade/auale.ui:1363
 msgid "Match tags"
 msgstr "Etiquetes de la partida"
 
@@ -244,11 +244,11 @@ msgstr "Obre una partida utilitzada recentment"
 msgid "Oware match files"
 msgstr "Fitxers de partides d'aualé"
 
-#: src/auale/res/glade/auale.ui:1108
+#: src/auale/res/glade/auale.ui:1118
 msgid "Play as north"
 msgstr "Jugar com a nord"
 
-#: src/auale/res/glade/auale.ui:1024
+#: src/auale/res/glade/auale.ui:1034
 msgid "Play as south"
 msgstr "Jugar com a sud"
 
@@ -333,7 +333,7 @@ msgstr "Sud"
 msgid "South has won"
 msgstr "El sud ha guanyat"
 
-#: src/auale/res/glade/auale.ui:925
+#: src/auale/res/glade/auale.ui:935
 msgid "Start new match"
 msgstr "Comença una nova partida"
 
@@ -345,11 +345,11 @@ msgstr "Comença una nova partida"
 msgid "Stop thinking"
 msgstr "Deixa de pensar"
 
-#: src/auale/res/glade/auale.ui:1436
+#: src/auale/res/glade/auale.ui:1446
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: src/auale/res/glade/auale.ui:1210
+#: src/auale/res/glade/auale.ui:1220
 msgid ""
 "The computer will play both as south and north while you can watch the match."
 msgstr ""
@@ -389,7 +389,7 @@ msgstr "Partida no desada"
 msgid "Untitled"
 msgstr "Sense títol"
 
-#: src/auale/res/glade/auale.ui:1450
+#: src/auale/res/glade/auale.ui:1460
 msgid "Value"
 msgstr "Valor"
 
@@ -397,11 +397,11 @@ msgstr "Valor"
 msgid "Variant"
 msgstr "Variant"
 
-#: src/auale/res/glade/auale.ui:1192
+#: src/auale/res/glade/auale.ui:1202
 msgid "Watch the computer play"
 msgstr "Observar com juga l'ordinador"
 
-#: src/auale/res/glade/auale.ui:967
+#: src/auale/res/glade/auale.ui:977
 msgid "What do you want to do?"
 msgstr "Què voleu fer?"
 
@@ -414,12 +414,12 @@ msgstr ""
 "Podeu trobar el <a href=\"%s\" title=\"Reglament de l'aualé abapa"
 "\">reglament del joc</a> al nostre lloc web. Divertiu-vos!"
 
-#: src/auale/res/glade/auale.ui:1126
+#: src/auale/res/glade/auale.ui:1136
 msgid ""
 "You will play a new match against the computer. Computer will move first."
 msgstr "Jugareu una nova partida contra l'ordinador. L'ordinador mourà primer."
 
-#: src/auale/res/glade/auale.ui:1042
+#: src/auale/res/glade/auale.ui:1052
 msgid "You will play a new match against the computer. You will move first."
 msgstr "Jugareu una nova partida contra l'ordinador. Vostè mourà primer."
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aualé 1.1.0\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-01 13:47+0100\n"
+"POT-Creation-Date: 2015-11-03 14:57+0100\n"
 "PO-Revision-Date: 2015-09-23 18:12+0000\n"
 "Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: \n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "A graphical user interface for oware"
 msgstr "Une interface graphique pour l'awalé"
 
-#: src/auale/res/glade/auale.ui:1294
+#: src/auale/res/glade/auale.ui:1304
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr ""
@@ -105,7 +105,7 @@ msgstr "Voulez-vous enregistrer la partie avant de la fermer ?"
 msgid "E_xpert"
 msgstr "E_xpert"
 
-#: src/auale/res/glade/auale.ui:1276
+#: src/auale/res/glade/auale.ui:1286
 msgid "Edit a match"
 msgstr "Modifier une partie"
 
@@ -185,7 +185,7 @@ msgstr "Partie"
 msgid "Match file cannot be opened"
 msgstr "Le fichier de partie ne peut être ouvert"
 
-#: src/auale/res/glade/auale.ui:1353
+#: src/auale/res/glade/auale.ui:1363
 msgid "Match tags"
 msgstr "Étiquettes de partie"
 
@@ -245,11 +245,11 @@ msgstr "Ouvre un fichier de partie récemment utilisé"
 msgid "Oware match files"
 msgstr "Fichiers de parties d'awalé"
 
-#: src/auale/res/glade/auale.ui:1108
+#: src/auale/res/glade/auale.ui:1118
 msgid "Play as north"
 msgstr "Jouer en tant que nord"
 
-#: src/auale/res/glade/auale.ui:1024
+#: src/auale/res/glade/auale.ui:1034
 msgid "Play as south"
 msgstr "Jouer en tant que sud"
 
@@ -334,7 +334,7 @@ msgstr "Sud"
 msgid "South has won"
 msgstr "Le sud a gagné"
 
-#: src/auale/res/glade/auale.ui:925
+#: src/auale/res/glade/auale.ui:935
 msgid "Start new match"
 msgstr "Démarrer une nouvelle partie"
 
@@ -346,11 +346,11 @@ msgstr "Démarre une nouvelle partie"
 msgid "Stop thinking"
 msgstr "Arrêter de réfléchir"
 
-#: src/auale/res/glade/auale.ui:1436
+#: src/auale/res/glade/auale.ui:1446
 msgid "Tag"
 msgstr "Étiquette"
 
-#: src/auale/res/glade/auale.ui:1210
+#: src/auale/res/glade/auale.ui:1220
 msgid ""
 "The computer will play both as south and north while you can watch the match."
 msgstr ""
@@ -390,7 +390,7 @@ msgstr "Partie non enregistrée"
 msgid "Untitled"
 msgstr "Sans titre"
 
-#: src/auale/res/glade/auale.ui:1450
+#: src/auale/res/glade/auale.ui:1460
 msgid "Value"
 msgstr "Valeur"
 
@@ -398,11 +398,11 @@ msgstr "Valeur"
 msgid "Variant"
 msgstr "Variante"
 
-#: src/auale/res/glade/auale.ui:1192
+#: src/auale/res/glade/auale.ui:1202
 msgid "Watch the computer play"
 msgstr "Regarder l'ordinateur jouer"
 
-#: src/auale/res/glade/auale.ui:967
+#: src/auale/res/glade/auale.ui:977
 msgid "What do you want to do?"
 msgstr "Que voulez-vous faire ?"
 
@@ -415,14 +415,14 @@ msgstr ""
 "Vous pouvez trouver les  <a href=\"%s\" title=\"Oware abapa rules\">règles "
 "du jeu</a> sur notre site web. Amusez-vous !"
 
-#: src/auale/res/glade/auale.ui:1126
+#: src/auale/res/glade/auale.ui:1136
 msgid ""
 "You will play a new match against the computer. Computer will move first."
 msgstr ""
 "Vous allez jouer une nouvelle partie contre l'ordinateur. L'ordinateur se "
 "déplacera en premier."
 
-#: src/auale/res/glade/auale.ui:1042
+#: src/auale/res/glade/auale.ui:1052
 msgid "You will play a new match against the computer. You will move first."
 msgstr ""
 "Vous allez jouer une nouvelle partie contre l'ordinateur. Vous vous "

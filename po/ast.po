@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: auale\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-01 13:47+0100\n"
+"POT-Creation-Date: 2015-11-03 14:57+0100\n"
 "PO-Revision-Date: 2015-09-06 16:21+0000\n"
 "Last-Translator: Xuacu Saturio <xuacusk8@gmail.com>\n"
 "Language-Team: Asturian <ast@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "A graphical user interface for oware"
 msgstr "Interfaz gráfica pal xuegu oware"
 
-#: src/auale/res/glade/auale.ui:1294
+#: src/auale/res/glade/auale.ui:1304
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr "Crearáse una nueva partida na que podrás mover con cualquier xugador."
@@ -103,7 +103,7 @@ msgstr "¿Quies guardar la partida antes de zarrar?"
 msgid "E_xpert"
 msgstr "E_spertu"
 
-#: src/auale/res/glade/auale.ui:1276
+#: src/auale/res/glade/auale.ui:1286
 msgid "Edit a match"
 msgstr "Editar una partida"
 
@@ -183,7 +183,7 @@ msgstr "Partida"
 msgid "Match file cannot be opened"
 msgstr "Nun pudo abrise'l ficheru de partida"
 
-#: src/auale/res/glade/auale.ui:1353
+#: src/auale/res/glade/auale.ui:1363
 msgid "Match tags"
 msgstr "Etiquetes de la partida"
 
@@ -243,11 +243,11 @@ msgstr "Abre un ficheru de partida usáu recientemente"
 msgid "Oware match files"
 msgstr "Ficheros de partíes d'oware"
 
-#: src/auale/res/glade/auale.ui:1108
+#: src/auale/res/glade/auale.ui:1118
 msgid "Play as north"
 msgstr "Xugar como norte"
 
-#: src/auale/res/glade/auale.ui:1024
+#: src/auale/res/glade/auale.ui:1034
 msgid "Play as south"
 msgstr "Xugar como sur"
 
@@ -332,7 +332,7 @@ msgstr "Sur"
 msgid "South has won"
 msgstr "Ganó'l sur"
 
-#: src/auale/res/glade/auale.ui:925
+#: src/auale/res/glade/auale.ui:935
 msgid "Start new match"
 msgstr "Aniciar una nueva partida"
 
@@ -344,11 +344,11 @@ msgstr "Anicia una nueva partida"
 msgid "Stop thinking"
 msgstr "Dexar de pensar"
 
-#: src/auale/res/glade/auale.ui:1436
+#: src/auale/res/glade/auale.ui:1446
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: src/auale/res/glade/auale.ui:1210
+#: src/auale/res/glade/auale.ui:1220
 msgid ""
 "The computer will play both as south and north while you can watch the match."
 msgstr "L'ordenador xugará como sur y como norte mentanto mires la partida."
@@ -386,7 +386,7 @@ msgstr "Partida sin guardar"
 msgid "Untitled"
 msgstr "Ensin títulu"
 
-#: src/auale/res/glade/auale.ui:1450
+#: src/auale/res/glade/auale.ui:1460
 msgid "Value"
 msgstr "Valor"
 
@@ -394,11 +394,11 @@ msgstr "Valor"
 msgid "Variant"
 msgstr "Variante"
 
-#: src/auale/res/glade/auale.ui:1192
+#: src/auale/res/glade/auale.ui:1202
 msgid "Watch the computer play"
 msgstr "Ver xugar al ordenador"
 
-#: src/auale/res/glade/auale.ui:967
+#: src/auale/res/glade/auale.ui:977
 msgid "What do you want to do?"
 msgstr "¿Qué quies facer?"
 
@@ -411,13 +411,13 @@ msgstr ""
 "Pues alcontrar el <a href=\"%s\" title=\"Reglamentu del oware abapa"
 "\">reglamentu del xuegu</a> nel nuesu sitiu web ¡Pásalo bien xugando!"
 
-#: src/auale/res/glade/auale.ui:1126
+#: src/auale/res/glade/auale.ui:1136
 msgid ""
 "You will play a new match against the computer. Computer will move first."
 msgstr ""
 "Xugarás una nueva partida contra l'ordenador. L'ordenador moverá primero."
 
-#: src/auale/res/glade/auale.ui:1042
+#: src/auale/res/glade/auale.ui:1052
 msgid "You will play a new match against the computer. You will move first."
 msgstr "Xugarás una nueva partida contra l'ordenador. Tu moverás primero."
 

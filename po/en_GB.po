@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: auale\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-01 13:47+0100\n"
+"POT-Creation-Date: 2015-11-03 14:57+0100\n"
 "PO-Revision-Date: 2015-09-07 16:50+0000\n"
 "Last-Translator: Andi Chandler <Unknown>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "A graphical user interface for oware"
 msgstr "A graphical user interface for Oware"
 
-#: src/auale/res/glade/auale.ui:1294
+#: src/auale/res/glade/auale.ui:1304
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr ""
@@ -104,7 +104,7 @@ msgstr "Do you want to save the match before closing?"
 msgid "E_xpert"
 msgstr "E_xpert"
 
-#: src/auale/res/glade/auale.ui:1276
+#: src/auale/res/glade/auale.ui:1286
 msgid "Edit a match"
 msgstr "Edit a match"
 
@@ -184,7 +184,7 @@ msgstr "Match"
 msgid "Match file cannot be opened"
 msgstr "Match file cannot be opened"
 
-#: src/auale/res/glade/auale.ui:1353
+#: src/auale/res/glade/auale.ui:1363
 msgid "Match tags"
 msgstr "Match tags"
 
@@ -244,11 +244,11 @@ msgstr "Open a recently used match file"
 msgid "Oware match files"
 msgstr "Oware match files"
 
-#: src/auale/res/glade/auale.ui:1108
+#: src/auale/res/glade/auale.ui:1118
 msgid "Play as north"
 msgstr "Play as north"
 
-#: src/auale/res/glade/auale.ui:1024
+#: src/auale/res/glade/auale.ui:1034
 msgid "Play as south"
 msgstr "Play as south"
 
@@ -333,7 +333,7 @@ msgstr "South"
 msgid "South has won"
 msgstr "South has won"
 
-#: src/auale/res/glade/auale.ui:925
+#: src/auale/res/glade/auale.ui:935
 msgid "Start new match"
 msgstr "Start new match"
 
@@ -345,11 +345,11 @@ msgstr "Starts a new match"
 msgid "Stop thinking"
 msgstr "Stop thinking"
 
-#: src/auale/res/glade/auale.ui:1436
+#: src/auale/res/glade/auale.ui:1446
 msgid "Tag"
 msgstr "Tag"
 
-#: src/auale/res/glade/auale.ui:1210
+#: src/auale/res/glade/auale.ui:1220
 msgid ""
 "The computer will play both as south and north while you can watch the match."
 msgstr ""
@@ -388,7 +388,7 @@ msgstr "Unsaved match"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/auale/res/glade/auale.ui:1450
+#: src/auale/res/glade/auale.ui:1460
 msgid "Value"
 msgstr "Value"
 
@@ -396,11 +396,11 @@ msgstr "Value"
 msgid "Variant"
 msgstr "Variant"
 
-#: src/auale/res/glade/auale.ui:1192
+#: src/auale/res/glade/auale.ui:1202
 msgid "Watch the computer play"
 msgstr "Watch the computer play"
 
-#: src/auale/res/glade/auale.ui:967
+#: src/auale/res/glade/auale.ui:977
 msgid "What do you want to do?"
 msgstr "What do you want to do?"
 
@@ -413,13 +413,13 @@ msgstr ""
 "You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the "
 "game</a> on our website. Have fun playing!"
 
-#: src/auale/res/glade/auale.ui:1126
+#: src/auale/res/glade/auale.ui:1136
 msgid ""
 "You will play a new match against the computer. Computer will move first."
 msgstr ""
 "You will play a new match against the computer. Computer will move first."
 
-#: src/auale/res/glade/auale.ui:1042
+#: src/auale/res/glade/auale.ui:1052
 msgid "You will play a new match against the computer. You will move first."
 msgstr "You will play a new match against the computer. You will move first."
 

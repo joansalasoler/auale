@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: auale\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-01 13:50+0100\n"
+"POT-Creation-Date: 2015-11-03 14:57+0100\n"
 "PO-Revision-Date: 2015-11-03 12:49+0000\n"
 "Last-Translator: Joan Sala Soler <contact@joansala.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-11-03 12:52+0000\n"
 "X-Generator: Launchpad (build 17838)\n"
-"Language: id\n"
 
 #: src/auale/res/glade/auale.ui:886
 msgid "A graphical user interface for oware"
 msgstr "Antarmuka pengguna grafis untuk Oware (Congkak)"
 
-#: src/auale/res/glade/auale.ui:1294
+#: src/auale/res/glade/auale.ui:1304
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr ""
@@ -105,7 +105,7 @@ msgstr "Ingin menyimpan pertandingan ini sebelum ditutup?"
 msgid "E_xpert"
 msgstr "_Ahli"
 
-#: src/auale/res/glade/auale.ui:1276
+#: src/auale/res/glade/auale.ui:1286
 msgid "Edit a match"
 msgstr "Edit pertandingan"
 
@@ -185,7 +185,7 @@ msgstr "Pertandingan"
 msgid "Match file cannot be opened"
 msgstr "File pertandingan tidak dapat dibuka"
 
-#: src/auale/res/glade/auale.ui:1353
+#: src/auale/res/glade/auale.ui:1363
 msgid "Match tags"
 msgstr "Label pertandingan"
 
@@ -245,11 +245,11 @@ msgstr "Membuka file pertandingan terbaru yang digunakan"
 msgid "Oware match files"
 msgstr "File pertandingan Oware (Congkak)"
 
-#: src/auale/res/glade/auale.ui:1108
+#: src/auale/res/glade/auale.ui:1118
 msgid "Play as north"
 msgstr "Bermain sebagai Utara"
 
-#: src/auale/res/glade/auale.ui:1024
+#: src/auale/res/glade/auale.ui:1034
 msgid "Play as south"
 msgstr "Bermain sebagai Selatan"
 
@@ -334,7 +334,7 @@ msgstr "Selatan"
 msgid "South has won"
 msgstr "Selatan telah menang"
 
-#: src/auale/res/glade/auale.ui:925
+#: src/auale/res/glade/auale.ui:935
 msgid "Start new match"
 msgstr "Mulai pertandingan baru"
 
@@ -346,11 +346,11 @@ msgstr "Memulai pertandingan baru"
 msgid "Stop thinking"
 msgstr "Berhenti berpikir"
 
-#: src/auale/res/glade/auale.ui:1436
+#: src/auale/res/glade/auale.ui:1446
 msgid "Tag"
 msgstr "Label"
 
-#: src/auale/res/glade/auale.ui:1210
+#: src/auale/res/glade/auale.ui:1220
 msgid ""
 "The computer will play both as south and north while you can watch the match."
 msgstr ""
@@ -390,7 +390,7 @@ msgstr "Pertandingan yang belum disimpan"
 msgid "Untitled"
 msgstr "Tak Berjudul"
 
-#: src/auale/res/glade/auale.ui:1450
+#: src/auale/res/glade/auale.ui:1460
 msgid "Value"
 msgstr "Nilai"
 
@@ -398,11 +398,11 @@ msgstr "Nilai"
 msgid "Variant"
 msgstr "Varian"
 
-#: src/auale/res/glade/auale.ui:1192
+#: src/auale/res/glade/auale.ui:1202
 msgid "Watch the computer play"
 msgstr "Lihat komputer bermain"
 
-#: src/auale/res/glade/auale.ui:967
+#: src/auale/res/glade/auale.ui:977
 msgid "What do you want to do?"
 msgstr "Apa yang ingin kamu lakukan?"
 
@@ -415,14 +415,14 @@ msgstr ""
 "Kamu bisa menemukan <a href=\"%s\" title=\"Oware abapa rules\">aturan "
 "permainan ini</a> di situs kami. Selamat bermain!"
 
-#: src/auale/res/glade/auale.ui:1126
+#: src/auale/res/glade/auale.ui:1136
 msgid ""
 "You will play a new match against the computer. Computer will move first."
 msgstr ""
 "Kamu akan memainkan pertandingan baru melawan komputer. Komputer yang "
 "pertama melangkah."
 
-#: src/auale/res/glade/auale.ui:1042
+#: src/auale/res/glade/auale.ui:1052
 msgid "You will play a new match against the computer. You will move first."
 msgstr ""
 "Kamu akan memainkan pertandingan baru melawan komputer. Kamu yang pertama "
