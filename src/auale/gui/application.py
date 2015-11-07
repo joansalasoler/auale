@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, sys
+import util
 
 from gui import App, GTKView
 from gi.repository import Gdk
@@ -61,7 +62,7 @@ class GTKApplication(Gtk.Application):
     def on_startup(self, application):
         """Emitted on application startup"""
         
-        self._settings = Gio.Settings(App.ID)
+        self._settings = util.get_gio_settings(App.ID)
         self._settings.delay()
         
         

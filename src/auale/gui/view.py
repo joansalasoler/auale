@@ -57,7 +57,7 @@ class GTKView(object):
         self._mixer = Mixer()
         self._animator = Animator(self._canvas, self._mixer)
         self._builder = Gtk.Builder()
-        self._settings = Gio.Settings(App.ID)
+        self._settings = util.get_gio_settings(App.ID)
         
         # Initialize this Gtk interface
         

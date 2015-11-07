@@ -11,7 +11,10 @@ import os, sys
 import gettext
 import locale
 
+from gi.repository import Gio
+
 __MESSAGES_PATH = './res/messages/'
+__SCHEMAS_PATH = './res/schemas/'
 
 
 def _which(cmd, mode=os.F_OK | os.X_OK, path=None):
@@ -141,6 +144,27 @@ def putenv(varname, value):
         value = value.encode('utf-8')
     
     os.putenv(varname, value)
+
+
+def get_gio_settings(schema_id):
+    """Returns a Gio.Settings object for the specified schema. This method
+       instantiates the object using the default source if the schema is
+       installed on the system, otherwise, it fallsback to a local folder"""
+    
+    # Read setting from the default source if available
+    
+    if schema_id in Gio.Settings.list_schemas():
+        return Gio.Settings(schema_id)
+    
+    # Fallback to a local application folder
+    
+    path = resource_path(__SCHEMAS_PATH)
+    gss = Gio.SettingsSchemaSource
+    default_source = gss.get_default()
+    source = gss.new_from_directory(path, default_source, False)
+    schema = source.lookup(schema_id, False)
+    
+    return Gio.Settings.new_full(schema, None, None)
 
 
 # With Python 3 use shutil
