@@ -494,17 +494,19 @@ class GTKView(object):
         """Open a match file dialog"""
         
         if self._match_changed == False:
-            return
-        
-        dialog = self.new_unsaved_confirmation_dialog(
-            _("Do you want to save the current match?"),
-            _("The current match has unsaved changes. Your changes will "
-              "be lost if you don't save them."),
-            _("Discard unsaved changes")
-        )
-        
-        dialog.connect('response', self.on_open_activate_response)
-        dialog.show()
+            dialog = self.new_open_dialog()
+            dialog.connect('response', self.on_open_dialog_response)
+            dialog.show()
+        else:
+            dialog = self.new_unsaved_confirmation_dialog(
+                _("Do you want to save the current match?"),
+                _("The current match has unsaved changes. Your changes will "
+                  "be lost if you don't save them."),
+                _("Discard unsaved changes")
+            )
+            
+            dialog.connect('response', self.on_open_activate_response)
+            dialog.show()
     
     
     def on_open_activate_response(self, dialog, response):
