@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aualé 1.1.0\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-03 14:57+0100\n"
+"POT-Creation-Date: 2015-11-07 15:24+0100\n"
 "PO-Revision-Date: 2015-09-03 13:03+0000\n"
 "Last-Translator: Joan Sala Soler <contact@joansala.com>\n"
 "Language-Team: \n"
@@ -316,7 +316,7 @@ msgstr "Guarda la partida actual"
 msgid "Saves the current match to a file"
 msgstr "Guarda la partida actual en un archivo"
 
-#: src/auale/gui/application.py:48
+#: src/auale/gui/application.py:49
 msgid "Show program's version number and exit"
 msgstr "Mostrar el número de versión del programa y salir"
 

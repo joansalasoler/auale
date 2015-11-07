@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: auale\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-03 14:57+0100\n"
+"POT-Creation-Date: 2015-11-07 15:24+0100\n"
 "PO-Revision-Date: 2015-09-07 16:50+0000\n"
 "Last-Translator: Andi Chandler <Unknown>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
@@ -317,7 +317,7 @@ msgstr "Save the current match"
 msgid "Saves the current match to a file"
 msgstr "Save the current match to a file"
 
-#: src/auale/gui/application.py:48
+#: src/auale/gui/application.py:49
 msgid "Show program's version number and exit"
 msgstr "Show program version number and exit"
 
