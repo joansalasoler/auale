@@ -992,7 +992,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                 <property name="margin_top">10</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">5</property>
-                <property name="homogeneous">True</property>
+                <property name="homogeneous">False</property>
                 <child>
                   <object class="GtkButton" id="south_button">
                     <property name="name">newgame-south-button</property>
@@ -1033,7 +1033,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Play as south</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -1051,7 +1051,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">You will play a new match against the computer. You will move first.</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1117,7 +1117,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Play as north</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -1135,7 +1135,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">You will play a new match against the computer. Computer will move first.</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1201,7 +1201,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Watch the computer play</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -1219,7 +1219,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">The computer will play both as south and north while you can watch the match.</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1285,7 +1285,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Edit a match</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -1303,7 +1303,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">A new match will be created where you will be able to move as either player.</property>
                                 <property name="wrap">True</property>
-                                <property name="max_width_chars">30</property>
+                                <property name="max_width_chars">45</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
