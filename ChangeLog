@@ -1,10 +1,11 @@
-2015-03-26  Joan Sala Soler  <contact@joansala.com>
+2015-11-07  Joan Sala Soler  <contact@joansala.com>
 
     * Support for Python 3
     * Basic GtkApplication support
     * Drop support for Gtk <= 3.8
     * Internationalization bug fixes and improvements
     * Various user experience and graphic improvements
+    * New translations: Asturian, French, Indonesian, Malay, Ukrainian
 
 2014-08-01  Joan Sala Soler  <contact@joansala.com>
 

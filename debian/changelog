@@ -5,8 +5,9 @@ auale (1.1.0-1) UNRELEASED; urgency=medium
   * Drop support for Gtk <= 3.8
   * Internationalization bug fixes and improvements
   * Various user experience and graphic improvements
+  * New translations: Asturian, French, Indonesian, Malay, Ukrainian
 
- -- Joan Sala Soler <contact@joansala.com>  Thu, 3 Sep 2015 17:25:16 +0200
+ -- Joan Sala Soler <contact@joansala.com>  Sat, 7 Nov 2015 09:51:17 +0100
 
 auale (1.0.0-1) UNRELEASED; urgency=medium
 
