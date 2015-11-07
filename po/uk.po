@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: auale\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-03 14:57+0100\n"
+"POT-Creation-Date: 2015-11-07 15:24+0100\n"
 "PO-Revision-Date: 2015-09-06 13:45+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -101,7 +101,7 @@ msgstr "Хочете зберегти гру перед закриттям?"
 
 #: src/auale/res/glade/auale.ui:576
 msgid "E_xpert"
-msgstr "_Експерт"
+msgstr "4. _Експерт"
 
 #: src/auale/res/glade/auale.ui:1286
 msgid "Edit a match"
@@ -316,7 +316,7 @@ msgstr "Зберегти поточну гру"
 msgid "Saves the current match to a file"
 msgstr "Зберегти поточну гру до файла"
 
-#: src/auale/gui/application.py:48
+#: src/auale/gui/application.py:49
 msgid "Show program's version number and exit"
 msgstr "Показати номер версії програми і завершити роботу"
 
@@ -434,7 +434,7 @@ msgstr "Ви_мкнути звук"
 
 #: src/auale/res/glade/auale.ui:540
 msgid "_Easy"
-msgstr "_Слабкий"
+msgstr "1. _Слабкий"
 
 #: src/auale/res/glade/auale.ui:158
 msgid "_Edit match tags..."
@@ -450,7 +450,7 @@ msgstr "_Перший хід"
 
 #: src/auale/res/glade/auale.ui:564
 msgid "_Hard"
-msgstr "Си_льний"
+msgstr "3. Си_льний"
 
 #: src/auale/res/glade/auale.ui:617
 msgid "_Help"
@@ -474,7 +474,7 @@ msgstr "_Гра"
 
 #: src/auale/res/glade/auale.ui:552
 msgid "_Medium"
-msgstr "_Посередній"
+msgstr "2. _Посередній"
 
 #: src/auale/res/glade/auale.ui:123
 msgid "_Move now"
