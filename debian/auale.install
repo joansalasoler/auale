@@ -1,4 +1,4 @@
 res/share/applications/auale.desktop /usr/share/applications/
-res/share/icons/auale.png /usr/share/icons/
+res/share/icons/hicolor/scalable/apps/auale.svg /usr/share/icons/hicolor/scalable/apps/
 res/share/icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg /usr/share/icons/hicolor/scalable/mimetypes/
 res/share/glib-2.0/schemas/com.joansala.auale.gschema.xml usr/share/glib-2.0/schemas/

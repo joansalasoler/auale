@@ -1,127 +1,157 @@
-Name:             auale
-Version:          1.1.0
-Release:          1%{?dist}
-Summary:          Play oware abapa against the computer or annotate your games
-Packager:	      Joan Sala Soler <contact@joansala.com>
-Group:            Amusements/Games
-License:          GPLv3+
-URL:              http://www.joansala.com/auale/
-Source0:          %{name}-%{version}.tar.gz
+Name:           auale
+Version:        1.1.0
+Release:        1%{?dist}
+Summary:        A free mancala game for the serious player
+Group:          Amusements/Games
+URL:            http://www.joansala.com/auale
+Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.gz
+BuildArch:      noarch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildArch:        noarch
-BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires:    python2-devel
-BuildRequires:    python-setuptools
-
-Requires(post):   desktop-file-utils
-Requires(postun): desktop-file-utils
-
-Requires:         python >= 2.6
-Requires:         gtk3 >= 3.10
-Requires:         jre >= 1.6
-
-%if %{defined fedora}
-Requires:         pygobject3 >= 3.8
-Requires:         pycairo
+%if %{defined suse_version}
+License:        GPL-3.0+
+%else
+License:        GPLv3+
 %endif
 
-%if 0%{?suse_version}
-Requires:         python-gobject >= 3.8
-Requires:         python-gobject-cairo >= 3.8
-Requires:         python-cairo
-Requires:         typelib-1_0-Gtk-3_0
+BuildRequires:  python-devel
+BuildRequires:  python-setuptools
+Requires:       python >= 2.6
+Requires:       gtk3 >= 3.10
+Requires:       jre >= 1.6
+Requires:       desktop-file-utils
+
+%if %{defined fedora}
+Requires:       pygobject3 >= 3.8
+Requires:       pycairo
+%endif
+
+%if 0%{?fedora_version} >= 21
+Requires:       SDL2
+Requires:       SDL2_mixer
+%endif
+
+%if %{defined suse_version}
+Requires:       python-gobject >= 3.8
+Requires:       python-gobject-cairo >= 3.8
+Requires:       python-cairo
+Requires:       typelib-1_0-Gtk-3_0
+Requires:       glib2-tools
 %endif
 
 %if 0%{?suse_version} > 1000
-Suggests:         SDL2
-Suggests:         SDL2_mixer
+Requires:       SDL2
+Requires:       SDL2_mixer
 %endif
 
+%if %{defined mgaversion}
+Requires:       python-cairo
+Requires:       python-gi
+Requires:       python-gi-cairo
+Recommends:     %{_lib}sdl2_mixer2.0_0
+%else
+%define         _gamesbindir    %{_bindir}
+%define         _gamesdatadir   %{_datadir}
+%define         _iconsdir       %{_datadir}/icons
+%endif
 
 %description
-Aualé is a graphical user interface for the popular Oware Abapa board game. It
-may be used to analyze, record and share your own mancala games or to play
-against the computer.
+Aualé is a graphical user interface for the popular Oware Abapa board
+game. It may be used to analyze, record and share your own mancala
+games or to play against the computer.
 
-This interface communicates with an oware engine through an adapted version of
-the Universal Chess Interface protocol, which makes it suitable for use with
-multiple mancala playing programs. Although, currently only the Aalina game
-engine supports this protocol.
+This interface communicates with an oware engine through an adapted
+version of the Universal Chess Interface protocol, which makes it
+suitable for use with multiple mancala playing programs. Although,
+currently only the Aalina game engine supports this protocol.
 
 Some of its main features include:
 
  * Play against the computer or watch how it plays.
  * Easily configurable computer strength.
  * Annotate your matches with an easy to use interface.
- * Save your games using a portable format which resembles that of the
-   popular Portable Game Notation format.
-
+ * Save your games using a portable format which resembles that of
+   the popular Portable Game Notation format.
 
 %prep
 %setup -q
 
-
 %build
-cd %{_builddir}/%{name}-%{version}/src/%{name}
+pushd %{_builddir}/%{name}-%{version}/src/%{name}
 %{__python} setup.py build
-
+popd
 
 %install
-rm -rf %{buildroot}
+pushd %{_builddir}/%{name}-%{version}/src/%{name}
+%{__python} setup.py install \
+    --root=%{buildroot} \
+    --install-lib=%{_gamesdatadir}/%{name} \
+    --skip-build
+popd
 
-cd %{_builddir}/%{name}-%{version}/src/%{name}
-%{__python} setup.py install --skip-build --root=%{buildroot} \
-    --install-lib=%{_datadir}/%{name}
+# __main__.py is the game launcher
+install -d %{buildroot}%{_gamesbindir}
+ln -s %{_gamesdatadir}/%{name}/__main__.py %{buildroot}%{_gamesbindir}/%{name}
+chmod +x %{buildroot}%{_gamesdatadir}/%{name}/__main__.py
 
-cp -R %{_builddir}/%{name}-%{version}/res/share %{buildroot}/%{_prefix}
+# Install dist files
+pushd %{_builddir}/%{name}-%{version}/res/share
+install -D -m644 applications/%{name}.desktop \
+    %{buildroot}%{_datadir}/applications/%{name}.desktop
+install -D -m644 glib-2.0/schemas/com.joansala.%{name}.gschema.xml \
+    %{buildroot}%{_datadir}/glib-2.0/schemas/com.joansala.%{name}.gschema.xml
+install -D -m644 man/man6/%{name}.6 \
+    %{buildroot}%{_mandir}/man6/%{name}.6
+install -D -m644 mime/packages/%{name}.xml \
+    %{buildroot}%{_datadir}/mime/packages/%{name}.xml
+install -D -m644 icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg \
+    %{buildroot}%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn.svg
+install -D -m644 icons/hicolor/scalable/apps/%{name}.svg \
+    %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
+popd
 
-mkdir -p %{buildroot}/%{_bindir}
-chmod 755 %{buildroot}/%{_datadir}/%{name}/__main__.py
-ln -s ../share/%{name}/__main__.py %{buildroot}/%{_bindir}/%{name}
+# Move installed locales
+pushd %{buildroot}%{_gamesdatadir}/%{name}/res
+mv -v messages %{buildroot}%{_datadir}/locale
+popd
 
+%find_lang %{name}
 
 %clean
 rm -rf %{buildroot}
 
-
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING NEWS README
-%{_bindir}/%{name}
-%{_datadir}/*
-
+%dir %{_datadir}/glib-2.0
+%dir %{_datadir}/glib-2.0/schemas
+%dir %{_iconsdir}/hicolor
+%dir %{_iconsdir}/hicolor/scalable
+%dir %{_iconsdir}/hicolor/scalable/apps
+%dir %{_iconsdir}/hicolor/scalable/mimetypes
+%{_gamesbindir}/%{name}
+%{_gamesdatadir}/%{name}/
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/glib-2.0/schemas/com.joansala.%{name}.gschema.xml
+%{_datadir}/mime/packages/%{name}.xml
+%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
+%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn.svg
+%{_mandir}/man6/%{name}.6*
 
 %post
-if which gtk-update-icon-cache >/dev/null 2>&1 ; then
-    gtk-update-icon-cache %{_datadir}/icons/%{name}.png
-fi
-
-if which update-mime-database >/dev/null 2>&1 ; then
-    update-mime-database %{_datadir}/mime
-fi
-
-if update-desktop-database >/dev/null 2>&1 ; then
-    update-desktop-database
-fi
-
-glib-compile-schemas %{_datadir}/glib-2.0/schemas
-
+%{_bindir}/glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+%{_bindir}/gtk-update-icon-cache %{_iconsdir} &> /dev/null || :
+%{_bindir}/update-mime-database %{_datadir}/mime &> /dev/null || :
+%{_bindir}/update-desktop-database &> /dev/null || :
 
 %postun
-if which gtk-update-icon-cache >/dev/null 2>&1 ; then
-    gtk-update-icon-cache /usr/share/icons/%{name}.png
-fi
-
-if which update-mime-database >/dev/null 2>&1 ; then
-    update-mime-database %{_datadir}/mime
-fi
-
-if update-desktop-database >/dev/null 2>&1 ; then
-    update-desktop-database
-fi
-
-glib-compile-schemas %{_datadir}/glib-2.0/schemas
-
+%{_bindir}/glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+%{_bindir}/gtk-update-icon-cache %{_iconsdir} &> /dev/null || :
+%{_bindir}/update-mime-database %{_datadir}/mime &> /dev/null || :
+%{_bindir}/update-desktop-database &> /dev/null || :
 
 %changelog
+* Sun Nov 8 2015 Joan Sala <contact@joansala.com>
+- 1.1.0-1
+- auale 1.1.0 release
+
