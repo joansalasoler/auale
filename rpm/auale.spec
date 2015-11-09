@@ -2,7 +2,6 @@ Name:           auale
 Version:        1.1.0
 Release:        1%{?dist}
 Summary:        A free mancala game for the serious player
-Group:          Amusements/Games
 URL:            http://www.joansala.com/auale
 Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.gz
 BuildArch:      noarch
@@ -12,6 +11,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License:        GPL-3.0+
 %else
 License:        GPLv3+
+%endif
+
+%if %{defined mgaversion}
+Group:          Games/Boards
+%else
+Group:          Amusements/Games
 %endif
 
 BuildRequires:  python-devel
