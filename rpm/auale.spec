@@ -1,6 +1,6 @@
 Name:           auale
 Version:        1.1.0
-Release:        1%{?dist}
+Release:        1
 Summary:        A free mancala game for the serious player
 URL:            http://www.joansala.com/auale
 Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.gz
@@ -45,8 +45,8 @@ Requires:       glib2-tools
 %endif
 
 %if 0%{?suse_version} > 1000
-Requires:       SDL2
-Requires:       SDL2_mixer
+Suggests:       SDL2
+Suggests:       SDL2_mixer
 %endif
 
 %if %{defined mgaversion}
