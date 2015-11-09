@@ -27,12 +27,7 @@ makedepends=(
 replaces=('python2-auale')
 install=${pkgname}.install
 source=("http://www.joansala.com/auale/packages/$pkgname-$pkgver.tar.gz")
-sha256sums=('44bf86dfcf14dde5be14254ed0697b54eb91d24613d04b3e43c40f514ef87870')
-
-bindir='/usr/bin'
-datadir='/usr/share'
-mandir='/usr/share/man'
-iconsdir='/usr/share/icons'
+sha256sums=('SKIP')
 
 build() {
     pushd ${pkgname}-${pkgver}/src/${pkgname}
@@ -44,34 +39,34 @@ package() {
     pushd ${pkgname}-${pkgver}/src/${pkgname}
     python setup.py install \
         --root=${pkgdir} \
-        --install-lib=${pkgdir}${datadir}/${pkgname} \
+        --install-lib=/usr/share/${pkgname} \
         --skip-build
     popd
     
     # Link the game launcher
-    install -d ${pkgdir}${bindir}
-    ln -s ${pkgdir}${datadir}/${pkgname}/__main__.py \
-          ${pkgdir}${bindir}/${pkgname}
-    chmod +x ${pkgdir}${datadir}/${pkgname}/__main__.py
+    install -d ${pkgdir}/usr/bin
+    ln -s ${pkgdir}/usr/share/${pkgname}/__main__.py \
+          ${pkgdir}/usr/bin/${pkgname}
+    chmod +x ${pkgdir}/usr/share/${pkgname}/__main__.py
     
     # Install dist files
     pushd ${pkgname}-${pkgver}/res/share
     install -D -m644 applications/${pkgname}.desktop \
-        ${pkgdir}${datadir}/applications/${pkgname}.desktop
+        ${pkgdir}/usr/share/applications/${pkgname}.desktop
     install -D -m644 glib-2.0/schemas/com.joansala.${pkgname}.gschema.xml \
-        ${pkgdir}${datadir}/glib-2.0/schemas/com.joansala.${pkgname}.gschema.xml
+        ${pkgdir}/usr/share/glib-2.0/schemas/com.joansala.${pkgname}.gschema.xml
     install -D -m644 man/man6/${pkgname}.6 \
-        ${pkgdir}${mandir}/man6/${pkgname}.6
+        ${pkgdir}/usr/share/man/man6/${pkgname}.6
     install -D -m644 mime/packages/${pkgname}.xml \
-        ${pkgdir}${datadir}/mime/packages/${pkgname}.xml
+        ${pkgdir}/usr/share/mime/packages/${pkgname}.xml
     install -D -m644 icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg \
-        ${pkgdir}${iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn.svg
+        ${pkgdir}/usr/share/icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg
     install -D -m644 icons/hicolor/scalable/apps/${pkgname}.svg \
-        ${pkgdir}${iconsdir}/hicolor/scalable/apps/${pkgname}.svg
+        ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg
     popd
     
     # Move installed locales
-    pushd ${pkgdir}${datadir}/${pkgname}/res
-    mv -v messages ${pkgdir}${datadir}/locale
+    pushd ${pkgdir}/usr/share/${pkgname}/res
+    mv -v messages ${pkgdir}/usr/share/locale
     popd
 }

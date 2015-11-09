@@ -77,8 +77,9 @@ PACKAGE_CONFIG = dict(
 
 # Add the 'gnome' package to the path
 
-gnome_path = os.path.join(site.getsitepackages()[1], "gnome")
-sys.path.append(gnome_path)
+if 'win' in sys.platform:
+    gnome_path = os.path.join(site.getsitepackages()[1], "gnome")
+    sys.path.append(gnome_path)
 
 # Do the distutils setup thing
 
