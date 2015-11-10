@@ -17,8 +17,8 @@ depends=(
   'java-environment=7'
   'python-gobject'
   'desktop-file-utils'
-  'sdl2: sound support'
-  'sdl2_mixer: sound support'
+  'sdl2'
+  'sdl2_mixer'
 )
 makedepends=(
   'python-setuptools'
