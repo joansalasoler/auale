@@ -17,8 +17,6 @@ depends=(
   'java-environment=7'
   'python-gobject'
   'desktop-file-utils'
-)
-optdepends=(
   'sdl2: sound support'
   'sdl2_mixer: sound support'
 )
