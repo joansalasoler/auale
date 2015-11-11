@@ -138,11 +138,12 @@ def putenv(varname, value):
     """Sets an environment variable making sure it is encoded as utf-8 if
        the version of Python > 2 (see os.putenv)"""
     
-    if sys.version_info.major > 2:
+    try:
+        os.putenv(varname, value)
+    except TypeError:
         varname = varname.encode('utf-8')
         value = value.encode('utf-8')
-    
-    os.putenv(varname, value)
+        os.putenv(varname, value)
 
 
 def get_gio_settings(schema_id):
