@@ -21,6 +21,10 @@ import math
 import warnings
 import util
 import cairo as pycairo
+import gi
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Rsvg', '2.0')
 
 from gi.repository import Gtk
 from gi.repository import Gdk
