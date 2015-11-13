@@ -1,6 +1,6 @@
 Name:           auale
 Version:        1.1.0
-Release:        1
+Release:        2
 Summary:        A free mancala game for the serious player
 URL:            http://www.joansala.com/auale
 Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.gz
@@ -41,12 +41,13 @@ Requires:       python-gobject >= 3.8
 Requires:       python-gobject-cairo >= 3.8
 Requires:       python-cairo
 Requires:       typelib-1_0-Gtk-3_0
+Requires:       typelib-1_0-Rsvg-2_0
 Requires:       glib2-tools
 %endif
 
 %if 0%{?suse_version} > 1000
-Suggests:       SDL2
-Suggests:       SDL2_mixer
+Requires:       SDL2
+Requires:       SDL2_mixer
 %endif
 
 %if %{defined mgaversion}
@@ -151,11 +152,15 @@ rm -rf %{buildroot}
 
 %postun
 %{_bindir}/glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
-%{_bindir}/gtk-update-icon-cache %{_iconsdir} &> /dev/null || :
+%{_bindir}/gtk-update-icon-cache %{_iconsdir}/hicolor/ &> /dev/null || :
 %{_bindir}/update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/update-desktop-database &> /dev/null || :
 
 %changelog
+* Fri Nov 13 2015 Joan Sala <contact@joansala.com>
+- 1.1.0-2
+- Fix OpenSUSE dependencies
+
 * Sun Nov 8 2015 Joan Sala <contact@joansala.com>
 - 1.1.0-1
 - auale 1.1.0 release
