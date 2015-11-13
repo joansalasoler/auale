@@ -146,7 +146,7 @@ rm -rf %{buildroot}
 
 %post
 %{_bindir}/glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
-%{_bindir}/gtk-update-icon-cache %{_iconsdir} &> /dev/null || :
+%{_bindir}/gtk-update-icon-cache %{_iconsdir}/hicolor/ &> /dev/null || :
 %{_bindir}/update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/update-desktop-database &> /dev/null || :
 
