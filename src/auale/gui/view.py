@@ -35,8 +35,12 @@ class GTKView(object):
     __ENGINE_PATH = util.resource_path('./res/engine/Aalina.jar')
     
     
-    def __init__(self):
+    def __init__(self, options = {}):
         """Builds this interface and runs it"""
+        
+        # Interface options dictionary
+        
+        self._options = options
         
         # Game state attributes
         
@@ -171,19 +175,35 @@ class GTKView(object):
     def _start_engine(self):
         """Initializes the engine process"""
         
+        path = None
+        command = None
+        
         try:
-            path = None
+            # If an engine command is provided use it
             
-            if 'linux' in sys.platform:
+            if self._options.has_key('command'):
+                command = self._options['command'].split()
+                path = util.which(command[0])
+                command[0] = path
+            
+            if path is None and self._options.has_key('command'):
+                raise Exception(_('Not a valid engine command'))
+            
+            # If Aalina is installed use it
+            
+            if path is None:
                 path = util.which('aalina')
+                command = [path]
+            
+            # Otherwise, use the provided Aalina.jar file
             
             if path is None:
                 command = [
                     util.which('java'), '-jar',
                     os.path.abspath(GTKView.__ENGINE_PATH)
                 ]
-            else:
-                command = [path]
+            
+            # Start the engine in a new process
             
             self._engine = UCIPlayer(command, Oware)
             self._north = self._engine
@@ -961,8 +981,9 @@ class GTKView(object):
         
         player = self.get_current_player()
         
-        self._engine.set_strength(self._strength)
-        self._engine.set_position(self._match)
+        if self._engine is not None:
+            self._engine.set_strength(self._strength)
+            self._engine.set_position(self._match)
         self._loop.request_move(player)
     
     
@@ -1414,8 +1435,9 @@ class GTKView(object):
     def reset_engine(self):
         """Aborts any engine computations and setups a new game"""
         
-        self._engine.abort_computation()
-        self._engine.new_match()
-        self._engine.set_strength(self._strength)
-        self._engine.set_position(self._match)
+        if self._engine is not None:
+            self._engine.abort_computation()
+            self._engine.new_match()
+            self._engine.set_strength(self._strength)
+            self._engine.set_position(self._match)
 

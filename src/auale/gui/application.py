@@ -20,9 +20,10 @@ import os, sys
 import util
 
 from gui import App, GTKView
+from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import GLib
 from gi.repository import Gtk
 
 
@@ -40,14 +41,37 @@ class GTKApplication(Gtk.Application):
             flags = Gio.ApplicationFlags.HANDLES_OPEN
         )
         
-        # Add a 'version' option to the command line
+        # View options
+        
+        self._view_options = {}
+        
+        # Append command line options
+        
+        options = []
         
         option = GLib.OptionEntry()
         option.long_name = 'version'
         option.short_name = ord('v')
         option.description = _("Show program's version number and exit")
+        options.append(option)
         
-        self.add_main_option_entries((option,))
+        option = GLib.OptionEntry()
+        option.long_name = 'engine'
+        option.short_name = ord('e')
+        option.arg = GLib.OptionArg.STRING
+        option.arg_description = _("command")
+        option.description = _("Sets the game engine to use")
+        options.append(option)
+        
+        self.add_main_option_entries(options)
+        
+        # Application actions
+        
+        action_type = GLib.VariantType.new('s')
+        action = Gio.SimpleAction.new('engine-change', action_type)
+        action.connect("activate", self.on_engine_change)
+        
+        self.add_action(action)
         
         # Connect all the application signals
         
@@ -56,6 +80,10 @@ class GTKApplication(Gtk.Application):
         self.connect("activate", self.on_activate)
         self.connect("open", self.on_open)
         self.connect("handle-local-options", self.on_handle_options)
+        
+        # Register the application
+        
+        self.register()
     
     
     def on_startup(self, application):
@@ -75,7 +103,7 @@ class GTKApplication(Gtk.Application):
     def on_activate(self, application):
         """Emitted to activate the application"""
         
-        view = GTKView()
+        view = GTKView(self._view_options)
         application.show_view(view)
         view.show_tips()
     
@@ -84,7 +112,7 @@ class GTKApplication(Gtk.Application):
         """Emitted to open one ore more files"""
         
         for path in (f.get_path() for f in files):
-            view = GTKView()
+            view = GTKView(self._view_options)
             view.open_match(path)
             application.show_view(view)
     
@@ -92,11 +120,35 @@ class GTKApplication(Gtk.Application):
     def on_handle_options(self, application, options):
         """Emitted to parse local command line options"""
         
+        # Show program version and exit
+        
         if options.contains('version'):
             print('%s %s' % (App.NAME, App.VERSION))
             sys.exit(0);
         
+        # If an engine command is provided set it, otherwise
+        # reset to default command
+        
+        if options.contains('engine'):
+            command = options.lookup_value('engine')
+            self.activate_action("engine-change", command)
+        else:
+            command = GLib.Variant.new_string('')
+            self.activate_action("engine-change", command)
+        
         return -1
+    
+    
+    def on_engine_change(self, action, parameter):
+        """Sets the command that must be used to launch the engine"""
+        
+        command = parameter.get_string()
+        
+        if not command:
+            if self._view_options.has_key('command'):
+                del self._view_options['command']
+        else:
+            self._view_options['command'] = command
     
     
     def on_window_delete(self, window, event):
