@@ -1,3 +1,8 @@
+auale (1.1.2-1) UNRELEASED; urgency=medium
+  * Fix issues with SVG rendering
+  * Fix Python 3 compatibility issues
+  * Update PySDL2 to version 0.9.5
+
 auale (1.1.0-1) UNRELEASED; urgency=medium
 
   * Support for Python 3

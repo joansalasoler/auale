@@ -3,7 +3,7 @@
 # Contributor: Andrew Dabrowski <dabrowsa@indiana.edu>
 
 pkgname=auale
-pkgver=1.1.0
+pkgver=1.1.2
 pkgrel=1
 pkgdesc="A free mancala game for the serious player"
 arch=('any')

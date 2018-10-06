@@ -1,3 +1,9 @@
+2018-10-06  Joan Sala Soler  <contact@joansala.com>
+
+    * Fix issues with SVG rendering
+    * Fix Python 3 compatibility issues
+    * Update PySDL2 to version 0.9.5
+
 2015-11-07  Joan Sala Soler  <contact@joansala.com>
 
     * Support for Python 3

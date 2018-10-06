@@ -6,6 +6,14 @@ News of Aualé
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
+Version 1.1.2 (06 Oct 2018) (Joan Sala Soler)
+  Fixed some compatibility issues and updated PySDL2 to the latest
+  version of the library.
+
+Version 1.1.1 (28 Nov 2015) (Joan Sala Soler)
+  New and improved packages for Linux. Added support to change the game
+  engine from the command line.
+
 Version 1.1.0 (07 Nov 2015) (Joan Sala Soler)
   This new version of the game is built to improve the overall user
   experience. Including new localizations to Asturian, French, Indonesian,
