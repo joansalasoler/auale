@@ -1463,6 +1463,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (graphic design)
                       <object class="GtkCellRendererText" id="value_cellrenderertext">
                         <property name="editable">True</property>
                         <property name="ellipsize">end</property>
+                        <property name="width-chars">50</property>
                         <signal name="edited" handler="on_property_edited" swapped="no"/>
                       </object>
                       <attributes>
