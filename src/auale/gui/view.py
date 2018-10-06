@@ -181,12 +181,12 @@ class GTKView(object):
         try:
             # If an engine command is provided use it
             
-            if self._options.has_key('command'):
+            if 'command' in self._options:
                 command = self._options['command'].split()
                 path = util.which(command[0])
                 command[0] = path
             
-            if path is None and self._options.has_key('command'):
+            if path is None and 'command' in self._options:
                 raise Exception(_('Not a valid engine command'))
             
             # If Aalina is installed use it

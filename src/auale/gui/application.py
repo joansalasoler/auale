@@ -145,7 +145,7 @@ class GTKApplication(Gtk.Application):
         command = parameter.get_string()
         
         if not command:
-            if self._view_options.has_key('command'):
+            if 'command' in self._view_options:
                 del self._view_options['command']
         else:
             self._view_options['command'] = command
