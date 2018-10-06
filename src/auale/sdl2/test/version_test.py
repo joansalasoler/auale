@@ -1,11 +1,17 @@
 import sys
 import ctypes
 import unittest
-from .. import version
+from .. import version, __version__, version_info
 
 
 class SDLVersionTest(unittest.TestCase):
     __tags__ = ["sdl"]
+
+    def test___version__(self):
+        self.assertEqual(__version__, "0.9.5")
+
+    def test_version_info(self):
+        self.assertEqual(version_info, (0, 9, 5, ""))
 
     def test_SDL_version(self):
         v = version.SDL_version(0, 0, 0)
@@ -19,7 +25,7 @@ class SDLVersionTest(unittest.TestCase):
         self.assertEqual(type(v), version.SDL_version)
         self.assertEqual(v.major, 2)
         self.assertEqual(v.minor, 0)
-        self.assertEqual(v.patch, 3)
+        self.assertEqual(v.patch, 5)
 
     def test_SDL_VERSIONNUM(self):
         self.assertEqual(version.SDL_VERSIONNUM(1, 2, 3), 1203)
@@ -37,7 +43,7 @@ class SDLVersionTest(unittest.TestCase):
         self.assertEqual(version.SDL_GetRevision()[0:3], b"hg-")
 
     def test_SDL_GetRevisionNumber(self):
-        if sys.platform in ("win32", "cli"):
+        if sys.platform in ("win32",):
             # HG tip on Win32 does not set any revision number
             self.assertGreaterEqual(version.SDL_GetRevisionNumber(), 0)
         else:

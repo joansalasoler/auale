@@ -2,6 +2,7 @@ import sys
 import unittest
 from ctypes import byref, POINTER, c_int
 from .. import SDL_Init, SDL_Quit, SDL_INIT_EVERYTHING
+import itertools
 from ..stdinc import Uint8, Uint32, SDL_TRUE, SDL_FALSE
 from .. import render, video, surface, pixels, blendmode, rect
 from ..ext.pixelaccess import PixelView
@@ -9,6 +10,9 @@ from ..ext.pixelaccess import PixelView
 _ISPYPY = hasattr(sys, "pypy_version_info")
 if _ISPYPY:
     import gc
+    dogc = gc.collect
+else:
+    dogc = lambda: None
 
 
 # TODO: mostly positive tests, improve this!
@@ -66,6 +70,7 @@ class SDLRenderTest(unittest.TestCase):
 
         render.SDL_DestroyRenderer(renderer)
         video.SDL_DestroyWindow(window)
+        dogc()
 
         # TODO: the code below works, too - is that really expected from SDL?
         #window, renderer = render.SDL_CreateWindowAndRenderer \
@@ -92,6 +97,7 @@ class SDLRenderTest(unittest.TestCase):
             self.assertIsInstance(renderer.contents, render.SDL_Renderer)
             render.SDL_DestroyRenderer(renderer)
             video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_CreateSoftwareRenderer(self):
         sf = surface.SDL_CreateRGBSurface(0, 100, 100, 32,
@@ -131,6 +137,7 @@ class SDLRenderTest(unittest.TestCase):
         #                  render.SDL_GetRenderer, None)
         #self.assertRaises((AttributeError, TypeError),
         #                  render.SDL_GetRenderer, "Test")
+        dogc()
 
     def test_SDL_GetRendererInfo(self):
         for i in range(render.SDL_GetNumRenderDrivers()):
@@ -155,6 +162,7 @@ class SDLRenderTest(unittest.TestCase):
                           render.SDL_GetRendererInfo, None)
         self.assertRaises((AttributeError, TypeError),
                           render.SDL_GetRendererInfo, "Test")
+        dogc()
 
     def test_SDL_CreateDestroyTexture(self):
         window = video.SDL_CreateWindow(b"Test", 10, 10, 10, 10,
@@ -182,8 +190,8 @@ class SDLRenderTest(unittest.TestCase):
                                                        w, h)
                         self.assertIsInstance(tex.contents, render.SDL_Texture)
                         render.SDL_DestroyTexture(tex)
-                    if _ISPYPY and (w % 50) == 0:
-                        gc.collect()
+                    if (w % 50) == 0:
+                        dogc()
 
         #self.assertRaises(sdl.SDLError, render.SDL_CreateTexture, renderer,
         #                  pixels.SDL_PIXELFORMAT_RGB555, 1, -10, 10)
@@ -212,6 +220,7 @@ class SDLRenderTest(unittest.TestCase):
         #self.assertRaises(sdl.SDLError, render.SDL_CreateTexture, renderer,
         #                  pixels.SDL_PIXELFORMAT_RGB555, 1, 10, 10)
         video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_CreateTextureFromSurface(self):
         sf = surface.SDL_CreateRGBSurface(0, 100, 100, 32, 0xFF000000,
@@ -225,6 +234,7 @@ class SDLRenderTest(unittest.TestCase):
         self.assertIsInstance(renderer.contents, render.SDL_Renderer)
         tex = render.SDL_CreateTextureFromSurface(renderer, sf)
         self.assertIsInstance(tex.contents, render.SDL_Texture)
+        dogc()
 
     def test_SDL_QueryTexture(self):
         window = video.SDL_CreateWindow(b"Test", 10, 10, 10, 10,
@@ -265,6 +275,7 @@ class SDLRenderTest(unittest.TestCase):
 
         render.SDL_DestroyRenderer(renderer)
         video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_GetSetTextureColorMod(self):
         window = video.SDL_CreateWindow(b"Test", 10, 10, 10, 10,
@@ -305,6 +316,7 @@ class SDLRenderTest(unittest.TestCase):
 
         render.SDL_DestroyRenderer(renderer)
         video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_GetSetTextureAlphaMod(self):
         window = video.SDL_CreateWindow(b"Test", 10, 10, 10, 10,
@@ -335,6 +347,7 @@ class SDLRenderTest(unittest.TestCase):
 
         render.SDL_DestroyRenderer(renderer)
         video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_GetSetTextureBlendMode(self):
         window = video.SDL_CreateWindow(b"Test", 10, 10, 10, 10,
@@ -370,6 +383,7 @@ class SDLRenderTest(unittest.TestCase):
 
         render.SDL_DestroyRenderer(renderer)
         video.SDL_DestroyWindow(window)
+        dogc()
 
     @unittest.skip("not implemented")
     def test_SDL_UpdateTexture(self):
@@ -394,6 +408,7 @@ class SDLRenderTest(unittest.TestCase):
             self.assertIn(val, (SDL_TRUE, SDL_FALSE))
             render.SDL_DestroyRenderer(renderer)
             video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_GetSetRenderTarget(self):
         skipcount = 0
@@ -442,6 +457,7 @@ class SDLRenderTest(unittest.TestCase):
 
         if skipcount == render.SDL_GetNumRenderDrivers():
             self.skipTest("None of the renderers supports render targets")
+        dogc()
 
     def test_SDL_RenderGetSetViewport(self):
         rects = (rect.SDL_Rect(0, 0, 0, 0),
@@ -487,6 +503,7 @@ class SDLRenderTest(unittest.TestCase):
         if failcount > 0:
             unittest.skip("""for some reason, even with correct values, this
 seems to fail on creating the second renderer of the window, if any""")
+        dogc()
 
     def test_SDL_GetSetRenderDrawColor(self):
         for i in range(render.SDL_GetNumRenderDrivers()):
@@ -525,6 +542,7 @@ seems to fail on creating the second renderer of the window, if any""")
             #self.assertRaises(sdl.SDLError, render.SDL_GetRenderDrawColor,
             #                  renderer)
             video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_GetSetRenderDrawBlendMode(self):
         for i in range(render.SDL_GetNumRenderDrivers()):
@@ -554,6 +572,7 @@ seems to fail on creating the second renderer of the window, if any""")
             #self.assertRaises(sdl.SDLError, render.SDL_GetRenderDrawBlendMode,
             #                  renderer)
             video.SDL_DestroyWindow(window)
+        dogc()
 
     def test_SDL_RenderClear(self):
         window = video.SDL_CreateWindow(b"Test", 10, 10, 10, 10,
@@ -573,11 +592,9 @@ seems to fail on creating the second renderer of the window, if any""")
 #                          render.SDL_RenderClear, "Test")
 #        self.assertRaises((AttributeError, TypeError),
 #                          render.SDL_RenderClear, 123456)
+        dogc()
 
-    @unittest.skipIf(hasattr(sys, "pypy_version_info"),
-                     "PyPy's ctypes can't do byref(value, offset)")
-    @unittest.skipIf(sys.platform=="cli",
-                     "IronPython can't cast values array values correctly")
+    @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_SDL_RenderDrawPoint(self):
         points = ((-4, -3), (-4, 3), (4, -3),
                   (0, 0), (1, 1), (10, 10), (99, 99),
@@ -658,9 +675,112 @@ seems to fail on creating the second renderer of the window, if any""")
     def test_SDL_RenderGetSetScale(self):
         pass
 
-    @unittest.skip("not implemented")
+    @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_SDL_RenderGetSetLogicalSize(self):
-        pass
+        w, h = 100, 100
+        sf = surface.SDL_CreateRGBSurface(0, w, h, 32,
+                                          0xFF000000,
+                                          0x00FF0000,
+                                          0x0000FF00,
+                                          0x000000FF)
+
+        renderer = render.SDL_CreateSoftwareRenderer(sf)
+        view = PixelView(sf.contents)
+
+        magenta = 255, 0, 255, 255
+        green = 0, 255, 0, 255
+
+        magenta_int = sum(c << (i * 8) for i, c in enumerate(reversed(magenta)))
+        green_int = sum(c << (i * 8) for i, c in enumerate(reversed(green)))
+
+        def clear_green():
+            ret = render.SDL_SetRenderDrawColor(renderer, green[0], green[1],
+                                                green[2], green[3])
+            self.assertEqual(ret, 0)
+            ret = render.SDL_RenderClear(renderer)
+            self.assertEqual(ret, 0)
+
+        def draw_magenta_pixel(x, y):
+            ret = render.SDL_SetRenderDrawColor(renderer, magenta[0],
+                                                magenta[1], magenta[2],
+                                                magenta[3])
+            self.assertEqual(ret, 0)
+            ret = render.SDL_RenderDrawPoint(renderer, x, y)
+            self.assertEqual(ret, 0)
+
+        # Test 1
+        # If we set the logical renderer size to 1 x 1, drawing a point
+        # at 0, 0 should have the same effect as filling the entire
+        # (square) window with magenta - no green should show through.
+        got_width, got_height = c_int(), c_int()
+
+        ret = render.SDL_RenderSetLogicalSize(renderer, 1, 1)
+        self.assertEqual(ret, 0)
+        render.SDL_RenderGetLogicalSize(renderer, byref(got_width),
+                                        byref(got_height))
+        self.assertEqual(got_width.value, 1)
+        self.assertEqual(got_height.value, 1)
+
+        clear_green()
+        draw_magenta_pixel(0, 0)
+
+        for x, y in itertools.product(range(w), range(h)):
+            self.assertEqual(view[y][x], magenta_int,
+                             'No pixel should be green')
+
+        # Test 2
+        # Reset the logical size to the original target by using 0, 0
+        # only the first and last pixel should be magenta. The rest
+        # should be green.
+        got_width, got_height = c_int(), c_int()
+
+        ret = render.SDL_RenderSetLogicalSize(renderer, 0, 0)
+        self.assertEqual(ret, 0)
+
+        render.SDL_RenderGetLogicalSize(renderer, byref(got_width),
+                                        byref(got_height))
+        self.assertEqual(got_width.value, 0)
+        self.assertEqual(got_height.value, 0)
+
+        clear_green()
+
+        draw_magenta_pixel(0, 0)
+        draw_magenta_pixel(w - 1, h - 1)
+
+        for x, y in itertools.product(range(w), range(h)):
+            if (x, y) == (0, 0) or (x, y) == (w - 1, h - 1):
+                self.assertEqual(view[y][x], magenta_int,
+                                 'First and last pixel should be magenta')
+            else:
+                self.assertEqual(view[y][x], green_int,
+                                 'All other pixels should be green')
+
+        # Test 3
+        # Set the logical size to 1/10, making a logical pixel draw be
+        # 10 x 10 real pixel blocks.
+        got_width, got_height = c_int(), c_int()
+
+        ret = render.SDL_RenderSetLogicalSize(renderer, w//10, h//10)
+        self.assertEqual(ret, 0)
+
+        render.SDL_RenderGetLogicalSize(renderer, byref(got_width),
+                                        byref(got_height))
+        self.assertEqual(got_width.value, w//10)
+        self.assertEqual(got_height.value, h//10)
+
+        clear_green()
+
+        draw_magenta_pixel(0, 0)
+        for x, y in itertools.product(range(w), range(h)):
+            if x < 10 and y < 10:
+                self.assertEqual(view[y][x], magenta_int,
+                    'Top-left 10 x 10 pixel block should be magenta')
+            else:
+                self.assertEqual(view[y][x], green_int,
+                                 'All other pixels should be green')
+
+        render.SDL_DestroyRenderer(renderer)
+        surface.SDL_FreeSurface(sf)
 
     @unittest.skip("not implemented")
     def test_SDL_RenderGetSetClipRect(self):
@@ -669,6 +789,28 @@ seems to fail on creating the second renderer of the window, if any""")
     @unittest.skip("not implemented")
     def test_SDL_GetRendererOutputSize(self):
         pass
+
+    @unittest.skip("not implemented")
+    def test_SDL_RenderIsClipEnabled(self):
+        pass
+
+    def test_SDL_RenderGetSetIntegerScale(self):
+        sf = surface.SDL_CreateRGBSurface(0, 100, 100, 32,
+                                          0xFF000000,
+                                          0x00FF0000,
+                                          0x0000FF00,
+                                          0x000000FF)
+        renderer = render.SDL_CreateSoftwareRenderer(sf)
+        self.assertIsInstance(renderer.contents, render.SDL_Renderer)
+        self.assertEqual(render.SDL_RenderGetIntegerScale(renderer), SDL_FALSE)
+        self.assertEqual(render.SDL_RenderSetIntegerScale(renderer, SDL_FALSE), 0)
+        self.assertEqual(render.SDL_RenderGetIntegerScale(renderer), SDL_FALSE)
+        self.assertEqual(render.SDL_RenderSetIntegerScale(renderer, SDL_TRUE), 0)
+        self.assertEqual(render.SDL_RenderGetIntegerScale(renderer), SDL_TRUE)
+        self.assertEqual(render.SDL_RenderSetIntegerScale(renderer, SDL_FALSE), 0)
+        self.assertEqual(render.SDL_RenderGetIntegerScale(renderer), SDL_FALSE)
+        render.SDL_DestroyRenderer(renderer)
+        surface.SDL_FreeSurface(sf)
 
 if __name__ == '__main__':
     sys.exit(unittest.main())

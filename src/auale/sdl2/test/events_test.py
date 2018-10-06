@@ -15,6 +15,10 @@ class SDLEventsTest(unittest.TestCase):
         SDL_QuitSubSystem(SDL_INIT_EVERYTHING)
         SDL_Quit()
 
+    def test_SDL_AudioDeviceEvent(self):
+        event = events.SDL_AudioDeviceEvent()
+        self.assertIsInstance(event, events.SDL_AudioDeviceEvent)
+
     def test_SDL_WindowEvent(self):
         event = events.SDL_WindowEvent()
         self.assertIsInstance(event, events.SDL_WindowEvent)
@@ -91,8 +95,6 @@ class SDLEventsTest(unittest.TestCase):
         event = events.SDL_Event()
         self.assertIsInstance(event, events.SDL_Event)
 
-    @unittest.skipIf(sys.platform == "cli",
-                     "IronPython's ctypes can't handle Union types correctly")
     def test_SDL_AddDelEventWatch(self):
         eventwatch = []
 
@@ -117,8 +119,6 @@ class SDLEventsTest(unittest.TestCase):
         # TODO: x
         # self.assertEqual(eventwatch[0][1], udata)
 
-    @unittest.skipIf(sys.platform == "cli",
-                     "IronPython's ctypes can't handle Union types correctly")
     def test_SDL_EventState(self):
         pass
         # state = events.SDL_EventState(events.SDL_USEREVENT, events.SDL_QUERY)

@@ -5,13 +5,13 @@ import warnings
 from ctypes import CDLL
 from ctypes.util import find_library
 
-__all__ = ["get_dll_file"]
+__all__ = ["DLL", "nullfunc"]
 
 
 def _findlib(libnames, path=None):
     """."""
     platform = sys.platform
-    if platform in ("win32", "cli"):
+    if platform in ("win32",):
         pattern = "%s.dll"
     elif platform == "darwin":
         pattern = "lib%s.dylib"
@@ -20,18 +20,16 @@ def _findlib(libnames, path=None):
     searchfor = libnames
     if type(libnames) is dict:
         # different library names for the platforms
-        if platform == "cli" and platform not in libnames:
-            # if not explicitly specified, use the Win32 libs for IronPython
-            platform = "win32"
         if platform not in libnames:
             platform = "DEFAULT"
         searchfor = libnames[platform]
     results = []
     if path:
         for libname in searchfor:
-            dllfile = os.path.join(path, pattern % libname)
-            if os.path.exists(dllfile):
-                results.append(dllfile)
+            for subpath in str.split(path, os.pathsep):
+                dllfile = os.path.join(subpath, pattern % libname)
+                if os.path.exists(dllfile):
+                    results.append(dllfile)
     for libname in searchfor:
         dllfile = find_library(libname)
         if dllfile:
@@ -39,7 +37,11 @@ def _findlib(libnames, path=None):
     return results
 
 
-class _DLL(object):
+class DLLWarning(Warning):
+    pass
+
+
+class DLL(object):
     """Function wrapper around the different DLL functions. Do not use or
     instantiate this one directly from your user code.
     """
@@ -56,13 +58,14 @@ class _DLL(object):
                 self._libfile = libfile
                 break
             except Exception as exc:
-                # Could not load it, silently ignore that issue and move
-                # to the next one.
-                warnings.warn(repr(exc), ImportWarning)
+                # Could not load the DLL, move to the next, but inform the user
+                # about something weird going on - this may become noisy, but
+                # is better than confusing the users with the RuntimeError below
+                warnings.warn(repr(exc), DLLWarning)
         if self._dll is None:
             raise RuntimeError("found %s, but it's not usable for the library %s" %
                                (foundlibs, libinfo))
-        if path is not None and sys.platform in ("win32", "cli") and \
+        if path is not None and sys.platform in ("win32",) and \
             path in self._libfile:
             os.environ["PATH"] = "%s;%s" % (path, os.environ["PATH"])
 
@@ -91,6 +94,7 @@ class _DLL(object):
         """Gets the filename of the loaded library."""
         return self._libfile
 
+
 def _nonexistent(funcname, func):
     """A simple wrapper to mark functions and methods as nonexistent."""
     def wrapper(*fargs, **kw):
@@ -101,14 +105,14 @@ def _nonexistent(funcname, func):
     return wrapper
 
 
-try:
-    dll = _DLL("SDL2", ["SDL2", "SDL2-2.0"], os.getenv("PYSDL2_DLL_PATH"))
-except RuntimeError as exc:
-    raise ImportError(exc)
-
 def nullfunc(*args):
     """A simple no-op function to be used as dll replacement."""
     return
+
+try:
+    dll = DLL("SDL2", ["SDL2", "SDL2-2.0"], os.getenv("PYSDL2_DLL_PATH"))
+except RuntimeError as exc:
+    raise ImportError(exc)
 
 def get_dll_file():
     """Gets the file name of the loaded SDL2 library."""

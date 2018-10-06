@@ -1,5 +1,5 @@
 from ctypes import Structure, POINTER, c_int
-from .dll import _bind
+from .dll import _bind, nullfunc
 from .stdinc import Uint8, Uint32, SDL_bool
 from .video import SDL_Window
 from .surface import SDL_Surface
@@ -19,8 +19,10 @@ __all__ = ["SDL_Cursor", "SDL_SYSTEM_CURSOR_ARROW", "SDL_SYSTEM_CURSOR_IBEAM",
            "SDL_ShowCursor", "SDL_BUTTON", "SDL_BUTTON_LEFT",
            "SDL_BUTTON_MIDDLE", "SDL_BUTTON_RIGHT", "SDL_BUTTON_X1",
            "SDL_BUTTON_X2", "SDL_BUTTON_LMASK", "SDL_BUTTON_MMASK",
-           "SDL_BUTTON_RMASK", "SDL_BUTTON_X1MASK", "SDL_BUTTON_X2MASK"
-           ]
+           "SDL_BUTTON_RMASK", "SDL_BUTTON_X1MASK", "SDL_BUTTON_X2MASK",
+           "SDL_WarpMouseGlobal", "SDL_CaptureMouse",
+           "SDL_GetGlobalMouseState", "SDL_MOUSEWHEEL_NORMAL",
+           "SDL_MOUSEWHEEL_FLIPPED", "SDL_MouseWheelDirection" ]
 
 
 class SDL_Cursor(Structure):
@@ -55,6 +57,9 @@ SDL_GetCursor = _bind("SDL_GetCursor", None, POINTER(SDL_Cursor))
 SDL_GetDefaultCursor = _bind("SDL_GetDefaultCursor", None, POINTER(SDL_Cursor))
 SDL_FreeCursor = _bind("SDL_FreeCursor", [POINTER(SDL_Cursor)])
 SDL_ShowCursor = _bind("SDL_ShowCursor", [c_int], c_int)
+SDL_WarpMouseGlobal = _bind("SDL_WarpMouseGlobal", [c_int, c_int], c_int, optfunc=nullfunc)
+SDL_CaptureMouse = _bind("SDL_CaptureMouse", [SDL_bool], c_int, optfunc=nullfunc)
+SDL_GetGlobalMouseState = _bind("SDL_GetGlobalMouseState", [POINTER(c_int), POINTER(c_int)], Uint32, optfunc=nullfunc)
 SDL_BUTTON = lambda X: (1 << ((X) - 1))
 SDL_BUTTON_LEFT = 1
 SDL_BUTTON_MIDDLE = 2
@@ -66,3 +71,6 @@ SDL_BUTTON_MMASK = SDL_BUTTON(SDL_BUTTON_MIDDLE)
 SDL_BUTTON_RMASK = SDL_BUTTON(SDL_BUTTON_RIGHT)
 SDL_BUTTON_X1MASK = SDL_BUTTON(SDL_BUTTON_X1)
 SDL_BUTTON_X2MASK = SDL_BUTTON(SDL_BUTTON_X2)
+SDL_MOUSEWHEEL_NORMAL = 0
+SDL_MOUSEWHEEL_FLIPPED = 1
+SDL_MouseWheelDirection = c_int

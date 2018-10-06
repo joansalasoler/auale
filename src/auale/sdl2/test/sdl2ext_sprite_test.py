@@ -14,6 +14,11 @@ _ISPYPY = hasattr(sys, "pypy_version_info")
 
 RESOURCES = Resources(__file__, "resources")
 
+if _ISPYPY:
+    import gc
+    dogc = gc.collect
+else:
+    dogc = lambda: None
 
 class MSprite(sdl2ext.Sprite):
     def __init__(self, w=0, h=0):
@@ -54,13 +59,29 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         def _inarea(x, y, rs):
             for r in rs:
                 if (x >= r[0] and x < (r[0] + r[2]) and
-                    y >= r[1] and y < (r[1] + r[3])):
+                        y >= r[1] and y < (r[1] + r[3])):
                     return True
             return False
         msg = "color mismatch at %d,%d: %d not in %s"
         for y in range(w):
             for x in range(h):
                 if _inarea(x, y, rects):
+                    self.assertEqual(view[y][x], c1,
+                                     msg % (x, y, view[y][x], c1))
+                else:
+                    self.assertTrue(view[y][x] in c2,
+                                    msg % (x, y, view[y][x], c2))
+
+    def check_lines(self, view, w, h, points, c1, c2):
+        def _online(x, y, pts):
+            for p1, p2 in pts:
+                if sdl2ext.point_on_line(p1, p2, (x, y)):
+                    return True
+            return False
+        msg = "color mismatch at %d,%d: %d not in %s"
+        for y in range(w):
+            for x in range(h):
+                if _online(x, y, points):
                     self.assertEqual(view[y][x], c1,
                                      msg % (x, y, view[y][x], c1))
                 else:
@@ -90,6 +111,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.assertRaises(ValueError, sdl2ext.SpriteFactory, -456)
         self.assertRaises(ValueError, sdl2ext.SpriteFactory, 123)
         self.assertRaises(ValueError, sdl2ext.SpriteFactory, sdl2ext.TEXTURE)
+        dogc()
 
     def test_SpriteFactory_create_sprite(self):
         window = sdl2ext.Window("Test", size=(1, 1))
@@ -109,6 +131,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
                     continue
                 sprite = tfactory.create_sprite(size=(w, h))
                 self.assertIsInstance(sprite, sdl2ext.TextureSprite)
+        dogc()
 
     def test_SpriteFactory_create_software_sprite(self):
         factory = sdl2ext.SpriteFactory(sdl2ext.SOFTWARE)
@@ -131,6 +154,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.assertRaises((ArgumentError, TypeError),
                           factory.create_software_sprite, size=(10, 10),
                           masks=("Test", 1, 2, 3))
+        dogc()
 
     def test_SpriteFactory_create_texture_sprite(self):
         window = sdl2ext.Window("Test", size=(1, 1))
@@ -140,13 +164,16 @@ class SDL2ExtSpriteTest(unittest.TestCase):
             for h in range(1, 100):
                 sprite = factory.create_texture_sprite(renderer, size=(w, h))
                 self.assertIsInstance(sprite, sdl2ext.TextureSprite)
+                del sprite
 
         # Test different access flags
         for flag in (SDL_TEXTUREACCESS_STATIC, SDL_TEXTUREACCESS_STREAMING,
-                     SDL_TEXTUREACCESS_TARGET, 22):
+                     SDL_TEXTUREACCESS_TARGET):
             sprite = factory.create_texture_sprite(renderer, size=(64, 64),
                                                    access=flag)
             self.assertIsInstance(sprite, sdl2ext.TextureSprite)
+            del sprite
+        dogc()
 
     def test_SpriteFactory_from_image(self):
         window = sdl2ext.Window("Test", size=(1, 1))
@@ -162,12 +189,13 @@ class SDL2ExtSpriteTest(unittest.TestCase):
             self.assertIsInstance(ssprite, sdl2ext.SoftwareSprite)
 
         for factory in (tfactory, sfactory):
-            self.assertRaises((AttributeError, TypeError, sdl2ext.SDLError),
+            self.assertRaises((ArgumentError, ValueError),
                               factory.from_image, None)
             #self.assertRaises((IOError, SDLError),
             #                  factory.from_image, "banana")
-            self.assertRaises((AttributeError, IOError, sdl2ext.SDLError),
-                              factory.from_image, 12345)
+            if not _ISPYPY:
+                self.assertRaises(ArgumentError, factory.from_image, 12345)
+        dogc()
 
     @unittest.skip("not implemented")
     def test_SpriteFactory_from_object(self):
@@ -197,6 +225,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
             # TODO: crashes pypy 2.0
             #self.assertRaises((AttributeError, ArgumentError, TypeError),
             #                  factory.from_surface, 1234)
+        dogc()
 
     def test_SpriteFactory_from_text(self):
         sfactory = sdl2ext.SpriteFactory(sdl2ext.SOFTWARE)
@@ -206,10 +235,10 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.assertRaises(KeyError, sfactory.from_text, "Test")
 
         # Passing various keywords arguments
-        sprite = sfactory.from_text("Test", fontmanager = fm)
+        sprite = sfactory.from_text("Test", fontmanager=fm)
         self.assertIsInstance(sprite, sdl2ext.SoftwareSprite)
 
-        sprite = sfactory.from_text("Test", fontmanager = fm, alias="tuffy")
+        sprite = sfactory.from_text("Test", fontmanager=fm, alias="tuffy")
         self.assertIsInstance(sprite, sdl2ext.SoftwareSprite)
 
         # Get text from a texture sprite factory
@@ -220,6 +249,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
                                          fontmanager=fm)
         sprite = tfactory.from_text("Test", alias="tuffy")
         self.assertIsInstance(sprite, sdl2ext.TextureSprite)
+        dogc()
 
     def test_SpriteRenderSystem(self):
         renderer = sdl2ext.SpriteRenderSystem()
@@ -272,6 +302,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.assertIsNotNone(renderer.sortfunc)
         self.assertFalse(sdl2ext.Sprite in renderer.componenttypes)
         self.assertTrue(sdl2ext.SoftwareSprite in renderer.componenttypes)
+        dogc()
 
     @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_SoftwareSpriteRenderSystem_render(self):
@@ -442,6 +473,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.assertIsInstance(sprite, sdl2ext.TextureSprite)
         SDL_DestroyRenderer(renderer)
         SDL_DestroyWindow(window)
+        dogc()
 
     def test_TextureSprite_position_xy(self):
         window = POINTER(SDL_Window)()
@@ -462,6 +494,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
             self.assertEqual(sprite.position, (x + 1, y + 1))
         SDL_DestroyRenderer(renderer)
         SDL_DestroyWindow(window)
+        dogc()
 
     def test_TextureSprite_size(self):
         window = POINTER(SDL_Window)()
@@ -478,6 +511,7 @@ class SDL2ExtSpriteTest(unittest.TestCase):
                 del sprite
         SDL_DestroyRenderer(renderer)
         SDL_DestroyWindow(window)
+        dogc()
 
     def test_TextureSprite_area(self):
         window = POINTER(SDL_Window)()
@@ -500,22 +534,105 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.assertEqual(sprite.area, (-22, 99, -12, 119))
         SDL_DestroyRenderer(renderer)
         SDL_DestroyWindow(window)
+        dogc()
 
-    @unittest.skip("not implemented")
     def test_Renderer(self):
-        pass
+        sf = SDL_CreateRGBSurface(0, 10, 10, 32, 0, 0, 0, 0).contents
 
-    @unittest.skip("not implemented")
+        renderer = sdl2ext.Renderer(sf)
+        self.assertEqual(renderer.rendertarget, sf)
+        self.assertIsInstance(renderer.sdlrenderer.contents, SDL_Renderer)
+        del renderer
+
+        # Deprecated
+        renderer = sdl2ext.Renderer(sf)
+        self.assertEqual(renderer.rendertarget, sf)
+        self.assertIsInstance(renderer.renderer.contents, SDL_Renderer)
+        del renderer
+
+
+        sprite = sdl2ext.SoftwareSprite(sf, True)
+        renderer = sdl2ext.Renderer(sprite)
+        self.assertEqual(renderer.rendertarget, sprite.surface)
+        self.assertEqual(renderer.rendertarget, sf)
+        self.assertIsInstance(renderer.sdlrenderer.contents, SDL_Renderer)
+        del renderer
+        dogc()
+
+        window = sdl2ext.Window("Test", size=(1, 1))
+        renderer = sdl2ext.Renderer(window)
+        self.assertEqual(renderer.rendertarget, window.window)
+        self.assertIsInstance(renderer.sdlrenderer.contents, SDL_Renderer)
+        del renderer
+        dogc()
+
+        sdlwindow = window.window
+        renderer = sdl2ext.Renderer(sdlwindow)
+        self.assertEqual(renderer.rendertarget, sdlwindow)
+        self.assertEqual(renderer.rendertarget, window.window)
+        self.assertIsInstance(renderer.sdlrenderer.contents, SDL_Renderer)
+        del renderer
+        del window
+
+        self.assertRaises(TypeError, sdl2ext.Renderer, None)
+        self.assertRaises(TypeError, sdl2ext.Renderer, 1234)
+        self.assertRaises(TypeError, sdl2ext.Renderer, "test")
+        dogc()
+
+    @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_Renderer_color(self):
-        pass
+        sf = SDL_CreateRGBSurface(0, 10, 10, 32,
+                                  0xFF000000,
+                                  0x00FF0000,
+                                  0x0000FF00,
+                                  0x000000FF)
+        renderer = sdl2ext.Renderer(sf.contents)
+        self.assertIsInstance(renderer.color, sdl2ext.Color)
+        self.assertEqual(renderer.color, sdl2ext.Color(0, 0, 0, 0))
+        renderer.color = 0x00FF0000
+        self.assertEqual(renderer.color, sdl2ext.Color(0xFF, 0, 0, 0))
+        renderer.clear()
+        view = sdl2ext.PixelView(sf.contents)
+        self.check_areas(view, 10, 10, [[0, 0, 10, 10]], 0xFF000000, (0x0,))
+        del view
+        renderer.color = 0xAABBCCDD
+        self.assertEqual(renderer.color, sdl2ext.Color(0xBB, 0xCC, 0xDD, 0xAA))
+        renderer.clear()
+        view = sdl2ext.PixelView(sf.contents)
+        self.check_areas(view, 10, 10, [[0, 0, 10, 10]], 0xBBCCDDAA, (0x0,))
+        del view
+        del renderer
+        SDL_FreeSurface(sf)
+        dogc()
 
     @unittest.skip("not implemented")
     def test_Renderer_blendmode(self):
         pass
 
-    @unittest.skip("not implemented")
+    @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_Renderer_clear(self):
-        pass
+        sf = SDL_CreateRGBSurface(0, 10, 10, 32,
+                                  0xFF000000,
+                                  0x00FF0000,
+                                  0x0000FF00,
+                                  0x000000FF)
+        renderer = sdl2ext.Renderer(sf.contents)
+        self.assertIsInstance(renderer.color, sdl2ext.Color)
+        self.assertEqual(renderer.color, sdl2ext.Color(0, 0, 0, 0))
+        renderer.color = 0x00FF0000
+        self.assertEqual(renderer.color, sdl2ext.Color(0xFF, 0, 0, 0))
+        renderer.clear()
+        view = sdl2ext.PixelView(sf.contents)
+        self.check_areas(view, 10, 10, [[0, 0, 10, 10]], 0xFF000000, (0x0,))
+        del view
+        renderer.clear(0xAABBCCDD)
+        self.assertEqual(renderer.color, sdl2ext.Color(0xFF, 0, 0, 0))
+        view = sdl2ext.PixelView(sf.contents)
+        self.check_areas(view, 10, 10, [[0, 0, 10, 10]], 0xBBCCDDAA, (0x0,))
+        del view
+        del renderer
+        SDL_FreeSurface(sf)
+        dogc()
 
     @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_Renderer_copy(self):
@@ -531,17 +648,47 @@ class SDL2ExtSpriteTest(unittest.TestCase):
         self.check_pixels(view, 128, 128, sp, 0xFF0000, (0x0,))
         del view
 
-    @unittest.skip("not implemented")
+    @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_Renderer_draw_line(self):
-        pass
+        surface = SDL_CreateRGBSurface(0, 128, 128, 32, 0, 0, 0, 0).contents
+        sdl2ext.fill(surface, 0x0)
+        renderer = sdl2ext.Renderer(surface)
+        renderer.draw_line((20, 10, 20, 86), 0x0000FF)
+        view = sdl2ext.PixelView(surface)
+        self.check_lines(view, 128, 128,
+                         [((20, 10), (20, 86))], 0x0000FF, (0x0,))
+        del view
 
     @unittest.skip("not implemented")
     def test_Renderer_draw_point(self):
         pass
 
-    @unittest.skip("not implemented")
+    @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_Renderer_draw_rect(self):
-        pass
+        surface = SDL_CreateRGBSurface(0, 128, 128, 32, 0, 0, 0, 0).contents
+        sdl2ext.fill(surface, 0x0)
+        renderer = sdl2ext.Renderer(surface)
+        renderer.draw_rect((40, 50, 32, 32), 0x0000FF)
+        view = sdl2ext.PixelView(surface)
+        self.check_lines(view, 128, 128, [
+            ((40, 50), (71, 50)),
+            ((40, 50), (40, 81)),
+            ((40, 81), (71, 81)),
+            ((71, 50), (71, 81))], 0x0000FF, (0x0,))
+        del view
+        sdl2ext.fill(surface, 0x0)
+        renderer.draw_rect([(5, 5, 10, 10), (20, 15, 8, 10)], 0x0000FF)
+        view = sdl2ext.PixelView(surface)
+        self.check_lines(view, 128, 128, [
+            ((5, 5), (14, 5)),
+            ((5, 5), (5, 14)),
+            ((5, 14), (14, 14)),
+            ((14, 5), (14, 14)),
+            ((20, 15), (27, 15)),
+            ((20, 15), (20, 24)),
+            ((20, 24), (27, 24)),
+            ((27, 15), (27, 24))], 0x0000FF, (0x0,))
+        del view
 
     @unittest.skipIf(_ISPYPY, "PyPy's ctypes can't do byref(value, offset)")
     def test_Renderer_fill(self):

@@ -1,7 +1,7 @@
 import os
 from ctypes import Structure, POINTER, CFUNCTYPE, c_int, c_char_p, c_void_p, \
     c_double
-from .dll import _DLL
+from .dll import DLL
 from .version import SDL_version
 from .audio import AUDIO_S16LSB, AUDIO_S16MSB
 from .stdinc import Uint8, Uint16, Uint32, Sint16
@@ -50,8 +50,8 @@ __all__ = ["get_dll_file", "SDL_MIXER_MAJOR_VERSION", "SDL_MIXER_MINOR_VERSION",
           ]
 
 try:
-    dll = _DLL("SDL2_mixer", ["SDL2_mixer", "SDL2_mixer-2.0"],
-               os.getenv("PYSDL2_DLL_PATH"))
+    dll = DLL("SDL2_mixer", ["SDL2_mixer", "SDL2_mixer-2.0"],
+              os.getenv("PYSDL2_DLL_PATH"))
 except RuntimeError as exc:
     raise ImportError(exc)
 
@@ -80,10 +80,11 @@ MIX_VERSION = SDL_MIXER_VERSION
 Mix_Linked_Version = _bind("Mix_Linked_Version", None, POINTER(SDL_version))
 MIX_InitFlags = c_int
 MIX_INIT_FLAC = 0x00000001
-MIX_INIT_MOD = 0x00000002
-MIX_INIT_MP3 = 0x00000004
-MIX_INIT_OGG = 0x00000008
-MIX_INIT_FLUIDSYNTH = 0x00000010
+MIX_INIT_MOD =  0x00000002
+MIX_INIT_MODPLUG = 0x00000004
+MIX_INIT_MP3 = 0x00000008
+MIX_INIT_OGG = 0x000000010
+MIX_INIT_FLUIDSYNTH = 0x00000020
 
 Mix_Init = _bind("Mix_Init", [c_int], c_int)
 Mix_Quit = _bind("Mix_Quit")
