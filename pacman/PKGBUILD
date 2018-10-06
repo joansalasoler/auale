@@ -3,7 +3,7 @@
 # Contributor: Andrew Dabrowski <dabrowsa@indiana.edu>
 
 pkgname=auale
-pkgver=1.1.0
+pkgver=1.1.2
 pkgrel=1
 pkgdesc="A free mancala game for the serious player"
 arch=('any')
@@ -25,7 +25,7 @@ makedepends=(
 )
 conflicts=('python2-auale')
 install=${pkgname}.install
-source=("http://www.joansala.com/auale/packages/$pkgname-$pkgver.tar.gz")
+source=("http://www.joansala.com/auale/packages/$pkgname-$pkgver.tar.xz")
 sha256sums=('SKIP')
 
 build() {

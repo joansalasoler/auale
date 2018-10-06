@@ -1,9 +1,9 @@
 Name:           auale
-Version:        1.1.0
-Release:        2
+Version:        1.1.2
+Release:        1
 Summary:        A free mancala game for the serious player
 URL:            http://www.joansala.com/auale
-Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.gz
+Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.xz
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -157,6 +157,10 @@ rm -rf %{buildroot}
 %{_bindir}/update-desktop-database &> /dev/null || :
 
 %changelog
+* Sat Oct 6 2018 Joan Sala <contact@joansala.com>
+- 1.1.2-1
+- auale 1.1.2 release
+
 * Fri Nov 13 2015 Joan Sala <contact@joansala.com>
 - 1.1.0-2
 - Fix OpenSUSE dependencies

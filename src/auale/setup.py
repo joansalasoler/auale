@@ -33,7 +33,7 @@ from distutils import dir_util
 
 PACKAGE_CONFIG = dict(
     name             = 'auale',
-    version          = '1.1.0',
+    version          = '1.1.2',
     url              = 'http://www.joansala.com/auale/',
     author           = 'Joan Sala Soler',
     author_email     = 'contact@joansala.com',
