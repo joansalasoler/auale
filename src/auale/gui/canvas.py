@@ -344,6 +344,7 @@ class Board(Gtk.DrawingArea):
         if self._labels is None:
             return
         
+        context.save()
         context.translate(x, y)
         context.rotate(-self._angle)
         
@@ -351,8 +352,7 @@ class Board(Gtk.DrawingArea):
         label = '#%s%s' % (char.lower(), turn)
         self._labels.render_cairo_sub(context, label)
         
-        context.rotate(self._angle)
-        context.translate(-x, -y)
+        context.restore()
         
         
     def draw_number(self, context, x, y, number):
@@ -361,13 +361,13 @@ class Board(Gtk.DrawingArea):
         if self._numbers is None:
             return
         
+        context.save()
         context.translate(x, y)
         context.rotate(-self._angle)
         
         self._numbers.render_cairo_sub(context, '#%d' % number)
         
-        context.rotate(self._angle)
-        context.translate(-x, -y)
+        context.restore()
         
         
     def draw_background(self, width, height, context):
