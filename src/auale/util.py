@@ -6,13 +6,14 @@ Python 3 module library. Please, see the Python distribution for licensing
 information.
 """
 
-import os, sys
-import gettext
+import os
+import sys
 import locale
+import builtins
 
 from gi.repository import Gio
 
-__MESSAGES_PATH = './res/messages/'
+__LOCALE_PATH = './res/locale/'
 __SCHEMAS_PATH = './res/schemas/'
 
 
@@ -81,63 +82,68 @@ def _which(cmd, mode=os.F_OK | os.X_OK, path=None):
 
 def resource_path(path):
     """Returns an absolute path for the given resource file"""
-    
+
     # Obtain this module's path
-    
+
     file = os.path.abspath(__file__)
     folder = os.path.dirname(file)
-    
+
     # This module may be in a compressed file
-    
+
     if os.path.isfile(folder):
         folder = os.path.dirname(folder)
-    
+
     return os.path.normcase(
         os.path.realpath(os.path.join(folder, path)))
 
 
+def get_gettext_module():
+    """Obtains the gettext library to use"""
+
+    # On Windows we load the intl library if the locale
+    # module does not have support for gettext
+
+    if not hasattr(locale, 'bindtextdomain'):
+        from ctypes import cdll
+        return cdll.LoadLibrary('libintl-8.dll')
+
+    return locale
+
+
 def install_gettext(domain):
     """Sets the text domain and installs it"""
-    
-    # LANG must be set on some platforms (e.g. Windows)
-    
-    if 'LANG' not in os.environ:
-        lang, enc = locale.getdefaultlocale()
+
+    gettext = get_gettext_module()
+
+    # Ensures LANG environment is set
+
+    if 'LANG' not in os.environ or not os.environ['LANG']:
+        lang, enc = gettext.getdefaultlocale()
         os.environ['LANG'] = lang
-    
-    # Use the standard system path for messages if possible,
-    # otherwise default to __MESSAGES_PATH
-    
-    path = None
-    
-    if not gettext.find(domain):
-        path = resource_path(__MESSAGES_PATH)
-    
-    # Set text domain for Python code
-    
+
+    # Ensures LOCPATH environment is set
+
+    if 'LOCPATH' not in os.environ or not os.environ['LOCPATH']:
+        path = resource_path(__LOCALE_PATH)
+
+        if not os.path.isdir(path):
+            path = '%s/share/locale' % sys.base_prefix
+
+        os.environ['LOCPATH'] = path
+
+    # Binds the text domain and adds a _() method
+
+    path = os.environ['LOCPATH']
+    gettext.bind_textdomain_codeset(domain, 'utf-8')
     gettext.bindtextdomain(domain, path)
     gettext.textdomain(domain)
-    
-    # Set text domain for non Python code. On Windows 'libintl'
-    # must be loaded to do so
-    
-    if hasattr(locale, 'bindtextdomain'):
-        locale.bindtextdomain(domain, path)
-    else:
-        from ctypes import cdll
-        intl = cdll.LoadLibrary('libintl-8.dll')
-        intl.bind_textdomain_codeset(domain, 'UTF-8')
-        intl.bindtextdomain(domain, path)
-    
-    # Install gettext's _() method in __builtins__
-    
-    gettext.install(domain, path, codeset = 'utf-8')
+    builtins._ = gettext.gettext
 
 
 def putenv(varname, value):
     """Sets an environment variable making sure it is encoded as utf-8 if
        the version of Python > 2 (see os.putenv)"""
-    
+
     try:
         os.putenv(varname, value)
     except TypeError:
@@ -150,20 +156,20 @@ def get_gio_settings(schema_id):
     """Returns a Gio.Settings object for the specified schema. This method
        instantiates the object using the default source if the schema is
        installed on the system, otherwise, it fallsback to a local folder"""
-    
+
     # Read setting from the default source if available
-    
+
     if schema_id in Gio.Settings.list_schemas():
         return Gio.Settings(schema_id)
-    
+
     # Fallback to a local application folder
-    
+
     path = resource_path(__SCHEMAS_PATH)
     gss = Gio.SettingsSchemaSource
     default_source = gss.get_default()
     source = gss.new_from_directory(path, default_source, False)
     schema = source.lookup(schema_id, False)
-    
+
     return Gio.Settings.new_full(schema, None, None)
 
 
@@ -171,11 +177,10 @@ def get_gio_settings(schema_id):
 
 try:
     import shutil
-    
+
     if hasattr(shutil, 'which'):
         which = shutil.which
     else:
         which = _which
 except:
     which = _which
-
