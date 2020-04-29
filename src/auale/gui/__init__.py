@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 class App:
-    
     NAME    = 'Aualé'
     VERSION = '1.1.2'
     ID      = 'com.joansala.auale'
@@ -24,4 +23,3 @@ __all__ = [
     'App', 'Animator', 'Board', 'GameLoop',
     'GTKApplication', 'GTKView', 'Mixer'
 ]
-

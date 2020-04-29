@@ -3,17 +3,17 @@
 
 # Aualé oware graphic user interface.
 # Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -42,7 +42,7 @@ PACKAGE_CONFIG = dict(
     long_description = """Aualé is a graphic user interface for the oware abapa
         board game. Allows the users to analyse and record their own matches
         or play against a strong computer player.""",
-    
+
     packages = [
         '.',
         'game',
@@ -58,15 +58,15 @@ PACKAGE_CONFIG = dict(
             'res/image/*',
             'res/other/*',
             'res/sound/*',
-            'res/messages/*/*/*'
+            'res/locale/*/*/*'
         ],
     },
-    
+
     windows = [{
         'script' : '__main__.py',
         'icon_resources' : [(1, './res/image/auale.ico')]
     }],
-    
+
     options = {
         'py2exe' : {
             'packages' : ['gi', 'cairo'],
@@ -93,4 +93,3 @@ if 'py2exe' in sys.argv and 'win' in sys.platform:
     dir_util.copy_tree('./res', './dist/res')
     dir_util.copy_tree('../../bin/win32/', './dist/')
     os.rename('./dist/__main__.exe', './dist/auale.exe')
-
