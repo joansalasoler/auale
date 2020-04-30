@@ -104,13 +104,9 @@ class GTKView(object):
 
         # Pack the objects together
 
-        overlay = Gtk.Overlay()
-        overlay.add(self._canvas)
+        overlay = self._builder.get_object('board_overlay')
         overlay.add_overlay(self._infobar)
-
-        vbox = self._builder.get_object('window_vbox')
-        vbox.add(overlay)
-        vbox.reorder_child(overlay, 2)
+        overlay.add(self._canvas)
 
         self._canvas.grab_focus()
         self._canvas.set_board(self._match.get_board())
