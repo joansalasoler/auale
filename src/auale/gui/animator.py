@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, math, time, threading
+import math
+import time
+import threading
 
 from game import Oware
-from gi.repository import GLib
 from gi.repository import GObject
 
 
@@ -45,7 +46,6 @@ class Animator(GObject.GObject):
     __DROP_ACTION = 1
     __GATHER_ACTION = 2
 
-
     def __init__(self, canvas, mixer):
         """Object initialization"""
 
@@ -62,8 +62,7 @@ class Animator(GObject.GObject):
             self._animate_canvas, None
         )
 
-
-    def _animate_canvas(self, widget, clock, data = None):
+    def _animate_canvas(self, widget, clock, data=None):
         """Canvas animation loop"""
 
         with self._lock:
@@ -96,14 +95,12 @@ class Animator(GObject.GObject):
 
         return True
 
-
     def _add(self, method, *args):
         """Adds a method to the draw queue"""
 
         with self._lock:
             self._queue.append([
                 method, args, time.time(), 0])
-
 
     def _remove(self, method):
         """Removes a method from the draw queue"""
@@ -119,7 +116,6 @@ class Animator(GObject.GObject):
             if index is not None:
                 self._queue.pop(index)
 
-
     def rotate_board(self):
         """Queue a board rotation animation"""
 
@@ -127,19 +123,16 @@ class Animator(GObject.GObject):
         target = (angle == 0.0) and math.pi or 0.0
         self._add(self._animate_rotation, target)
 
-
     def make_move(self, match, move):
         """Queue a move animation"""
 
         frames = self._compute_move_frames(match, move)
         self._add(self._animate_move, frames)
 
-
     def stop_move(self):
         """Stops a move animation"""
 
         self._remove(self._animate_move)
-
 
     def _animate_rotation(self, delay, step, target):
         """Canvas rotation animation method"""
@@ -171,7 +164,6 @@ class Animator(GObject.GObject):
         self._canvas.set_active(None)
 
         return False
-
 
     def _animate_move(self, delay, step, frames):
         """Move animation method"""
@@ -205,7 +197,6 @@ class Animator(GObject.GObject):
             self._canvas.set_board(board)
 
         return True
-
 
     def _compute_move_frames(self, match, move):
         """Computes key frames of a move animation"""

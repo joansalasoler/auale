@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, re
-import shutil, subprocess
+import os
+import re
+import shutil
+import subprocess
+import sys
+import util
+
+from gui import App
 
 # Import the util and App modules from the package
 
@@ -28,8 +34,6 @@ sys.path.append(
     )
 )
 
-import util
-from gui import App
 
 # Configuration options
 
@@ -38,9 +42,9 @@ BUGS_ADDRESS = 'contact@joansala.com'
 
 # Update and compile translation files
 
-xgettext = util.which('xgettext')
-msgmerge = util.which('msgmerge')
-msgfmt = util.which('msgfmt')
+xgettext = shutil.which('xgettext')
+msgmerge = shutil.which('msgmerge')
+msgfmt = shutil.which('msgfmt')
 
 if not (xgettext and msgmerge and msgfmt):
     raise Exception("Gettext tools not found")
@@ -77,32 +81,35 @@ if os.path.exists(OUTPUT_FOLDER):
 
 LINGUAS = [
     x for x in re.findall(
-        '(?:#.*)|([^\s]+)',
+        r'(?:#.*)|([^\s]+)',
         open('po/LINGUAS').read()
     ) if x
 ]
 
 for name in os.listdir('po'):
     match = re.match(r'^([^.]+)[.]po$', name)
-    if not match: continue
+
+    if not match:
+        continue
+
     code = match.group(1)
-    
+
     if code not in LINGUAS:
         continue
-    
+
     print("-- Updating translation: %s." % code)
-    
+
     subprocess.call((
         msgmerge, '--verbose', '--update',
         'po/%s.po' % code,
         'po/%s.pot' % App.DOMAIN
     ))
-    
+
     print("-- Formatting translation: %s." % code)
-    
+
     folder = '%s/%s/LC_MESSAGES/' % (OUTPUT_FOLDER, code)
     os.makedirs(folder)
-    
+
     subprocess.call((
         msgfmt, '--verbose', '--check',
         '--output-file=%s/%s.mo' % (folder, App.DOMAIN),

@@ -24,8 +24,11 @@ def resource_path(path):
     if os.path.isfile(folder):
         folder = os.path.dirname(folder)
 
-    return os.path.normcase(
-        os.path.realpath(os.path.join(folder, path)))
+    result = os.path.join(folder, path)
+    result = os.path.realpath(result)
+    result = os.path.normcase(result)
+
+    return result
 
 
 def get_gettext_module():

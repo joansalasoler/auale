@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys
-import math, threading
+import logging
+import math
+import os
+import sys
+import threading
 import util
+
+from gui import App
 
 _SDL_IS_DISABLED = False
 
@@ -29,10 +34,9 @@ try:
 
     import sdl2 as sdl
     import sdl2.sdlmixer as mixer
-except:
+except BaseException as e:
     _SDL_IS_DISABLED = True
-
-from gui import App
+    logging.warning(e)
 
 
 class Mixer():
@@ -50,7 +54,6 @@ class Mixer():
     __PICK_UP_PATH = util.resource_path('./res/sound/pickup.wav').encode('utf-8')
     __ROTATE_PATH = util.resource_path('./res/sound/rotate.wav').encode('utf-8')
     __START_PATH = util.resource_path('./res/sound/start.wav').encode('utf-8')
-
 
     def __init__(self):
         """Initializes a new mixer object"""
@@ -89,20 +92,18 @@ class Mixer():
 
         # Load available sounds files
 
-        self._wav_drop   = mixer.Mix_LoadWAV(Mixer.__DROP_PATH)
+        self._wav_drop = mixer.Mix_LoadWAV(Mixer.__DROP_PATH)
         self._wav_gather = mixer.Mix_LoadWAV(Mixer.__GATHER_PATH)
         self._wav_pickup = mixer.Mix_LoadWAV(Mixer.__PICK_UP_PATH)
         self._wav_rotate = mixer.Mix_LoadWAV(Mixer.__ROTATE_PATH)
-        self._wav_start  = mixer.Mix_LoadWAV(Mixer.__START_PATH)
+        self._wav_start = mixer.Mix_LoadWAV(Mixer.__START_PATH)
 
         Mixer.__OPENED_COUNT += 1
-
 
     def is_disabled(self):
         """Tells if the mixer is disabled"""
 
         return _SDL_IS_DISABLED
-
 
     def stop_mixer(self):
         """Close resources and clean up"""
@@ -118,7 +119,6 @@ class Mixer():
         if not Mixer.__OPENED_COUNT:
             sdl.SDL_Quit()
 
-
     def toggle_mute(self):
         """Enables and disables sound effects"""
 
@@ -132,7 +132,6 @@ class Mixer():
             mixer.Mix_Volume(-1, 0)
             self._muted = True
 
-
     def set_rotation(self, angle):
         """Sets the board rotation angle in radians"""
 
@@ -143,7 +142,6 @@ class Mixer():
             return
 
         self._angle = angle
-
 
     def play_on_house(self, house, chunk):
         """Plays a chunk with a panning relative to a house."""
@@ -160,10 +158,17 @@ class Mixer():
 
         # Compute a nice panning effect
 
-        if house < 6: place = house
-        if house > 5: place = 11 - house
-        if house == 12: place = 6
-        if house == 13: place = -1
+        if house < 6:
+            place = house
+
+        if house > 5:
+            place = 11 - house
+
+        if house == 12:
+            place = 6
+
+        if house == 13:
+            place = -1
 
         cos = math.cos(self._angle)
         dis = 16 * cos * (place - 2.5)
@@ -174,7 +179,6 @@ class Mixer():
 
         mixer.Mix_SetPanning(channel, left, right)
         mixer.Mix_PlayChannel(channel, chunk, 0)
-
 
     def on_board_rotate(self):
         """Plays a board rotation sound"""
@@ -188,13 +192,11 @@ class Mixer():
             0
         )
 
-
     def on_house_gather(self, house, seeds):
         """Plays a sound for a gather event"""
 
         if not _SDL_IS_DISABLED:
             self.play_on_house(house, self._wav_gather)
-
 
     def on_house_pickup(self, house, seeds):
         """Plays a sound for a seeds pick up event"""
@@ -202,13 +204,11 @@ class Mixer():
         if not _SDL_IS_DISABLED:
             self.play_on_house(house, self._wav_pickup)
 
-
     def on_house_drop(self, house, seeds):
         """Plays a sound for a seed drop event"""
 
         if not _SDL_IS_DISABLED:
             self.play_on_house(house, self._wav_drop)
-
 
     def on_game_start(self):
         """Plays a game start sound"""

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,22 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import math
-import warnings
-import util
-import cairo as pycairo
 import gi
+import math
+import util
+import warnings
+import cairo
 
+gi.require_version('Gdk', '3.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Rsvg', '2.0')
 
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GObject
-from gi.repository import cairo
-from gi.repository import GdkPixbuf
 from gi.repository import Rsvg
+from gi.repository import GdkPixbuf
+from gi.repository import GObject
+from gi.repository import Gdk
+from gi.repository import Gtk
 
 
 class Board(Gtk.DrawingArea):
@@ -82,7 +81,6 @@ class Board(Gtk.DrawingArea):
     __NUMBERS_PATH = util.resource_path('./res/image/numbers.svg')
     __BACKGROUND_PATH = util.resource_path('./res/image/background.png')
 
-
     def __init__(self):
         """Initalize this canva object"""
 
@@ -91,19 +89,19 @@ class Board(Gtk.DrawingArea):
         self._NOTATION = 'ABCDEFabcdef'
 
         self._HOUSE_POSITIONS = (
-            (-275.0,  55.0), (-165.0,  55.0), ( -55.0,  55.0),
-            (  55.0,  55.0), ( 165.0,  55.0), ( 275.0,  55.0),
-            ( 275.0, -55.0), ( 165.0, -55.0), (  55.0, -55.0),
-            ( -55.0, -55.0), (-165.0, -55.0), (-275.0, -55.0)
+            (-275.0, 55.0), (-165.0, 55.0), (-55.0, 55.0),
+            (55.0, 55.0), (165.0, 55.0), (275.0, 55.0),
+            (275.0, -55.0), (165.0, -55.0), (55.0, -55.0),
+            (-55.0, -55.0), (-165.0, -55.0), (-275.0, -55.0)
         )
 
         self._COLOR = {
-            'HOUSE':           (0.96, 0.96, 0.96),
-            'HOUSE_ACTIVE':    (1.0, 1.0, 0.55),
+            'HOUSE': (0.96, 0.96, 0.96),
+            'HOUSE_ACTIVE': (1.0, 1.0, 0.55),
             'HOUSE_HIGHLIGHT': (0.88, 0.95, 1.0),
-            'HOUSE_STROKE':    (0.2, 0.2, 0.2),
-            'SEED':            (0.55, 0.75, 0.0),
-            'SEED_STROKE':     (0.10, 0.5, 0.2)
+            'HOUSE_STROKE': (0.2, 0.2, 0.2),
+            'SEED': (0.55, 0.75, 0.0),
+            'SEED_STROKE': (0.10, 0.5, 0.2)
         }
 
         self._context = None
@@ -122,21 +120,20 @@ class Board(Gtk.DrawingArea):
             self._numbers = Rsvg.Handle().new_from_file(self.__NUMBERS_PATH)
             self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(self.__BACKGROUND_PATH)
             self._background_path = self.__BACKGROUND_PATH
-        except:
+        except BaseException:
             self._labels = None
             self._numbers = None
             self._wallpaper = None
 
         self.add_events(
-            Gdk.EventMask.POINTER_MOTION_MASK | \
-            Gdk.EventMask.BUTTON_PRESS_MASK | \
-            Gdk.EventMask.ENTER_NOTIFY_MASK | \
+            Gdk.EventMask.POINTER_MOTION_MASK |
+            Gdk.EventMask.BUTTON_PRESS_MASK |
+            Gdk.EventMask.ENTER_NOTIFY_MASK |
             Gdk.EventMask.LEAVE_NOTIFY_MASK
         )
 
         self.connect('draw', self.do_draw_event)
         self.set_property('can-focus', True)
-
 
     def do_get_property(self, prop):
         """Gets a property value"""
@@ -146,12 +143,11 @@ class Board(Gtk.DrawingArea):
         elif prop.name == 'background-image':
             return self._background_path
 
-
     def do_set_property(self, prop, value):
         """Sets a property value"""
 
         if prop.name == 'board':
-            if type(value) != tuple:
+            if not isinstance(value, tuple):
                 raise TypeError('board must be a tuple')
 
             if len(value) != 14 or sum(value) > 48:
@@ -163,9 +159,8 @@ class Board(Gtk.DrawingArea):
             try:
                 self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(value)
                 self._background_path = value
-            except:
+            except BaseException:
                 warnings.warn('cannot load background image')
-
 
     def do_draw_event(self, widget, context):
         """Performs all drawing operations"""
@@ -179,19 +174,17 @@ class Board(Gtk.DrawingArea):
         self.transform_canvas(width, height, context)
         self.draw_board(context)
 
-
     def export_svg(self, path, width, height):
         """Exports the current canvas to an SVG file"""
 
-        surface = pycairo.SVGSurface(path, width, height)
-        context = pycairo.Context(surface)
+        surface = cairo.SVGSurface(path, width, height)
+        context = cairo.Context(surface)
 
         self.transform_canvas(width, height, context)
         self.draw_board(context)
 
         surface.flush()
         surface.finish()
-
 
     def do_motion_notify_event(self, event):
         """Hit detection"""
@@ -234,19 +227,16 @@ class Board(Gtk.DrawingArea):
                 self.emit('house-enter-notify-event', hovered_house)
             self._hovered_house = hovered_house
 
-
     def do_button_press_event(self, event):
         """Button press events"""
 
         if self._hovered_house != -1:
             self.emit('house-button-press-event', self._hovered_house)
 
-
     def do_enter_notify_event(self, event):
         """Recomputes hit detection"""
 
         self.do_motion_notify_event(event)
-
 
     def do_leave_notify_event(self, event):
         """Unselect any selected house"""
@@ -254,7 +244,6 @@ class Board(Gtk.DrawingArea):
         if self._hovered_house != -1:
             self.emit('house-leave-notify-event', self._hovered_house)
             self._hovered_house = -1
-
 
     def draw_home(self, context, x, y):
         """Draws a home"""
@@ -270,8 +259,7 @@ class Board(Gtk.DrawingArea):
         context.set_line_width(2.0)
         context.stroke()
 
-
-    def draw_house(self, context, x, y, active = False, highlight = False):
+    def draw_house(self, context, x, y, active=False, highlight=False):
         """Draws a house"""
 
         context.new_sub_path()
@@ -279,13 +267,12 @@ class Board(Gtk.DrawingArea):
         context.set_source_rgb(
             *self._COLOR[
                 active and 'HOUSE_ACTIVE' or (
-                highlight and 'HOUSE_HIGHLIGHT' or 'HOUSE')]
+                    highlight and 'HOUSE_HIGHLIGHT' or 'HOUSE')]
         )
         context.fill_preserve()
         context.set_source_rgb(*self._COLOR['HOUSE_STROKE'])
         context.set_line_width(2.0)
         context.stroke()
-
 
     def draw_seed(self, context, x, y, radius):
         """Draws a single seed"""
@@ -297,7 +284,6 @@ class Board(Gtk.DrawingArea):
         context.set_source_rgb(*self._COLOR['SEED_STROKE'])
         context.set_line_width(1.5)
         context.stroke()
-
 
     def draw_seeds(self, context, x, y, number):
         """Draws the specified number of seeds"""
@@ -325,7 +311,7 @@ class Board(Gtk.DrawingArea):
         # Remaining seeds
 
         angle = 2.0 * math.pi / seeds
-        radius = (seeds > 1 and 6.0 + 3.0 * seeds  or 0.0)
+        radius = (seeds > 1 and 6.0 + 3.0 * seeds or 0.0)
 
         for n in range(seeds):
             self.draw_seed(
@@ -334,7 +320,6 @@ class Board(Gtk.DrawingArea):
                 y + radius * math.sin(n * angle),
                 10.0
             )
-
 
     def draw_label(self, context, x, y, char):
         """Draws a notation label"""
@@ -352,7 +337,6 @@ class Board(Gtk.DrawingArea):
 
         context.restore()
 
-
     def draw_number(self, context, x, y, number):
         """Draws a seed number"""
 
@@ -367,7 +351,6 @@ class Board(Gtk.DrawingArea):
 
         context.restore()
 
-
     def draw_background(self, width, height, context):
         """Draws a tiled background"""
 
@@ -377,11 +360,10 @@ class Board(Gtk.DrawingArea):
             Gdk.cairo_set_source_pixbuf(context, self._wallpaper, 0, 0)
             pattern = context.get_source()
             pattern.set_extend(2)
-        except:
+        except BaseException:
             context.set_source_rgb(0.7, 0.5, 0.3)
 
         context.fill()
-
 
     def draw_board(self, context):
         """Draws the current board"""
@@ -411,7 +393,6 @@ class Board(Gtk.DrawingArea):
                 self._NOTATION[house]
             )
 
-
     def transform_canvas(self, width, height, context):
         """Translates, scales and rotates this canvas"""
 
@@ -428,13 +409,11 @@ class Board(Gtk.DrawingArea):
 
         context.rotate(self._angle)
 
-
     def rotate(self, angle):
         """Rotates the canvas the specified number of radians"""
 
         self._angle += angle
         self._hovered_house = -1
-
 
     def get_rotation(self):
         """Returns this canvas rotation angle in radians"""
@@ -446,24 +425,20 @@ class Board(Gtk.DrawingArea):
 
         self.set_property('board', board)
 
-
     def set_active(self, house):
         """Sets the active house"""
 
         self._active_house = house
-
 
     def set_highlight(self, house):
         """Sets the highligted house"""
 
         self._highlighted_house = house
 
-
     def get_hovered(self):
         """Returns the current hovered house index"""
 
         return self._hovered_house
-
 
     def update_hovered(self):
         """Updates the hovered house"""
@@ -475,12 +450,10 @@ class Board(Gtk.DrawingArea):
         self._hovered_house = -1
         self.do_motion_notify_event(event)
 
-
     def get_active(self):
         """Returns the current active house index"""
 
         return self._active_house
-
 
     def get_highlight(self):
         """Returns the active house"""

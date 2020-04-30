@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import site
 
 try:
     import py2exe
-except:
+except BaseException:
     pass
 
 from distutils.core import setup
@@ -32,27 +32,27 @@ from distutils import dir_util
 # Distutils configuration
 
 PACKAGE_CONFIG = dict(
-    name             = 'auale',
-    version          = '1.1.2',
-    url              = 'http://www.joansala.com/auale/',
-    author           = 'Joan Sala Soler',
-    author_email     = 'contact@joansala.com',
-    license          = 'GPL3+',
-    description      = 'Graphic user interface for oware',
-    long_description = """Aualé is a graphic user interface for the oware abapa
+    name='auale',
+    version='1.1.2',
+    url='http://www.joansala.com/auale/',
+    author='Joan Sala Soler',
+    author_email='contact@joansala.com',
+    license='GPL3+',
+    description='Graphic user interface for oware',
+    long_description="""Aualé is a graphic user interface for the oware abapa
         board game. Allows the users to analyse and record their own matches
         or play against a strong computer player.""",
 
-    packages = [
+    packages=[
         '.',
         'game',
         'gui',
         'uci',
         'sdl2',
     ],
-    
-    package_data = {
-        '.' : [
+
+    package_data={
+        '.': [
             'res/engine/*',
             'res/glade/*',
             'res/image/*',
@@ -62,15 +62,15 @@ PACKAGE_CONFIG = dict(
         ],
     },
 
-    windows = [{
-        'script' : '__main__.py',
-        'icon_resources' : [(1, './res/image/auale.ico')]
+    windows=[{
+        'script': '__main__.py',
+        'icon_resources': [(1, './res/image/auale.ico')]
     }],
 
-    options = {
-        'py2exe' : {
-            'packages' : ['gi', 'cairo'],
-            'includes' : ['gi', 'cairo'],
+    options={
+        'py2exe': {
+            'packages': ['gi', 'cairo'],
+            'includes': ['gi', 'cairo'],
         }
     },
 )

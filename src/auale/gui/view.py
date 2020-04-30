@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,18 +16,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gi
 import math
 import os
 import shutil
 import threading
 import time
-import webbrowser
 import util
+import webbrowser
 
-from game import *
-from gui import *
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+
+from gi.repository import Gdk
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
+
+from game import Match
+from game import Oware
+from gui import Animator
+from gui import App
+from gui import Board
+from gui import GameLoop
+from gui import Mixer
 from uci import UCIPlayer
-from gi.repository import Gio, GLib, Gdk, Gtk, GObject
 
 
 class GTKView(object):
@@ -37,8 +51,7 @@ class GTKView(object):
     __CSS_PATH = util.resource_path('./res/glade/auale.css')
     __ENGINE_PATH = util.resource_path('./res/engine/Aalina.jar')
 
-
-    def __init__(self, options = {}):
+    def __init__(self, options={}):
         """Builds this interface and runs it"""
 
         # Interface options dictionary
@@ -113,9 +126,7 @@ class GTKView(object):
         self._connect_signals(self._loop)
         self._connect_signals(self._canvas)
 
-        self._canvas.connect('leave-notify-event',
-            self.on_canvas_leave_notify_event)
-
+        self._canvas.connect('leave-notify-event', self.on_canvas_leave_notify_event)
         self._about_dialog.connect('delete-event', self.hide_on_delete)
         self._newmatch_dialog.connect('delete-event', self.hide_on_delete)
         self._properties_dialog.connect('delete-event', self.hide_on_delete)
@@ -127,7 +138,6 @@ class GTKView(object):
         self._loop.start()
         self.start_match()
 
-
     # Utility methods
 
     def _connect_signals(self, cobject):
@@ -137,7 +147,6 @@ class GTKView(object):
             attr = 'on_%s' % name.replace('-', '_')
             method = getattr(self, attr)
             cobject.connect(name, method)
-
 
     def _add_css_provider(self, path):
         """Adds a new class provider for the screen"""
@@ -149,7 +158,6 @@ class GTKView(object):
             Gdk.Screen.get_default(), provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
-
 
     def _load_settings(self):
         """Loads application settings"""
@@ -173,7 +181,6 @@ class GTKView(object):
 
         strength = self._settings.get_int('strength')
         self._update_strength_menu(strength)
-
 
     def _start_engine(self):
         """Initializes the engine process"""
@@ -222,7 +229,6 @@ class GTKView(object):
                 )
             )
 
-
     def _update_strength_menu(self, strength):
         """Updates the active strength menu item"""
 
@@ -239,7 +245,6 @@ class GTKView(object):
             item = self._builder.get_object('expert_strength_radiomenuitem')
             item.activate()
 
-
     def hide_on_delete(self, widget, event):
         """Hides a window and prevents it from being destroyed"""
 
@@ -251,11 +256,10 @@ class GTKView(object):
         """Returns true if the user is allowed to move"""
 
         return not (
-            self._locked.is_set() or \
-            self._loop.is_thinking() or \
+            self._locked.is_set() or
+            self._loop.is_thinking() or
             self._match.has_ended()
         )
-
 
     def get_current_player(self):
         """Returns the player to move"""
@@ -267,7 +271,6 @@ class GTKView(object):
             return self._south
 
         return self._north
-
 
     def show_tips(self):
         """Shows help messages at startup"""
@@ -284,12 +287,10 @@ class GTKView(object):
 
         self._settings.set_boolean('show-tips', False)
 
-
     def get_window(self):
         """Return the main window for this view"""
 
         return self._main_window
-
 
     # Event handlers
 
@@ -311,7 +312,6 @@ class GTKView(object):
 
         return True
 
-
     def on_main_window_delete_response(self, dialog, response):
         """Main window delete-event response handler"""
 
@@ -328,7 +328,6 @@ class GTKView(object):
             dialog.connect('response', self.on_save_and_quit_response)
             dialog.show()
 
-
     def on_save_and_quit_response(self, dialog, response):
         """Main window save and quit dialog response handler"""
 
@@ -341,7 +340,6 @@ class GTKView(object):
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
 
-
     def on_main_window_destroy(self, widget):
         """Quits this interface"""
 
@@ -353,13 +351,12 @@ class GTKView(object):
         self._settings.sync()
         self._mixer.stop_mixer()
 
-
     def on_main_window_key_press_event(self, widget, event):
         """Interprets key presses"""
 
         # Modifier keys are not allowed
 
-        modifiers = Gtk.accelerator_get_default_mod_mask();
+        modifiers = Gtk.accelerator_get_default_mod_mask()
 
         if event.state & modifiers:
             return
@@ -399,14 +396,12 @@ class GTKView(object):
                     self.on_move_received(self._loop, house)
                 break
 
-
     def on_house_button_press_event(self, widget, house):
         """Catches mouse press events on a house"""
 
         if self.user_can_move():
             if self._match.is_legal_move(house):
                 self.on_move_received(self._loop, house)
-
 
     def on_house_enter_notify_event(self, widget, house):
         """Catches mouse enter notifications on a house"""
@@ -424,7 +419,6 @@ class GTKView(object):
             window.set_cursor(None)
             widget.set_active(None)
 
-
     def on_house_leave_notify_event(self, widget, house):
         """Catches mouse leave notifications on a house"""
 
@@ -433,14 +427,12 @@ class GTKView(object):
         widget.set_active(None)
         widget.queue_draw()
 
-
     def on_canvas_leave_notify_event(self, widget, event):
         """Emited when the mouse leaves the drawin area"""
 
         window = self._main_window.get_window()
         window.set_cursor(None)
         widget.set_active(None)
-
 
     def on_new_activate(self, widget):
         """On new game activate"""
@@ -459,7 +451,6 @@ class GTKView(object):
         dialog.connect('response', self.on_new_activate_response)
         dialog.show()
 
-
     def on_new_activate_response(self, dialog, response):
         """New match action response handler"""
 
@@ -476,7 +467,6 @@ class GTKView(object):
         elif response != Gtk.ResponseType.CANCEL:
             self._newmatch_dialog.show()
 
-
     def on_save_and_new_response(self, dialog, response):
         """New match response handler"""
 
@@ -488,7 +478,6 @@ class GTKView(object):
                 self._newmatch_dialog.show()
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
-
 
     def on_newmatch_dialog_response(self, dialog, response):
         """Handles the new match dialog responses"""
@@ -511,7 +500,6 @@ class GTKView(object):
 
         self._newmatch_dialog.hide()
 
-
     def on_open_activate(self, widget):
         """Open a match file dialog"""
 
@@ -529,7 +517,6 @@ class GTKView(object):
 
             dialog.connect('response', self.on_open_activate_response)
             dialog.show()
-
 
     def on_open_activate_response(self, dialog, response):
         """Open match action response handler"""
@@ -549,7 +536,6 @@ class GTKView(object):
             dialog.connect('response', self.on_open_dialog_response)
             dialog.show()
 
-
     def on_open_dialog_response(self, dialog, response):
         """Handles open dialogs responses"""
 
@@ -561,7 +547,6 @@ class GTKView(object):
             self.refresh_view()
 
         dialog.destroy()
-
 
     def on_save_and_open_response(self, dialog, response):
         """Open match response handler"""
@@ -576,7 +561,6 @@ class GTKView(object):
                 dialog.show()
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
-
 
     def on_save_activate(self, widget):
         """Save a match file dialog"""
@@ -595,7 +579,6 @@ class GTKView(object):
         dialog.connect('response', self.on_save_dialog_response)
         dialog.show()
 
-
     def on_save_dialog_response(self, dialog, response):
         """Handles save dialogs responses"""
 
@@ -605,7 +588,6 @@ class GTKView(object):
         if response == Gtk.ResponseType.CANCEL \
         or self._match_changed == False:
             dialog.destroy()
-
 
     def on_open_recent_item_activated(self, widget):
         """Open a recently used file"""
@@ -624,7 +606,6 @@ class GTKView(object):
         dialog.connect('response', self.on_open_recent_response)
         dialog.show()
 
-
     def on_open_recent_response(self, dialog, response):
         """Open recent match action response handler"""
 
@@ -641,7 +622,6 @@ class GTKView(object):
         elif response != Gtk.ResponseType.CANCEL:
             self.open_recent_match()
 
-
     def on_save_and_open_recent(self, dialog, response):
         """Open match response handler"""
 
@@ -653,7 +633,6 @@ class GTKView(object):
                 self.open_recent_match()
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
-
 
     def open_recent_match(self):
         """Open the last chosen recent match file"""
@@ -667,7 +646,6 @@ class GTKView(object):
         self.open_match(path)
         self.reset_engine()
         self.refresh_view()
-
 
     def on_file_changed(self, path):
         """File path changed event"""
@@ -695,7 +673,6 @@ class GTKView(object):
         manager = Gtk.RecentManager.get_default()
         manager.add_item(uri)
 
-
     def on_rotate_activate(self, widget):
         """Rotates the current canvas board"""
 
@@ -713,12 +690,10 @@ class GTKView(object):
         self._rotate_action.set_sensitive(False)
         self._animator.rotate_board()
 
-
     def on_mute_activate(self, widget):
         """Enables and disables sound effects"""
 
         self._mixer.toggle_mute()
-
 
     def on_quit_activate(self, widget):
         """Quits this interface"""
@@ -728,24 +703,20 @@ class GTKView(object):
         if not self._main_window.emit('delete-event', event):
             self._main_window.destroy()
 
-
     def on_home_activate(self, widget):
         """Start home page"""
 
-        webbrowser.open(App.HOME_URL, autoraise = True)
-
+        webbrowser.open(App.HOME_URL, autoraise=True)
 
     def on_support_activate(self, widget):
         """Start help and support forum"""
 
-        webbrowser.open(App.HELP_URL, autoraise = True)
-
+        webbrowser.open(App.HELP_URL, autoraise=True)
 
     def on_rules_activate(self, widget):
         """Show game rules"""
 
-        webbrowser.open(App.RULES_URL, autoraise = True)
-
+        webbrowser.open(App.RULES_URL, autoraise=True)
 
     def on_properties_activate(self, widget):
         """Show a match tags edition dialog"""
@@ -766,7 +737,6 @@ class GTKView(object):
         view.grab_focus()
 
         self._properties_dialog.show()
-
 
     def on_properties_dialog_response(self, widget, response):
         """Handles the properties dialog responses"""
@@ -797,7 +767,6 @@ class GTKView(object):
 
         self._properties_dialog.hide()
 
-
     def on_properties_treeview_row_activated(self, widget, path, column):
         """Starts property edition on activating a row"""
 
@@ -806,7 +775,6 @@ class GTKView(object):
         column.focus_cell(cell)
         widget.set_cursor(path, column, True)
 
-
     def on_property_edited(self, widget, path, new_text):
         """Called after editing a match property"""
 
@@ -814,18 +782,15 @@ class GTKView(object):
         siter = store.get_iter(path)
         store.set_value(siter, 1, new_text.strip())
 
-
     def on_about_activate(self, widget):
         """Shows the about dialog"""
 
         self._about_dialog.show()
 
-
     def on_about_dialog_response(self, widget, response):
         """Handles the about dialog response"""
 
         self._about_dialog.hide()
-
 
     def on_move_now_activate(self, widget):
         """Asks the engine to perform a move"""
@@ -839,7 +804,6 @@ class GTKView(object):
 
         self.refresh_view()
 
-
     def on_stop_activate(self, widget):
         """Asks the engine to stop thinking"""
 
@@ -847,7 +811,6 @@ class GTKView(object):
         self._animator.stop_move()
         self.refresh_view()
         self._locked.clear()
-
 
     def on_undo_activate(self, widget):
         """Undoes the last move"""
@@ -858,7 +821,6 @@ class GTKView(object):
         self.refresh_view()
         self._locked.clear()
 
-
     def on_redo_activate(self, widget):
         """Redoes the last move"""
 
@@ -867,7 +829,6 @@ class GTKView(object):
         self._match.redo_last_move()
         self.refresh_view()
         self._locked.clear()
-
 
     def on_undo_all_activate(self, widget):
         """Undoes all the performed moves"""
@@ -878,7 +839,6 @@ class GTKView(object):
         self.refresh_view()
         self._locked.clear()
 
-
     def on_redo_all_activate(self, widget):
         """Redoes all the undone moves"""
 
@@ -888,44 +848,41 @@ class GTKView(object):
         self.refresh_view()
         self._locked.clear()
 
-
     def on_side_menuitem_toggled(self, widget):
         """Emitted when the user sets the engine player"""
 
-        if not widget.get_active(): return
-        name = widget.get_name()
+        if widget.get_active():
+            name = widget.get_name()
 
-        if name == 'south-side-menuitem':
-            self._south = self._engine
-            self._north = None
-        elif name == 'north-side-menuitem':
-            self._south = None
-            self._north = self._engine
-        elif name == 'both-side-menuitem':
-            self._south = self._engine
-            self._north = self._engine
-        elif name == 'neither-side-menuitem':
-            self._south = None
-            self._north = None
-
+            if name == 'south-side-menuitem':
+                self._south = self._engine
+                self._north = None
+            elif name == 'north-side-menuitem':
+                self._south = None
+                self._north = self._engine
+            elif name == 'both-side-menuitem':
+                self._south = self._engine
+                self._north = self._engine
+            elif name == 'neither-side-menuitem':
+                self._south = None
+                self._north = None
 
     def on_strength_menuitem_toggled(self, widget):
         """Emitted when the user sets the engine strength"""
 
-        if not widget.get_active(): return
-        name = widget.get_name()
+        if widget.get_active():
+            name = widget.get_name()
 
-        if name == 'easy-menuitem':
-            self._strength = UCIPlayer.Strength.EASY
-        elif name == 'medium-menuitem':
-            self._strength = UCIPlayer.Strength.MEDIUM
-        elif name == 'hard-menuitem':
-            self._strength = UCIPlayer.Strength.HARD
-        elif name == 'expert-menuitem':
-            self._strength = UCIPlayer.Strength.EXPERT
+            if name == 'easy-menuitem':
+                self._strength = UCIPlayer.Strength.EASY
+            elif name == 'medium-menuitem':
+                self._strength = UCIPlayer.Strength.MEDIUM
+            elif name == 'hard-menuitem':
+                self._strength = UCIPlayer.Strength.HARD
+            elif name == 'expert-menuitem':
+                self._strength = UCIPlayer.Strength.EXPERT
 
-        self._settings.set_int('strength', self._strength)
-
+            self._settings.set_int('strength', self._strength)
 
     def on_newgame_button_clicked(self, widget):
         """Emitted on a new game button activation"""
@@ -947,7 +904,6 @@ class GTKView(object):
 
         self._newmatch_dialog.response(Gtk.ResponseType.OK)
 
-
     def on_rotate_animation_finished(self, animator):
         """Called after a board rotation animation"""
 
@@ -956,7 +912,6 @@ class GTKView(object):
         if self.user_can_move():
             self._canvas.update_hovered()
             self.refresh_active_house()
-
 
     def on_move_received(self, loop, move):
         """Adds a move to the match and animates it"""
@@ -969,7 +924,7 @@ class GTKView(object):
             self._animator.make_move(self._match, move)
             self._match.add_move(move)
             self._match_changed = True
-        except:
+        except BaseException:
             self._locked.clear()
             self.show_error_bar(
                 _("Error"),
@@ -977,7 +932,6 @@ class GTKView(object):
             )
 
         self.refresh_actions()
-
 
     def on_move_animation_finished(self, animator):
         """Called after a move animation"""
@@ -989,13 +943,11 @@ class GTKView(object):
             self._engine.set_position(self._match)
         self._loop.request_move(player)
 
-
     def on_state_changed(self, loop):
         """Emited when the game loop state changes"""
 
         self._locked.clear()
         self.refresh_state()
-
 
     # Update view methods
 
@@ -1023,7 +975,6 @@ class GTKView(object):
         if self._match.has_ended():
             self._move_action.set_sensitive(False)
 
-
     def refresh_active_house(self):
         """Highlights the currently hovered house"""
 
@@ -1038,7 +989,6 @@ class GTKView(object):
                 window.set_cursor(self._hand_cursor)
                 self._canvas.set_active(house)
 
-
     def refresh_highlight(self):
         """Highlights the last performed move"""
 
@@ -1047,7 +997,6 @@ class GTKView(object):
             self._canvas.set_highlight(move)
         except IndexError:
             self._canvas.set_highlight(None)
-
 
     def refresh_infobar(self):
         """Sets information bar properties"""
@@ -1079,8 +1028,7 @@ class GTKView(object):
                 message = '%s (%s)' % (message, result)
 
             if title or message:
-                if not title: title = _("Match")
-                self.show_info_bar(title, message, 'document-open')
+                self.show_info_bar(title or _("Match"), message, 'document-open')
             elif self._infobar.is_visible():
                 self._infobar.set_visible(False)
 
@@ -1103,7 +1051,7 @@ class GTKView(object):
 
         # If the match has comments, show them
 
-        elif self._match.get_comment() != None:
+        elif self._match.get_comment() is not None:
             comment = GLib.markup_escape_text(self._match.get_comment())
             self.show_info_bar(None, comment, 'edit-find')
 
@@ -1111,7 +1059,6 @@ class GTKView(object):
 
         else:
             self._infobar.set_visible(False)
-
 
     def refresh_state(self):
         """Refresh actions and board state"""
@@ -1123,7 +1070,6 @@ class GTKView(object):
             if self.user_can_move():
                 self._canvas.update_hovered()
                 self.refresh_active_house()
-
 
     def refresh_view(self):
         """Updates this interface"""
@@ -1141,10 +1087,9 @@ class GTKView(object):
         self._canvas.set_board(board)
         self._canvas.queue_draw()
 
-
     # Message and confirmation dialogs
 
-    def show_info_bar(self, title, message, icon = 'dialog-information'):
+    def show_info_bar(self, title, message, icon='dialog-information'):
         """Shows an infobar information to the user"""
 
         label = self._builder.get_object('infobar-label')
@@ -1163,8 +1108,7 @@ class GTKView(object):
         self._infobar.set_message_type(Gtk.MessageType.INFO)
         self._infobar.set_visible(True)
 
-
-    def show_error_bar(self, title, message, icon = 'dialog-error'):
+    def show_error_bar(self, title, message, icon='dialog-error'):
         """Shows an infobar error to the user"""
 
         label = self._builder.get_object('infobar-label')
@@ -1176,8 +1120,7 @@ class GTKView(object):
         self._infobar.set_message_type(Gtk.MessageType.ERROR)
         self._infobar.set_visible(True)
 
-
-    def show_info_dialog(self, title, message, text = None):
+    def show_info_dialog(self, title, message, text=None):
         """Shows an information message to the user"""
 
         dialog = self.new_message_dialog(
@@ -1186,8 +1129,7 @@ class GTKView(object):
         dialog.connect('response', self.on_message_dialog_response)
         dialog.show()
 
-
-    def show_error_dialog(self, title, message, text = None):
+    def show_error_dialog(self, title, message, text=None):
         """Shows an error message to the user"""
 
         dialog = self.new_message_dialog(
@@ -1196,20 +1138,18 @@ class GTKView(object):
         dialog.connect('response', self.on_message_dialog_response)
         dialog.show()
 
-
     def on_message_dialog_response(self, dialog, response):
         """Default handler for message dialogs"""
 
         dialog.destroy()
 
-
-    def new_message_dialog(self, type, title, message, text = None):
+    def new_message_dialog(self, type, title, message, text=None):
         """Creates a new message dialog"""
 
         dialog = Gtk.MessageDialog(
-            parent = self._main_window,
-            flags = Gtk.DialogFlags.MODAL,
-            buttons = Gtk.ButtonsType.OK
+            parent=self._main_window,
+            flags=Gtk.DialogFlags.MODAL,
+            buttons=Gtk.ButtonsType.OK
         )
 
         self._window_group.add_window(dialog)
@@ -1229,14 +1169,13 @@ class GTKView(object):
 
         return dialog
 
-
     def new_confirmation_dialog(self, title, message, text, discard):
         """Creates a new confirmation dialog"""
 
         dialog = Gtk.MessageDialog(
-            parent = self._main_window,
-            flags = Gtk.DialogFlags.MODAL,
-            message_type = Gtk.MessageType.QUESTION,
+            parent=self._main_window,
+            flags=Gtk.DialogFlags.MODAL,
+            message_type=Gtk.MessageType.QUESTION,
         )
 
         self._window_group.add_window(dialog)
@@ -1257,7 +1196,6 @@ class GTKView(object):
 
         return dialog
 
-
     def new_unsaved_confirmation_dialog(self, message, text, discard):
         """Creates a new unsaved-match confirmation dialog"""
 
@@ -1268,15 +1206,14 @@ class GTKView(object):
 
         return dialog
 
-
     def new_open_dialog(self):
         """Create a new open match file dialog"""
 
         dialog = Gtk.FileChooserDialog(
-            title = _("Open an oware match"),
-            parent = self._main_window,
-            action = Gtk.FileChooserAction.OPEN,
-            buttons = (
+            title=_("Open an oware match"),
+            parent=self._main_window,
+            action=Gtk.FileChooserAction.OPEN,
+            buttons=(
                 Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                 Gtk.STOCK_OPEN, Gtk.ResponseType.ACCEPT
             )
@@ -1299,15 +1236,14 @@ class GTKView(object):
 
         return dialog
 
-
     def new_save_dialog(self):
         """Create a new save match file dialog"""
 
         dialog = Gtk.FileChooserDialog(
-            title = _("Save current match"),
-            parent = self._main_window,
-            action = Gtk.FileChooserAction.SAVE,
-            buttons = (
+            title=_("Save current match"),
+            parent=self._main_window,
+            action=Gtk.FileChooserAction.SAVE,
+            buttons=(
                 Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                 Gtk.STOCK_SAVE, Gtk.ResponseType.ACCEPT
             )
@@ -1326,7 +1262,6 @@ class GTKView(object):
         dialog.set_modal(True)
 
         return dialog
-
 
     # Match manipulation methods
 
@@ -1349,7 +1284,6 @@ class GTKView(object):
             message = str(exception)
 
         return message
-
 
     def open_match(self, path):
         """Open a match file and sets it as current"""
@@ -1374,7 +1308,6 @@ class GTKView(object):
 
         self._locked.clear()
 
-
     def save_match(self, path):
         """Saves the current match to a file"""
 
@@ -1390,7 +1323,6 @@ class GTKView(object):
                 _("Cannot save current match"),
                 _(message)
             )
-
 
     def start_match(self):
         """Starts a new match"""
@@ -1433,7 +1365,6 @@ class GTKView(object):
         # Notify this view of a file change
 
         self.on_file_changed(None)
-
 
     def reset_engine(self):
         """Aborts any engine computations and setups a new game"""

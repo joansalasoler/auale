@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
+import threading
 
-from threading import *
-from uci import UCIPlayer
 from gi.repository import GLib
 from gi.repository import GObject
+from uci import UCIPlayer
 
 
-class GameLoop(Thread, GObject.GObject):
+class GameLoop(threading.Thread, GObject.GObject):
     """Represents the game loop"""
 
     __gtype_name__ = 'GameLoop'
@@ -45,28 +45,25 @@ class GameLoop(Thread, GObject.GObject):
 
     MOVE_DELAY = 1.6
 
-
     def __init__(self):
         """Initializes this game loop"""
 
         GObject.GObject.__init__(self)
-        Thread.__init__(self)
+        threading.Thread.__init__(self)
 
         self._match = None
         self._player = None
         self._is_running = False
-        self._lock = Lock()
-        self._switch = Condition(self._lock)
-        self._aborted = Event()
-        self._computed = Event()
+        self._lock = threading.Lock()
+        self._switch = threading.Condition(self._lock)
+        self._aborted = threading.Event()
+        self._computed = threading.Event()
         self._computed.set()
-
 
     def is_thinking(self):
         """Tells if the engine is thinking"""
 
         return not self._computed.is_set()
-
 
     def request_move(self, player):
         """Requests a move to the current player"""
@@ -74,7 +71,6 @@ class GameLoop(Thread, GObject.GObject):
         with self._switch:
             self._player = player
             self._switch.notify_all()
-
 
     def run(self):
         """Switches turns till this thread is stopped"""
@@ -87,7 +83,6 @@ class GameLoop(Thread, GObject.GObject):
                 if self._is_running:
                     self._request_action()
 
-
     def abort(self):
         """Aborts any running move computation"""
 
@@ -98,12 +93,11 @@ class GameLoop(Thread, GObject.GObject):
                 while not self._computed.is_set():
                     self._player.stop()
                     self._computed.wait(0.2)
-        except:
-            pass # Not computing
+        except BaseException:
+            pass  # Not computing
 
         self._computed.wait()
         self._aborted.clear()
-
 
     def stop(self):
         """Stops this game loop thread"""
@@ -113,7 +107,6 @@ class GameLoop(Thread, GObject.GObject):
         with self._switch:
             self._is_running = False
             self._switch.notify_all()
-
 
     def _request_action(self):
         """Request a move to the player"""
@@ -127,10 +120,9 @@ class GameLoop(Thread, GObject.GObject):
             GLib.idle_add(self.emit, 'state-changed')
             self._compute_move()
             self._computed.set()
-        except:
+        except BaseException:
             self._computed.set()
             GLib.idle_add(self.emit, 'state-changed')
-
 
     def _compute_move(self):
         """Requests a move to the player"""

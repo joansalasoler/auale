@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, re, subprocess
+import re
+
 from game import Match
 
 
@@ -26,13 +27,12 @@ class UCIClient():
     interact with an external engine process throught the UCI protocol.
     """
 
-    __PATTERN = '^[ \\t]*(\\S+)(?:[ \\t]+(.*))?$'
-
     __STOPPED_STATE = 0
     __WAITING_STATE = 1
     __THINKING_STATE = 2
     __PONDERING_STATE = 3
 
+    __PATTERN = '^[ \\t]*(\\S+)(?:[ \\t]+(.*))?$'
 
     def __init__(self, game, service):
         """Initializes a new client object"""
@@ -55,72 +55,60 @@ class UCIClient():
         self._uciok = True
         self._state = UCIClient.__WAITING_STATE
 
-
     def get_board(self):
         """Returns the current board position"""
 
         return self._match.get_board()
-
 
     def get_start_board(self):
         """Returns the current game start position"""
 
         return self._board
 
-
     def get_best_move(self):
         """Returns the last received best move"""
 
         return self._best_move
-
 
     def get_ponder_move(self):
         """Returns the last received ponder move"""
 
         return self._ponder_move
 
-
     def get_name(self):
         """Returns the current engine name"""
 
         return self._name
-
 
     def get_author(self):
         """Returns the current engine author"""
 
         return self._author
 
-
     def is_debug_on(self):
         """Returns the current engine debug mode"""
 
         return self._debug
-
 
     def has_time_limit(self):
         """True if the engine is not thinking in infinite mode"""
 
         return (self._infinite == False)
 
-
     def is_thinking(self):
         """True if the engine is in a thinking state"""
 
         return (self._state == UCIClient.__THINKING_STATE)
-
 
     def is_pondering(self):
         """True if the engine is in a pondering state"""
 
         return (self._state == UCIClient.__PONDERING_STATE)
 
-
     def is_running(self):
         """True if the engine process is running"""
 
         return (self._state != UCIClient.__STOPPED_STATE)
-
 
     def is_ready(self):
         """True if the engine is ready to receive new commands"""
@@ -130,7 +118,6 @@ class UCIClient():
 
         return self._ready
 
-
     def is_uci_ready(self):
         """True if the engine is ready to accept UCI commands"""
 
@@ -139,12 +126,10 @@ class UCIClient():
 
         return self._uciok
 
-
     def _parse_uci(self, params):
         """Parses a 'uci' command"""
 
         self._uciok = False
-
 
     def _parse_debug(self, params):
         """Parses a 'debug' command"""
@@ -166,29 +151,24 @@ class UCIClient():
         else:
             self._debug = value
 
-
     def _parse_isready(self, params):
         """Parses an 'isready' command"""
 
         self._ready = False
 
-
     def _parse_setoption(self, params):
         """Not implemented"""
         pass
 
-
     def _parse_register(self, params):
         """Not implemented"""
         pass
-
 
     def _parse_ucinewgame(self, params):
         """Parses an 'ucinewgame' command"""
 
         if self._state != UCIClient.__WAITING_STATE:
             raise Exception("The engine is not waiting for commands")
-
 
     def _parse_position(self, params):
         """Parses a 'position' command"""
@@ -249,7 +229,6 @@ class UCIClient():
         self._board = board
         self._match = match
 
-
     def _parse_go(self, params):
         """Parses a 'go' command"""
 
@@ -278,7 +257,6 @@ class UCIClient():
             or UCIClient.__THINKING_STATE
         self._infinite = infinite
 
-
     def _parse_stop(self, params):
         """Parses an 'stop' command"""
 
@@ -288,7 +266,6 @@ class UCIClient():
 
         self._infinite = False
 
-
     def _parse_ponderhit(self, params):
         """Parses a 'quit' command"""
 
@@ -297,12 +274,10 @@ class UCIClient():
 
         self._state = UCIClient.__THINKING_STATE
 
-
     def _parse_quit(self, params):
         """Parses a 'quit' command"""
 
         self._state = UCIClient.__STOPPED_STATE
-
 
     def _parse_id(self, params):
         """Parses an 'id' command"""
@@ -323,18 +298,15 @@ class UCIClient():
                 string = self._string(tokens, stop)
                 self._author = string
 
-
     def _parse_uciok(self, params):
         """Parses an 'uciok' command"""
 
         self._uciok = True
 
-
     def _parse_readyok(self, params):
         """Parses an 'readyok' command"""
 
         self._ready = True
-
 
     def _parse_bestmove(self, params):
         """Parses a 'bestmove' command"""
@@ -402,26 +374,21 @@ class UCIClient():
         self._best_move = best
         self._ponder_move = ponder
 
-
     def _parse_copyprotection(self, params):
         """Not implemented"""
         pass
-
 
     def _parse_registration(self, params):
         """Not implemented"""
         pass
 
-
     def _parse_info(self, params):
         """Not implemented"""
         pass
 
-
     def _parse_option(self, params):
         """Not implemented"""
         pass
-
 
     def _string(self, tokens, stop):
         """
@@ -442,7 +409,6 @@ class UCIClient():
             string = ' '.join(words)
 
         return string
-
 
     def _evaluate_input(self, message):
         """Evaluates an engine-to-client command"""
@@ -478,7 +444,6 @@ class UCIClient():
         else:
             raise ValueError(
                 "Unknown engine command: %s" % command)
-
 
     def _evaluate_output(self, message):
         """Evaluates a client-to-engine command"""
@@ -526,7 +491,6 @@ class UCIClient():
             raise ValueError(
                 "Unknown client command: %s" % command)
 
-
     def send(self, message):
         """Evaluates and sends a single client-to-engine command"""
 
@@ -536,7 +500,6 @@ class UCIClient():
 
         if self._debug:
             print("> %s" % message)
-
 
     def receive(self):
         """Receives and evaluates the next engine-to-client command"""

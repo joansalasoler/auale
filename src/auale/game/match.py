@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
-# Copyright (C) 2014-2015 Joan Sala Soler <contact@joansala.com>
+# Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,18 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, re
 import codecs
+import re
 
 
 class Match(object):
     """Represents an oware match"""
 
     __TAG_ROSTER = (
-        "Variant", "Event", "Site",  "Date",
-        "Round",   "South", "North", "Result",
+        "Variant",
+        "Event",
+        "Site",
+        "Date",
+        "Round",
+        "South",
+        "North",
+        "Result",
     )
-
 
     def __init__(self, game):
         """Object constructor"""
@@ -44,13 +49,11 @@ class Match(object):
 
         self.new_match()
 
-
     def __str__(self):
         """Returns a string representation of this object"""
 
         return 'Match(board=%s, turn=%s)' % \
             (self.get_board(), self.get_turn())
-
 
     def new_match(self):
         """Starts a new match with the defaul position"""
@@ -60,24 +63,20 @@ class Match(object):
             self._game.SOUTH
         )
 
-
     def get_current_index(self):
         """Return the index of the current move"""
 
         return self._current_move
-
 
     def get_moves(self):
         """Returns a tuple of performed moves"""
 
         return tuple(self._moves)
 
-
     def get_positions(self):
         """Returns a tuple of played positions"""
 
         return tuple(self._positions)
-
 
     def get_south_store(self):
         """Returns the current south store"""
@@ -86,14 +85,12 @@ class Match(object):
 
         return board[12]
 
-
     def get_north_store(self):
         """Returns the current north store"""
 
         board = self._positions[self._current_move][0]
 
         return board[13]
-
 
     def get_previous_move(self):
         """Returns the previous move on the match history"""
@@ -103,24 +100,20 @@ class Match(object):
 
         return self._moves[self._current_move - 1]
 
-
     def get_next_move(self):
         """Returns the next move on the match history"""
 
         return self._moves[self._current_move + 1]
-
 
     def get_board(self):
         """Returns a copy of the current board position"""
 
         return self._board[:]
 
-
     def get_turn(self):
         """Returns the current turn"""
 
         return self._turn
-
 
     def get_winner(self):
         """Returns the winner of the match (1 = South, -1 = North) or
@@ -132,7 +125,6 @@ class Match(object):
 
         return 0
 
-
     def get_comment(self):
         """Returns the comment for the current move"""
 
@@ -141,24 +133,20 @@ class Match(object):
 
         return self._comments[self._current_move]
 
-
     def can_undo(self):
         """Return True if a move can be undone"""
 
         return self._current_move > 0
-
 
     def can_redo(self):
         """Return True if a move can be redone"""
 
         return self._current_move < len(self._moves)
 
-
     def has_ended(self):
         """Returns if the match ended on the current position"""
 
         return self._has_ended
-
 
     def is_legal_move(self, move):
         """Returns true if the move is legal for the current position"""
@@ -166,19 +154,16 @@ class Match(object):
         return move in self._game.xlegal_moves(
             self.get_board(), self.get_turn())
 
-
     def has_position(self, board, turn):
         """Returns true if the match contains the specified position
            in the positions prior to the current"""
 
         return (board, turn) in self._positions[:self._current_move + 1]
 
-
     def set_comment(self, comment):
         """Adds a comment to the current move"""
 
         self._comments[self._current_move] = comment
-
 
     def set_position(self, board, turn):
         """Sets a new position and initialitzes match properties"""
@@ -209,7 +194,6 @@ class Match(object):
         and self._turn != self._game.SOUTH:
             notation = self._game.to_board_notation(self._board, self._turn)
             self._tags['FEN'] = '%s' % notation
-
 
     def add_move(self, move):
         """Adds a new move to the match after the current position"""
@@ -243,7 +227,6 @@ class Match(object):
         self._positions.append((self._board[:], self._turn))
         self._current_move += 1
 
-
     def undo_last_move(self):
         """Undoes the last move"""
 
@@ -252,7 +235,6 @@ class Match(object):
             self._turn = self._positions[self._current_move][1]
             self._board = self._positions[self._current_move][0]
             self._has_ended = False
-
 
     def redo_last_move(self):
         """Redoes the last move"""
@@ -267,7 +249,6 @@ class Match(object):
             if self._game.is_end(self._board, self._turn):
                 self._has_ended = True
 
-
     def undo_all_moves(self):
         """Undoes all the moves"""
 
@@ -276,7 +257,6 @@ class Match(object):
             self._turn = self._positions[0][1]
             self._board = self._positions[0][0]
             self._has_ended = False
-
 
     def redo_all_moves(self):
         """Redoes all the moves"""
@@ -291,18 +271,16 @@ class Match(object):
             if self._game.is_end(self._board, self._turn):
                 self._has_ended = True
 
-
     def set_tag(self, name, value):
         """Tags this match with a value"""
 
-        if type(name) != str:
+        if not isinstance(name, str):
             raise ValueError("Tag name must be a string")
 
-        if type(value) != str:
+        if not isinstance(value, str):
             raise ValueError("Tag value must be a string")
 
         self._tags[name.strip()] = value.strip()
-
 
     def get_tags(self):
         """Returns a tuple view of this match tags"""
@@ -318,7 +296,6 @@ class Match(object):
 
         return tuple(tags)
 
-
     def get_tag(self, tag):
         """Returns a match tag value"""
 
@@ -326,7 +303,6 @@ class Match(object):
             return None
 
         return self._tags[tag]
-
 
     def get_notation(self):
         """Converts this match to a valid notation tuple"""
@@ -369,7 +345,6 @@ class Match(object):
 
         return tuple(tokens)
 
-
     def save(self, path):
         """Save this match to a file"""
 
@@ -379,7 +354,6 @@ class Match(object):
                 fileo.write('\n')
                 self._write_moves(fileo)
 
-
     def load(self, path):
         """Load a match from a file"""
 
@@ -388,7 +362,10 @@ class Match(object):
         try:
             with codecs.open(path, 'r', 'utf-8') as fileo:
                 header = fileo.read(8)
-                if header != '[Variant': raise ValueError()
+
+                if header != '[Variant':
+                    raise ValueError()
+
                 string = header + fileo.read()
 
             (tags, index) = self._read_tags(string, 0)
@@ -403,7 +380,7 @@ class Match(object):
 
             for move in moves:
                 match.add_move(move)
-        except:
+        except BaseException:
             raise ValueError(
                 "Not a valid match file")
 
@@ -418,7 +395,6 @@ class Match(object):
         self._has_ended = match._has_ended
         self._current_move = match._current_move
 
-
     def _unescape(self, value):
         """Unescapes a tag value"""
 
@@ -427,7 +403,6 @@ class Match(object):
 
         return value
 
-
     def _escape(self, value):
         """Escapes a tag value"""
 
@@ -435,7 +410,6 @@ class Match(object):
         value = value.replace('\"', '\\"')
 
         return value
-
 
     def _read_tags(self, string, index):
         """Reads all header tags from the string"""
@@ -456,14 +430,16 @@ class Match(object):
 
         while index < len(string):
             m = pattern.match(string, index)
-            if m is None: break
+
+            if m is None:
+                break
+
             tag = m.group(1)
             value = self._unescape(m.group(2))
             tags[tag] = value
             index = m.end(0)
 
         return (tags, index)
-
 
     def _read_moves(self, string, index):
         """Reads all the moves from the string"""
@@ -475,7 +451,9 @@ class Match(object):
         while index < len(string):
             if string[index] == '{':
                 comment, index = self._read_comment(string, index)
-                if len(comments) > 0: comments[-1] = comment
+
+                if len(comments) > 0:
+                    comments[-1] = comment
             elif string[index] == '(':
                 variation, index = self._read_variation(string, index)
             else:
@@ -488,7 +466,6 @@ class Match(object):
                 index += 1
 
         return (moves, comments, index)
-
 
     def _read_comment(self, string, index):
         """Reads a single comment from the string"""
@@ -505,7 +482,6 @@ class Match(object):
 
         return (comment, index)
 
-
     def _read_variation(self, string, index):
         """Reads a single comment from the string"""
 
@@ -521,7 +497,6 @@ class Match(object):
 
         return (variation, index)
 
-
     def _write_tags(self, fileo):
         """Writes this match tags to a file"""
 
@@ -535,7 +510,6 @@ class Match(object):
                 value = self._escape(self._tags[tag])
                 string = '[%s "%s"]\n' % (tag, value)
                 fileo.write(string)
-
 
     def _write_moves(self, fileo):
         """Writes moves from a match to a file"""
