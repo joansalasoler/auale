@@ -805,8 +805,8 @@ class GTKView(object):
 
         self._loop.abort()
         self._animator.stop_move()
-        self.refresh_view()
         self._locked.clear()
+        self.refresh_view()
 
     def on_undo_activate(self, widget):
         """Undoes the last move"""
@@ -814,8 +814,8 @@ class GTKView(object):
         self._loop.abort()
         self._animator.stop_move()
         self._match.undo_last_move()
-        self.refresh_view()
         self._locked.clear()
+        self.refresh_view()
 
     def on_redo_activate(self, widget):
         """Redoes the last move"""
@@ -823,8 +823,8 @@ class GTKView(object):
         self._loop.abort()
         self._animator.stop_move()
         self._match.redo_last_move()
-        self.refresh_view()
         self._locked.clear()
+        self.refresh_view()
 
     def on_undo_all_activate(self, widget):
         """Undoes all the performed moves"""
@@ -832,8 +832,8 @@ class GTKView(object):
         self._loop.abort()
         self._animator.stop_move()
         self._match.undo_all_moves()
-        self.refresh_view()
         self._locked.clear()
+        self.refresh_view()
 
     def on_redo_all_activate(self, widget):
         """Redoes all the undone moves"""
@@ -841,8 +841,8 @@ class GTKView(object):
         self._loop.abort()
         self._animator.stop_move()
         self._match.redo_all_moves()
-        self.refresh_view()
         self._locked.clear()
+        self.refresh_view()
 
     def on_side_menuitem_toggled(self, widget):
         """Emitted when the user sets the engine player"""
