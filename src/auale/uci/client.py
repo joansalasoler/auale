@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import logging
 
 from game import Match
 
@@ -498,8 +499,7 @@ class UCIClient():
         self._output.write('%s\n' % message)
         self._output.flush()
 
-        if self._debug:
-            print("> %s" % message)
+        logging.debug("uci > %s" % message)
 
     def receive(self):
         """Receives and evaluates the next engine-to-client command"""
@@ -517,7 +517,6 @@ class UCIClient():
         if message != '':
             self._evaluate_input(message)
 
-        if self._debug:
-            print("< %s" % message)
+        logging.debug("uci < %s" % message)
 
         return message

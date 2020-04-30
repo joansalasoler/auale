@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import sys
 import util
 
@@ -53,6 +54,12 @@ class GTKApplication(Gtk.Application):
         option.long_name = 'version'
         option.short_name = ord('v')
         option.description = _("Show program's version number and exit")
+        options.append(option)
+
+        option = GLib.OptionEntry()
+        option.long_name = 'debug'
+        option.short_name = ord('d')
+        option.description = _("Enables the debug mode")
         options.append(option)
 
         option = GLib.OptionEntry()
@@ -120,6 +127,9 @@ class GTKApplication(Gtk.Application):
         if options.contains('version'):
             print('%s %s' % (App.NAME, App.VERSION))
             sys.exit(0)
+
+        if options.contains('debug'):
+            logging.getLogger().setLevel(logging.DEBUG)
 
         # If an engine command is provided set it, otherwise
         # reset to default command
