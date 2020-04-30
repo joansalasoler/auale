@@ -278,7 +278,7 @@ class GTKView(object):
             _("How to play oware"),
             _("You can find the <a href=\"%s\" title=\"Oware abapa rules\">"
               "rules of the game</a> on our website. Have fun playing!")
-            % App.RULES_URL, 'help'
+            % App.RULES_URL, App.HELP_ICON
         )
 
         self._settings.set_boolean('show-tips', False)
@@ -1024,7 +1024,7 @@ class GTKView(object):
                 message = '%s (%s)' % (message, result)
 
             if title or message:
-                self.show_info_bar(title or _("Match"), message, 'document-open')
+                self.show_info_bar(title or _("Match"), message, App.FOLDER_ICON)
             elif self._infobar.is_visible():
                 self._infobar.set_visible(False)
 
@@ -1049,7 +1049,7 @@ class GTKView(object):
 
         elif self._match.get_comment() is not None:
             comment = GLib.markup_escape_text(self._match.get_comment())
-            self.show_info_bar(None, comment, 'edit-find')
+            self.show_info_bar(None, comment, App.COMMENT_ICON)
 
         # Otherwise, hide the infobar
 
@@ -1085,7 +1085,7 @@ class GTKView(object):
 
     # Message and confirmation dialogs
 
-    def show_info_bar(self, title, message, icon='dialog-information'):
+    def show_info_bar(self, title, message, icon=App.INFORMATION_ICON):
         """Shows an infobar information to the user"""
 
         label = self._builder.get_object('infobar-label')
@@ -1099,19 +1099,19 @@ class GTKView(object):
             markup = '<b>%s</b>: %s' % (title, message)
 
         label.set_markup(markup)
-        image.set_from_icon_name(icon, Gtk.IconSize.MENU)
+        image.set_from_file(util.resource_path(icon))
 
-        self._infobar.set_message_type(Gtk.MessageType.INFO)
+        self._infobar.set_message_type(Gtk.MessageType.OTHER)
         self._infobar.set_visible(True)
 
-    def show_error_bar(self, title, message, icon='dialog-error'):
+    def show_error_bar(self, title, message, icon=App.ERROR_ICON):
         """Shows an infobar error to the user"""
 
         label = self._builder.get_object('infobar-label')
         image = self._builder.get_object('infobar-image')
 
         label.set_markup('<b>%s</b>: %s' % (title, message))
-        image.set_from_icon_name(icon, Gtk.IconSize.MENU)
+        image.set_from_file(util.resource_path(icon))
 
         self._infobar.set_message_type(Gtk.MessageType.ERROR)
         self._infobar.set_visible(True)

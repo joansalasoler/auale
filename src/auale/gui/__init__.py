@@ -15,6 +15,12 @@ class App:
     HELP_URL = 'http://www.joansala.com/auale/help/'
     RULES_URL = 'http://www.joansala.com/auale/rules/'
 
+    COMMENT_ICON = './res/image/comment.svg'
+    ERROR_ICON = './res/image/error.svg'
+    FOLDER_ICON = './res/image/folder.svg'
+    HELP_ICON = './res/image/help.svg'
+    INFORMATION_ICON = './res/image/information.svg'
+
 
 from gui.animator import Animator
 from gui.canvas import Board

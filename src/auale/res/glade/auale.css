@@ -1,1 +1,6 @@
-/* Ther aren't any interface styles yet */
+/* Match information bar */
+
+.match-infobar {
+  color: rgb(30, 30, 30);
+  background: rgba(255, 255, 255, .5);
+}

@@ -7,14 +7,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="48"
-   width="48"
+   height="24"
+   width="24"
    version="1.1"
-   id="svg4"
-   sodipodi:docname="document-edit-symbolic.svg"
+   id="svg8"
+   sodipodi:docname="information.svg"
    inkscape:version="0.92.4 (fd57863, 2020-04-02)">
   <metadata
-     id="metadata10">
+     id="metadata14">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -26,7 +26,7 @@
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs8" />
+     id="defs12" />
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -38,7 +38,7 @@
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
-     id="namedview6"
+     id="namedview10"
      showgrid="false"
      inkscape:zoom="14.75"
      inkscape:cx="8"
@@ -46,14 +46,22 @@
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
-  <path
-     d="M 36.714,3 35.655,4.08 8.748,31.365 8.658,31.5 c -0.183,0.297 -0.81,1.35 -1.749,3.264 -0.942,1.914 -2.1,4.53 -3.036,7.476 L 3,45 5.76,44.127 a 54.489,54.489 0 0 0 7.476,-3.036 c 1.914,-0.942 2.961,-1.56 3.264,-1.752 L 16.635,39.252 45,11.286 Z M 36,27 v 3 h 9 v -3 z m -24.33,5.67 3.66,3.66 -0.534,0.525 c 0.021,-0.015 -1.137,0.681 -2.883,1.542 -0.642,0.315 -1.608,0.666 -2.502,1.014 L 8.589,38.589 c 0.348,-0.894 0.699,-1.86 1.014,-2.502 0.861,-1.746 1.554,-2.898 1.542,-2.88 z M 30,33 v 3 h 15 v -3 z m -6,6 v 3 h 21 v -3 z"
-     font-size="15"
-     font-weight="400"
-     letter-spacing="0"
-     style="font-weight:400;font-size:15px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;letter-spacing:0;word-spacing:0;text-anchor:middle;fill:#808080;stroke-width:3"
-     word-spacing="0"
-     id="path2"
-     inkscape:connector-curvature="0" />
+     inkscape:current-layer="svg8" />
+  <g
+     id="g6"
+     style="fill:#808080"
+     transform="scale(1.5)">
+    <path
+       d="M 8,16 A 8,8 0 0 1 0,8 8,8 0 0 1 8,0 8,8 0 0 1 16,8 8,8 0 0 1 8,16 Z M 8,15 A 7,7 0 0 0 15,8 7,7 0 0 0 8,1 7,7 0 0 0 1,8 7,7 0 0 0 8,15 Z"
+       id="path2"
+       inkscape:connector-curvature="0" />
+    <path
+       d="M 8,3.75 C 7.614,3.75 7.31,3.874 7.086,4.123 A 1.27,1.27 0 0 0 6.75,5 c 0,0.336 0.112,0.628 0.336,0.877 C 7.31,6.126 7.614,6.25 8,6.25 8.386,6.25 8.69,6.126 8.914,5.877 A 1.27,1.27 0 0 0 9.25,5 1.27,1.27 0 0 0 8.914,4.123 C 8.69,3.874 8.386,3.75 8,3.75 Z M 7,7 v 5 H 9 V 7 Z"
+       style="font-weight:400;line-height:1000%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0;word-spacing:0"
+       font-weight="400"
+       letter-spacing="0"
+       word-spacing="0"
+       id="path4"
+       inkscape:connector-curvature="0" />
+  </g>
 </svg>
