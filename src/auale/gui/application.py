@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import signal
 import sys
 import util
 
@@ -88,9 +89,23 @@ class GTKApplication(Gtk.Application):
         self.connect("open", self.on_open)
         self.connect("handle-local-options", self.on_handle_options)
 
+        signal.signal(signal.SIGINT, self.on_sigterm)
+        signal.signal(signal.SIGTERM, self.on_sigterm)
+
         # Register the application
 
         self.register()
+
+    def on_sigterm(self, signal, frame):
+        """Handles system interruption signals"""
+
+        for window in self.get_windows():
+            window.destroy()
+
+        self._settings.apply()
+        self._settings.sync()
+
+        sys.exit(0)
 
     def on_startup(self, application):
         """Emitted on application startup"""
