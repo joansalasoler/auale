@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
 import codecs
 import re
 
@@ -44,29 +45,47 @@ class Match(object):
         self._positions = [(None, None)]
         self._comments = [None]
         self._has_ended = False
-        self._current_move = 0
+        self._current_index = 0
         self._tags = {}
 
         self.new_match()
 
-    def __str__(self):
-        """Returns a string representation of this object"""
+    def clone(self):
+        """Creates a copy of this match"""
 
-        return 'Match(board=%s, turn=%s)' % \
-            (self.get_board(), self.get_turn())
+        return copy.copy(self)
 
     def new_match(self):
         """Starts a new match with the defaul position"""
 
-        self.set_position(
-            self._game.get_initial_board(),
-            self._game.SOUTH
-        )
+        turn = self._game.SOUTH
+        board = self._game.get_initial_board()
+        self.set_position(board, turn)
+
+    def get_game(self):
+        """Obtains the game that is being played"""
+
+        return self._game
 
     def get_current_index(self):
         """Return the index of the current move"""
 
-        return self._current_move
+        return self._current_index
+
+    def get_capture_index(self):
+        """Return the index of the last performed capture"""
+
+        capture_index = 0
+
+        for index in range(self._current_index, 0, -1):
+            (next_board, turn) = self._positions[index]
+            (prev_board, turn) = self._positions[index - 1]
+
+            if next_board[12:] != prev_board[12:]:
+                capture_index = index
+                break
+
+        return capture_index
 
     def get_moves(self):
         """Returns a tuple of performed moves"""
@@ -81,29 +100,29 @@ class Match(object):
     def get_south_store(self):
         """Returns the current south store"""
 
-        board = self._positions[self._current_move][0]
+        board = self._positions[self._current_index][0]
 
         return board[12]
 
     def get_north_store(self):
         """Returns the current north store"""
 
-        board = self._positions[self._current_move][0]
+        board = self._positions[self._current_index][0]
 
         return board[13]
 
     def get_previous_move(self):
         """Returns the previous move on the match history"""
 
-        if self._current_move <= 0:
+        if self._current_index <= 0:
             raise IndexError
 
-        return self._moves[self._current_move - 1]
+        return self._moves[self._current_index - 1]
 
     def get_next_move(self):
         """Returns the next move on the match history"""
 
-        return self._moves[self._current_move + 1]
+        return self._moves[self._current_index + 1]
 
     def get_board(self):
         """Returns a copy of the current board position"""
@@ -128,20 +147,20 @@ class Match(object):
     def get_comment(self):
         """Returns the comment for the current move"""
 
-        if self._current_move == 0:
+        if self._current_index == 0:
             return None
 
-        return self._comments[self._current_move]
+        return self._comments[self._current_index]
 
     def can_undo(self):
         """Return True if a move can be undone"""
 
-        return self._current_move > 0
+        return self._current_index > 0
 
     def can_redo(self):
         """Return True if a move can be redone"""
 
-        return self._current_move < len(self._moves)
+        return self._current_index < len(self._moves)
 
     def has_ended(self):
         """Returns if the match ended on the current position"""
@@ -158,12 +177,12 @@ class Match(object):
         """Returns true if the match contains the specified position
            in the positions prior to the current"""
 
-        return (board, turn) in self._positions[:self._current_move + 1]
+        return (board, turn) in self._positions[:self._current_index + 1]
 
     def set_comment(self, comment):
         """Adds a comment to the current move"""
 
-        self._comments[self._current_move] = comment
+        self._comments[self._current_index] = comment
 
     def set_position(self, board, turn):
         """Sets a new position and initialitzes match properties"""
@@ -176,17 +195,12 @@ class Match(object):
         self._positions = [(self._board[:], self._turn)]
         self._comments = [None]
         self._has_ended = False
-        self._current_move = 0
+        self._current_index = 0
 
         # Fill default tags
 
         self._tags = {}
-
-        for tag in self.__TAG_ROSTER:
-            self._tags[tag] = '?'
-
-        self._tags['Variant'] = self._game.get_ruleset_name()
-        self._tags['Result'] = '*'
+        self.reset_tags()
 
         # Set start position tag
 
@@ -219,30 +233,30 @@ class Match(object):
 
         # Record the move and position
 
-        self._moves = self._moves[:self._current_move]
-        self._comments = self._comments[:self._current_move + 1]
-        self._positions = self._positions[:self._current_move + 1]
+        self._moves = self._moves[:self._current_index]
+        self._comments = self._comments[:self._current_index + 1]
+        self._positions = self._positions[:self._current_index + 1]
         self._moves.append(move)
         self._comments.append(None)
         self._positions.append((self._board[:], self._turn))
-        self._current_move += 1
+        self._current_index += 1
 
     def undo_last_move(self):
         """Undoes the last move"""
 
         if self.can_undo():
-            self._current_move -= 1
-            self._turn = self._positions[self._current_move][1]
-            self._board = self._positions[self._current_move][0]
+            self._current_index -= 1
+            self._turn = self._positions[self._current_index][1]
+            self._board = self._positions[self._current_index][0]
             self._has_ended = False
 
     def redo_last_move(self):
         """Redoes the last move"""
 
         if self.can_redo():
-            self._current_move += 1
-            self._turn = self._positions[self._current_move][1]
-            self._board = self._positions[self._current_move][0]
+            self._current_index += 1
+            self._turn = self._positions[self._current_index][1]
+            self._board = self._positions[self._current_index][0]
 
             # Check if the match ended on that position
 
@@ -253,7 +267,7 @@ class Match(object):
         """Undoes all the moves"""
 
         if self.can_undo():
-            self._current_move = 0
+            self._current_index = 0
             self._turn = self._positions[0][1]
             self._board = self._positions[0][0]
             self._has_ended = False
@@ -262,14 +276,25 @@ class Match(object):
         """Redoes all the moves"""
 
         if self.can_redo():
-            self._current_move = len(self._positions) - 1
-            self._turn = self._positions[self._current_move][1]
-            self._board = self._positions[self._current_move][0]
+            self._current_index = len(self._positions) - 1
+            self._turn = self._positions[self._current_index][1]
+            self._board = self._positions[self._current_index][0]
 
             # Check if the match ended on that position
 
             if self._game.is_end(self._board, self._turn):
                 self._has_ended = True
+
+    def reset_tags(self):
+        """Clears all the match tags"""
+
+        self._tags.clear()
+
+        for tag in self.__TAG_ROSTER:
+            self._tags[tag] = '?'
+
+        self._tags['Variant'] = self._game.get_ruleset_name()
+        self._tags['Result'] = '*'
 
     def set_tag(self, name, value):
         """Tags this match with a value"""
@@ -393,7 +418,7 @@ class Match(object):
         self._comments = comments
         self._positions = match._positions
         self._has_ended = match._has_ended
-        self._current_move = match._current_move
+        self._current_index = match._current_index
 
     def _unescape(self, value):
         """Unescapes a tag value"""
