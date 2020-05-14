@@ -16,507 +16,293 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
 import logging
+import re
+import sys
 
-from game import Match
+from threading import Event
+from threading import Thread
+from gi.repository import GObject
 
+from .rules import parser
 
-class UCIClient():
-    """
-    Universal Chess Interface Protocol Client. This class provides methods to
-    interact with an external engine process throught the UCI protocol.
-    """
 
-    __STOPPED_STATE = 0
-    __WAITING_STATE = 1
-    __THINKING_STATE = 2
-    __PONDERING_STATE = 3
+class Client(Thread, GObject.GObject):
+    """UCI protocol client implementation."""
 
-    __PATTERN = '^[ \\t]*(\\S+)(?:[ \\t]+(.*))?$'
+    __response_timeout = 8.0
 
-    def __init__(self, game, service):
-        """Initializes a new client object"""
+    __gtype_name__ = 'UCIClient'
 
-        self._game = game
-        self._input = service.stdout
-        self._output = service.stdin
+    __response_signal = (
+        GObject.SignalFlags.RUN_FIRST,
+        GObject.TYPE_NONE, (
+          GObject.TYPE_PYOBJECT,
+        )
+    )
 
-        self._match = Match(game)
-        self._board = self._match.get_board()
-        self._pattern = re.compile(UCIClient.__PATTERN)
+    __timeout_signal = (
+        GObject.SignalFlags.RUN_FIRST,
+        GObject.TYPE_NONE, (
+          GObject.TYPE_STRING,
+        )
+    )
 
-        self._name = "Unknown"
-        self._author = "Unknown"
-        self._best_move = game.NULL_MOVE
-        self._ponder_move = game.NULL_MOVE
-        self._infinite = False
-        self._debug = False
-        self._ready = True
-        self._uciok = True
-        self._state = UCIClient.__WAITING_STATE
+    __termination_signal = (
+        GObject.SignalFlags.RUN_LAST,
+        GObject.TYPE_NONE, ()
+    )
 
-    def get_board(self):
-        """Returns the current board position"""
+    __gsignals__ = {
+        'id-received': __response_signal,
+        'info-received': __response_signal,
+        'option-received': __response_signal,
+        'bestmove-received': __response_signal,
+        'response-timeout': __timeout_signal,
+        'termination': __termination_signal
+    }
 
-        return self._match.get_board()
+    def __init__(self, filein, fileout):
+        GObject.GObject.__init__(self)
+        Thread.__init__(self)
 
-    def get_start_board(self):
-        """Returns the current game start position"""
+        self._fileout = fileout
+        self._filein = filein
 
-        return self._board
+        self._logger = logging.getLogger('uci')
+        self._is_waiting = Event()
+        self._is_terminated = Event()
+        self._is_running = Event()
+        self._is_ready = Event()
 
-    def get_best_move(self):
-        """Returns the last received best move"""
+        self._search_depth = 10
+        self._search_timeout = 1000
 
-        return self._best_move
+    def is_searching(self):
+        """Checks if the engine is thinking or pondering"""
 
-    def get_ponder_move(self):
-        """Returns the last received ponder move"""
+        running = self._is_running.is_set()
+        waiting = self._is_waiting.is_set()
 
-        return self._ponder_move
+        return running and not waiting
 
-    def get_name(self):
-        """Returns the current engine name"""
+    def set_search_depth(self, depth):
+        """Sets how many plies the player may search"""
 
-        return self._name
+        self._search_depth = depth
 
-    def get_author(self):
-        """Returns the current engine author"""
+    def set_search_timeout(self, milliseconds):
+        """Sets how many milliseconds a search may take"""
 
-        return self._author
+        self._search_timeout = milliseconds
 
-    def is_debug_on(self):
-        """Returns the current engine debug mode"""
+    def start(self):
+        """Starts the client in UCI mode"""
 
-        return self._debug
+        super().start()
 
-    def has_time_limit(self):
-        """True if the engine is not thinking in infinite mode"""
+        if not self._is_running.is_set():
+            self._is_running.clear()
+            self._send_command('uci')
+            self._wait_for('uci', self._is_running)
 
-        return (self._infinite == False)
+        if not self._is_running.is_set():
+            raise RuntimeError('Engine is not responding')
 
-    def is_thinking(self):
-        """True if the engine is in a thinking state"""
+    def start_new_match(self):
+        """Notify the player a new match will start"""
 
-        return (self._state == UCIClient.__THINKING_STATE)
+        if self._is_waiting.is_set():
+            self._send_command('ucinewgame')
+            self._synchronize()
 
-    def is_pondering(self):
-        """True if the engine is in a pondering state"""
+    def start_thinking(self, match):
+        """Asks the player to start thinking on the given match"""
 
-        return (self._state == UCIClient.__PONDERING_STATE)
+        if self._is_waiting.is_set():
+            self._is_waiting.clear()
+            search_args = self._get_search_arguments()
+            position_args = self._get_position_arguments(match)
+            self._send_command(f'position { position_args }')
+            self._send_command(f'go { search_args }')
 
-    def is_running(self):
-        """True if the engine process is running"""
+    def start_pondering(self, match):
+        """Asks the player to start pondering on the given match"""
 
-        return (self._state != UCIClient.__STOPPED_STATE)
+        if self._is_waiting.is_set():
+            self._is_waiting.clear()
+            position_args = self._get_position_arguments(match)
+            self._send_command(f'position { position_args }')
+            self._send_command('go ponder')
 
-    def is_ready(self):
-        """True if the engine is ready to receive new commands"""
+    def stop_thinking(self):
+        """Asks the player to stop thinking"""
 
-        if self._state == UCIClient.__STOPPED_STATE:
-            return False
+        if not self._is_waiting.is_set():
+            self._send_command('stop')
+            self._wait_for('stop', self._is_waiting)
 
-        return self._ready
+    def quit(self):
+        """Asks the player to quit"""
 
-    def is_uci_ready(self):
-        """True if the engine is ready to accept UCI commands"""
+        if not self._is_terminated.is_set():
+            self._send_command('quit')
+            self._wait_for('quit', self._is_terminated)
 
-        if self._state == UCIClient.__STOPPED_STATE:
-            return False
+    def _eval_uciok(self, params):
+        """Evaluates a uciok response"""
 
-        return self._uciok
+        if not self._is_running.is_set():
+            self._is_running.set()
+            self._is_waiting.set()
 
-    def _parse_uci(self, params):
-        """Parses a 'uci' command"""
+    def _eval_readyok(self, params):
+        """Evaluates a readyok response"""
 
-        self._uciok = False
+        if not self._is_ready.is_set():
+            self._is_ready.set()
 
-    def _parse_debug(self, params):
-        """Parses a 'debug' command"""
+    def _eval_info(self, params):
+        """Evaluates a info response"""
 
-        switch = True
-        value = True
+        if self._is_running.is_set():
+            self.emit('info-received', params)
 
-        if params is not None:
-            for token in params.split():
-                if 'on' == token:
-                    switch = False
-                    value = True
-                elif 'off' == token:
-                    switch = False
-                    value = False
+    def _eval_id(self, params):
+        """Evaluates an id response"""
 
-        if switch == True:
-            self._debug = not self._debug
-        else:
-            self._debug = value
+        if not self._is_running.is_set():
+            self.emit('id-received', params)
 
-    def _parse_isready(self, params):
-        """Parses an 'isready' command"""
+    def _eval_option(self, params):
+        """Evaluates an option response"""
 
-        self._ready = False
+        if not self._is_running.is_set():
+            self.emit('option-received', params)
 
-    def _parse_setoption(self, params):
-        """Not implemented"""
-        pass
+    def _eval_bestmove(self, params):
+        """Evaluates a bestmove response"""
 
-    def _parse_register(self, params):
-        """Not implemented"""
-        pass
+        if not self._is_waiting.is_set():
+            self._is_waiting.set()
+            self.emit('bestmove-received', params)
 
-    def _parse_ucinewgame(self, params):
-        """Parses an 'ucinewgame' command"""
+    def _get_search_arguments(self):
+        """Builds the arguments for the go command"""
 
-        if self._state != UCIClient.__WAITING_STATE:
-            raise Exception("The engine is not waiting for commands")
+        options = []
 
-    def _parse_position(self, params):
-        """Parses a 'position' command"""
+        if self._search_depth is not None:
+            options.append('depth')
+            options.append(self._search_depth)
 
-        position = None
-        notation = None
-        moves = None
+        if self._search_timeout is not None:
+            options.append('movetime')
+            options.append(self._search_timeout)
 
-        board = None
-        turn = self._game.SOUTH
+        if not options:
+            options.append('infinite')
 
-        # This command requieres at least one parameter
+        return self._to_string(options)
 
-        if params is None:
-            raise ValueError("No parameters were provided")
+    def _get_position_arguments(self, match):
+        """Builds the arguments for the position command"""
 
-        # Parse the provided parameters
+        options = []
 
-        tokens = params.split()
+        index = match.get_capture_index()
+        board = self._get_board_argument(match, index)
+        moves = self._get_moves_argument(match, index)
 
-        while len(tokens) > 0:
-            token = tokens.pop(0)
+        options.append(board)
+        options.append(moves)
 
-            if 'startpos' == token:
-                position = 'startpos'
-            elif 'fen' == token:
-                if len(tokens) > 0:
-                    position = tokens.pop(0)
-            elif 'moves' == token:
-                if len(tokens) > 0:
-                    notation = tokens.pop(0)
+        return self._to_string(options)
 
-        # Obtain the board for the received position
+    def _get_board_argument(self, match, index):
+        """Obtains a board notation for the given match index"""
 
-        if position is None:
-            raise ValueError("No position was provided")
+        options = 'startpos'
+        position = match.get_positions()[index]
+        game = match.get_game()
 
-        if 'startpos' == position:
-            board = self._game.get_initial_board()
-            turn = self._game.SOUTH
-        else:
-            (board, turn) = self._game.to_position(position)
+        if position[0] != game.get_initial_board():
+            options = game.to_board_notation(*position)
+            options = f'fen { options }'
 
-        # Obtain the moves for the received notation
+        return options
 
-        if notation is not None:
-            moves = self._game.to_moves(notation)
+    def _get_moves_argument(self, match, index):
+        """Obtains a moves notation for the given match index"""
 
-        # Change the game state if moves are legal
+        options = None
+        length = 1 + match.get_current_index()
+        moves = match.get_moves()[index:length]
 
-        match = Match(self._game)
-        match.set_position(board, turn)
+        if moves:
+            game = match.get_game()
+            options = game.to_moves_notation(moves)
+            options = f'moves { options }'
 
-        if moves is not None:
-            for move in moves:
-                match.add_move(move)
+        return options
 
-        self._board = board
-        self._match = match
+    def _to_string(self, options):
+        """Converts an iterable into a string"""
 
-    def _parse_go(self, params):
-        """Parses a 'go' command"""
-
-        infinite = False
-        ponder = False
-
-        # Ensure the engine is in a consistent state
-
-        if self._state != UCIClient.__WAITING_STATE:
-            raise Exception("The engine is already thinking")
-
-        # Parse the provided parameters
-
-        if params is not None:
-            for token in params.split():
-                if 'infinite' == token:
-                    infinite = True
-                elif 'ponder' == token:
-                    ponder = True
-                    infinite = True
-
-        # Change the engine state accordingly
-
-        self._state = (ponder == True) \
-            and UCIClient.__PONDERING_STATE \
-            or UCIClient.__THINKING_STATE
-        self._infinite = infinite
-
-    def _parse_stop(self, params):
-        """Parses an 'stop' command"""
-
-        if self._state != UCIClient.__THINKING_STATE \
-        and self._state != UCIClient.__PONDERING_STATE:
-            raise Exception("The engine is not thinking")
-
-        self._infinite = False
-
-    def _parse_ponderhit(self, params):
-        """Parses a 'quit' command"""
-
-        if self._state != UCIClient.__PONDERING_STATE:
-            raise Exception("The engine is not pondering")
-
-        self._state = UCIClient.__THINKING_STATE
-
-    def _parse_quit(self, params):
-        """Parses a 'quit' command"""
-
-        self._state = UCIClient.__STOPPED_STATE
-
-    def _parse_id(self, params):
-        """Parses an 'id' command"""
-
-        if params is None:
-            raise ValueError("No parameters were provided")
-
-        stop = 'name|value$'
-        tokens = params.split()
-
-        while len(tokens) > 0:
-            token = tokens.pop(0)
-
-            if 'name' == token:
-                string = self._string(tokens, stop)
-                self._name = string
-            elif 'author' == token:
-                string = self._string(tokens, stop)
-                self._author = string
-
-    def _parse_uciok(self, params):
-        """Parses an 'uciok' command"""
-
-        self._uciok = True
-
-    def _parse_readyok(self, params):
-        """Parses an 'readyok' command"""
-
-        self._ready = True
-
-    def _parse_bestmove(self, params):
-        """Parses a 'bestmove' command"""
-
-        best_move = None
-        ponder_move = None
-
-        # Change the state, even if moves are not valid
-
-        self._state = UCIClient.__WAITING_STATE
-        self._infinite = False
-
-        # This method requieres at least a parameter
-
-        if params is None:
-            raise ValueError("No parameters were provided")
-
-        # Parse the provided parameters
-
-        tokens = params.split()
-
-        if len(tokens) > 0:
-            best_move = tokens.pop(0)
-
-        while len(tokens) > 0:
-            token = tokens.pop(0)
-            if 'ponder' == token and len(tokens) > 0:
-                ponder_move = tokens.pop(0)
-
-        # Check if a null move was received
-
-        if '0000' == best_move:
-            self._best_move = self._game.NULL_MOVE
-            self._ponder_move = self._game.NULL_MOVE
-            return
-
-        # Validate the provided move notations
-
-        if best_move is None or len(best_move) != 1:
-            raise Exception("Not a valid move notation")
-
-        if ponder_move is not None and len(ponder_move) != 1:
-            raise Exception("Not a valid move notation")
-
-        # Validate the received moves legality
-
-        ponder = self._game.NULL_MOVE
-        best = self._game.to_move(best_move)
-
-        board = self._match.get_board()
-        turn = self._match.get_turn()
-
-        if best not in self._game.xlegal_moves(board, turn):
-            raise Exception("Best move is not legal")
-
-        if ponder_move is not None:
-            board = self._game.compute_board(board, best)
-            ponder = self._game.to_move(ponder_move)
-
-            if ponder not in self._game.xlegal_moves(board, -turn):
-                raise Exception("Ponder move is not legal")
-
-        # Save the received moves
-
-        self._best_move = best
-        self._ponder_move = ponder
-
-    def _parse_copyprotection(self, params):
-        """Not implemented"""
-        pass
-
-    def _parse_registration(self, params):
-        """Not implemented"""
-        pass
-
-    def _parse_info(self, params):
-        """Not implemented"""
-        pass
-
-    def _parse_option(self, params):
-        """Not implemented"""
-        pass
-
-    def _string(self, tokens, stop):
-        """
-        Builds a string from a list of tokens, consuming tokens from the list
-        until the stop pattern is found or all tokens are consumed
-        """
-
-        string = ''
-        words = []
-
-        while len(tokens) > 0:
-            if re.match(stop, tokens[0]) is not None:
-                break
-            token = tokens.pop(0)
-            words.append(token)
-
-        if len(words) > 0:
-            string = ' '.join(words)
+        parts = (o for o in options if o is not None)
+        string = ' '.join((str(o) for o in parts))
 
         return string
 
-    def _evaluate_input(self, message):
-        """Evaluates an engine-to-client command"""
+    def _synchronize(self):
+        """Synchronize player responses"""
 
-        # Parse the input message
+        self._is_ready.clear()
+        self._send_command('isready')
+        self._wait_for('isready', self._is_ready)
 
-        match = self._pattern.match(message)
+    def _wait_for(self, order, event):
+        """Waits for an event to be set"""
 
-        if match is None:
-            raise ValueError("Syntax error: %s" % message)
+        if not self._is_terminated.is_set():
+            if not event.wait(self.__response_timeout):
+                self._logger.warning('Response timeout')
+                self.emit('response-timeout', order)
 
-        # Parse the received command
+    def _eval_response(self, response):
+        """Evaluates a received response"""
 
-        command = match.group(1)
-        params = match.group(2)
+        try:
+            params = parser.parse(response)
+            method_name = f'_eval_{ params["order"] }'
+            callback = getattr(self, method_name)
+            callback(params)
+        except BaseException as e:
+            self._logger.warning('Unknown UCI response')
 
-        if 'id' == command:
-            self._parse_id(params)
-        elif 'uciok' == command:
-            self._parse_uciok(params)
-        elif 'readyok' == command:
-            self._parse_readyok(params)
-        elif 'bestmove' == command:
-            self._parse_bestmove(params)
-        elif 'copyprotection' == command:
-            self._parse_copyprotection(params)
-        elif 'registration' == command:
-            self._parse_registration(params)
-        elif 'info' == command:
-            self._parse_info(params)
-        elif 'option' == command:
-            self._parse_option(params)
-        else:
-            raise ValueError(
-                "Unknown engine command: %s" % command)
+    def _read_response(self):
+        """Reads a response from the input file"""
 
-    def _evaluate_output(self, message):
-        """Evaluates a client-to-engine command"""
+        response = self._filein.readline().strip()
+        self._logger.debug(f'< { response }')
 
-        # Ensure that the engine is running
+        return response
 
-        if self._state == UCIClient.__STOPPED_STATE:
-            raise Exception("The engine is not running")
+    def _send_command(self, command):
+        """Writes a command to the output file"""
 
-        # Parse the output message
+        if not self._is_terminated.is_set():
+            self._logger.debug(f'> { command }')
+            self._fileout.write(f'{ command }\n')
+            self._fileout.flush()
 
-        match = self._pattern.match(message)
+    def run(self):
+        """Evaluates responses while the input file is open"""
 
-        if match is None:
-            raise ValueError("Syntax error: %s" % message)
-
-        # Parse the received command
-
-        command = match.group(1)
-        params = match.group(2)
-
-        if 'uci' == command:
-            self._parse_uci(params)
-        elif 'debug' == command:
-            self._parse_debug(params)
-        elif 'isready' == command:
-            self._parse_isready(params)
-        elif 'setoption' == command:
-            self._parse_setoption(params)
-        elif 'register' == command:
-            self._parse_register(params)
-        elif 'ucinewgame' == command:
-            self._parse_ucinewgame(params)
-        elif 'position' == command:
-            self._parse_position(params)
-        elif 'go' == command:
-            self._parse_go(params)
-        elif 'stop' == command:
-            self._parse_stop(params)
-        elif 'ponderhit' == command:
-            self._parsePonderHit(params)
-        elif 'quit' == command:
-            self._parse_quit(params)
-        else:
-            raise ValueError(
-                "Unknown client command: %s" % command)
-
-    def send(self, message):
-        """Evaluates and sends a single client-to-engine command"""
-
-        self._evaluate_output(message)
-        self._output.write('%s\n' % message)
-        self._output.flush()
-
-        logging.debug("uci > %s" % message)
-
-    def receive(self):
-        """Receives and evaluates the next engine-to-client command"""
-
-        if self._input.closed:
-            raise Exception("Engine is not responding")
-
-        message = self._input.readline()
-
-        if message is None or message == '':
-            raise Exception("Engine is not responding")
-
-        message = message.strip()
-
-        if message != '':
-            self._evaluate_input(message)
-
-        logging.debug("uci < %s" % message)
-
-        return message
+        try:
+            while response := self._read_response():
+                self._eval_response(response)
+        finally:
+            self._is_running.clear()
+            self._is_terminated.set()
+            self.emit('termination')

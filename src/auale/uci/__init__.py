@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from uci.client import UCIClient
-from uci.player import UCIPlayer
+from .client import Client
+from .engine import Engine
+from .human import Human
+from .strength import Strength
 
-__all__ = ['UCIClient', 'UCIPlayer']
+__all__ = [
+    'Client',
+    'Engine',
+    'Human',
+    'Strength'
+]
