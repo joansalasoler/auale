@@ -16,18 +16,19 @@ class App:
     RULES_URL = 'http://www.joansala.com/auale/rules/'
 
     COMMENT_ICON = './res/image/comment.svg'
+    CREATE_ICON = './res/image/create.svg'
     ERROR_ICON = './res/image/error.svg'
     FOLDER_ICON = './res/image/folder.svg'
     HELP_ICON = './res/image/help.svg'
     INFORMATION_ICON = './res/image/information.svg'
 
 
-from gui.animator import Animator
-from gui.canvas import Board
-from gui.loop import GameLoop
-from gui.mixer import Mixer
-from gui.view import GTKView
-from gui.application import GTKApplication
+from .animator import Animator
+from .canvas import Board
+from .loop import GameLoop
+from .mixer import Mixer
+from .view import GTKView
+from .application import GTKApplication
 
 
 __all__ = [

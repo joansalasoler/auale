@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2
+<!-- Generated with glade 3.22.2 
 
 Aualé -
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
@@ -94,9 +94,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
         <property name="position">0</property>
       </packing>
     </child>
-    <style>
-      <class name="match-infobar"/>
-    </style>
   </object>
   <object class="GtkAccelGroup" id="main_accelgroup"/>
   <object class="GtkActionGroup" id="help_actiongroup">
@@ -1404,8 +1401,8 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (interface)
     </columns>
   </object>
   <object class="GtkDialog" id="properties_dialog">
-    <property name="width_request">480</property>
-    <property name="height_request">300</property>
+    <property name="width_request">550</property>
+    <property name="height_request">340</property>
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Match tags</property>
@@ -1441,7 +1438,7 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (interface)
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child>
@@ -1456,12 +1453,12 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (interface)
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
@@ -1496,7 +1493,9 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (interface)
                     <property name="title" translatable="yes">Tag</property>
                     <child>
                       <object class="GtkCellRendererText" id="name_cellrenderertext">
+                        <property name="ellipsize">end</property>
                         <property name="weight">600</property>
+                        <property name="width_chars">25</property>
                       </object>
                       <attributes>
                         <attribute name="text">0</attribute>
@@ -1544,5 +1543,31 @@ Joan Sala Soler &lt;contact@joansala.com&gt; (interface)
       <action-widget response="-6">cancel_button</action-widget>
       <action-widget response="-3">ok_button</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkBox" id="report_vbox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="valign">end</property>
+    <property name="margin_left">15</property>
+    <property name="margin_right">15</property>
+    <property name="margin_top">15</property>
+    <property name="margin_bottom">15</property>
+    <property name="orientation">vertical</property>
+    <property name="homogeneous">True</property>
+    <property name="baseline_position">bottom</property>
+    <child>
+      <object class="GtkLabel" id="report_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <style>
+      <class name="report-container"/>
+    </style>
   </object>
 </interface>

@@ -144,6 +144,7 @@ class GTKApplication(Gtk.Application):
             sys.exit(0)
 
         if options.contains('debug'):
+            logging.basicConfig(stream=sys.stdout)
             logging.getLogger().setLevel(logging.DEBUG)
 
         # If an engine command is provided set it, otherwise

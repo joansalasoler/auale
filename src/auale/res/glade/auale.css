@@ -1,6 +1,10 @@
 /* Match information bar */
 
-.match-infobar {
+infobar {
   color: rgb(30, 30, 30);
   background: rgba(255, 255, 255, .5);
+}
+
+.report-container {
+  color: rgb(30, 30, 30);
 }

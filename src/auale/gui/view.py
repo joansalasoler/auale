@@ -41,7 +41,9 @@ from gui import App
 from gui import Board
 from gui import GameLoop
 from gui import Mixer
-from uci import UCIPlayer
+from uci import Engine
+from uci import Human
+from uci import Strength
 
 
 class GTKView(object):
@@ -60,18 +62,19 @@ class GTKView(object):
 
         # Game state attributes
 
-        self._locked = threading.Event()
+        self._board_lock = threading.Event()
         self._engine = None
-        self._south = None
-        self._north = None
+        self._human = Human()
+        self._south = self._human
+        self._north = self._human
         self._filename = None
         self._match_changed = False
-        self._strength = UCIPlayer.Strength.EASY
+        self._strength = Strength.EASY
 
         # Interface objects
 
         self._match = Match(Oware)
-        self._loop = GameLoop()
+        self._game_loop = GameLoop()
         self._canvas = Board()
         self._mixer = Mixer()
         self._animator = Animator(self._canvas, self._mixer)
@@ -101,11 +104,14 @@ class GTKView(object):
         self._about_dialog = self._builder.get_object('about_dialog')
         self._newmatch_dialog = self._builder.get_object('newmatch_dialog')
         self._properties_dialog = self._builder.get_object('properties_dialog')
+        self._report_vbox = self._builder.get_object('report_vbox')
+        self._report_label = self._builder.get_object('report_label')
 
         # Pack the objects together
 
         overlay = self._builder.get_object('board_overlay')
         overlay.add_overlay(self._infobar)
+        overlay.add_overlay(self._report_vbox)
         overlay.add(self._canvas)
 
         self._canvas.grab_focus()
@@ -116,10 +122,12 @@ class GTKView(object):
         self._window_group.add_window(self._newmatch_dialog)
         self._window_group.add_window(self._properties_dialog)
 
+        self._builder.get_object('north_side_radiomenuitem').activate()
+
         # Connect event signals for custom objects
 
         self._connect_signals(self._animator)
-        self._connect_signals(self._loop)
+        self._connect_signals(self._game_loop)
         self._connect_signals(self._canvas)
 
         self._canvas.connect('leave-notify-event', self.on_canvas_leave_notify_event)
@@ -131,7 +139,6 @@ class GTKView(object):
 
         self._load_settings()
         self._start_engine()
-        self._loop.start()
         self.start_match()
 
     # Utility methods
@@ -175,8 +182,8 @@ class GTKView(object):
 
         # Retrieve last used computer strength
 
-        strength = self._settings.get_int('strength')
-        self._update_strength_menu(strength)
+        value = self._settings.get_int('strength')
+        self._update_strength_menu(value)
 
     def _start_engine(self):
         """Initializes the engine process"""
@@ -211,33 +218,25 @@ class GTKView(object):
 
             # Start the engine in a new process
 
-            self._engine = UCIPlayer(command, Oware)
+            self._engine = Engine(command)
+            self._engine.connect('termination', self._on_engine_termination)
             self._north = self._engine
         except Exception as e:
-            message = self._get_exception_message(e)
+            self._handle_engine_exception(e)
 
-            self.show_error_dialog(
-                _('Could not start the engine'),
-                _('Computer player is disabled'),
-                '%s: %s' % (
-                    _('Could not start the engine'),
-                    _(message)
-                )
-            )
-
-    def _update_strength_menu(self, strength):
+    def _update_strength_menu(self, value):
         """Updates the active strength menu item"""
 
-        if UCIPlayer.Strength.EASY == strength:
+        if value == Strength.EASY.ordinal:
             item = self._builder.get_object('easy_strength_radiomenuitem')
             item.activate()
-        elif UCIPlayer.Strength.MEDIUM == strength:
+        elif value == Strength.MEDIUM.ordinal:
             item = self._builder.get_object('medium_strength_radiomenuitem')
             item.activate()
-        elif UCIPlayer.Strength.HARD == strength:
+        elif value == Strength.HARD.ordinal:
             item = self._builder.get_object('hard_strength_radiomenuitem')
             item.activate()
-        elif UCIPlayer.Strength.EXPERT == strength:
+        elif value == Strength.EXPERT.ordinal:
             item = self._builder.get_object('expert_strength_radiomenuitem')
             item.activate()
 
@@ -252,8 +251,8 @@ class GTKView(object):
         """Returns true if the user is allowed to move"""
 
         return not (
-            self._locked.is_set() or
-            self._loop.is_thinking() or
+            self._board_lock.is_set() or
+            self._game_loop.is_engine_searching() or
             self._match.has_ended()
         )
 
@@ -339,13 +338,11 @@ class GTKView(object):
     def on_main_window_destroy(self, widget):
         """Quits this interface"""
 
-        self._loop.stop()
-
-        if self._engine is not None:
-            self._engine.quit()
-
         self._settings.sync()
         self._mixer.stop_mixer()
+
+        if isinstance(self._engine, Engine):
+            self._engine.quit()
 
     def on_main_window_key_press_event(self, widget, event):
         """Interprets key presses"""
@@ -389,7 +386,7 @@ class GTKView(object):
             if event.keyval in move_keys[move]:
                 house = move + (turn == -1 and 6 or 0)
                 if self._match.is_legal_move(house):
-                    self.on_move_received(self._loop, house)
+                    self.on_move_received(self._game_loop, house)
                 break
 
     def on_house_button_press_event(self, widget, house):
@@ -397,7 +394,7 @@ class GTKView(object):
 
         if self.user_can_move():
             if self._match.is_legal_move(house):
-                self.on_move_received(self._loop, house)
+                self.on_move_received(self._game_loop, house)
 
     def on_house_enter_notify_event(self, widget, house):
         """Catches mouse enter notifications on a house"""
@@ -479,7 +476,7 @@ class GTKView(object):
         """Handles the new match dialog responses"""
 
         if response == Gtk.ResponseType.OK:
-            self._loop.abort()
+            self._game_loop.abort_request()
             self._animator.stop_move()
 
             self.start_match()
@@ -490,9 +487,9 @@ class GTKView(object):
 
             player = self.get_current_player()
 
-            if player is None:
-                self._locked.clear()
-            self._loop.request_move(player)
+            self._game_loop.request_move(player, self._match)
+            self._board_lock.clear()
+            self.refresh_state()
 
         self._newmatch_dialog.hide()
 
@@ -536,7 +533,7 @@ class GTKView(object):
         """Handles open dialogs responses"""
 
         if response == Gtk.ResponseType.ACCEPT:
-            self._loop.abort()
+            self._game_loop.abort_request()
             self._animator.stop_move()
             self.open_match(dialog.get_filename())
             self.reset_engine()
@@ -637,7 +634,7 @@ class GTKView(object):
         uri = widget.get_current_uri()
         path = GLib.filename_from_uri(uri)[0]
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
         self.open_match(path)
         self.reset_engine()
@@ -650,6 +647,7 @@ class GTKView(object):
 
         self._filename = path
         self._match_changed = False
+        self._report_label.set_text('')
 
         if path is None:
             name = _("Unsaved match")
@@ -791,57 +789,58 @@ class GTKView(object):
     def on_move_now_activate(self, widget):
         """Asks the engine to perform a move"""
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
 
-        self._engine.set_strength(self._strength)
-        self._engine.set_position(self._match)
-        self._loop.request_move(self._engine)
+        if isinstance(self._engine, Engine):
+            self._engine.set_playing_strength(self._strength)
 
-        self.refresh_view()
+        self._game_loop.request_move(self._engine, self._match)
+        self._board_lock.clear()
+        self.refresh_state()
 
     def on_stop_activate(self, widget):
         """Asks the engine to stop thinking"""
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
-        self._locked.clear()
+        self._board_lock.clear()
         self.refresh_view()
 
     def on_undo_activate(self, widget):
         """Undoes the last move"""
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
         self._match.undo_last_move()
-        self._locked.clear()
+        self._board_lock.clear()
         self.refresh_view()
 
     def on_redo_activate(self, widget):
         """Redoes the last move"""
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
         self._match.redo_last_move()
-        self._locked.clear()
+        self._board_lock.clear()
         self.refresh_view()
 
     def on_undo_all_activate(self, widget):
         """Undoes all the performed moves"""
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
         self._match.undo_all_moves()
-        self._locked.clear()
+        self._board_lock.clear()
         self.refresh_view()
 
     def on_redo_all_activate(self, widget):
         """Redoes all the undone moves"""
 
-        self._loop.abort()
+        self._game_loop.abort_request()
         self._animator.stop_move()
         self._match.redo_all_moves()
-        self._locked.clear()
+        self._board_lock.clear()
         self.refresh_view()
 
     def on_side_menuitem_toggled(self, widget):
@@ -852,16 +851,16 @@ class GTKView(object):
 
             if name == 'south-side-menuitem':
                 self._south = self._engine
-                self._north = None
+                self._north = self._human
             elif name == 'north-side-menuitem':
-                self._south = None
+                self._south = self._human
                 self._north = self._engine
             elif name == 'both-side-menuitem':
                 self._south = self._engine
                 self._north = self._engine
             elif name == 'neither-side-menuitem':
-                self._south = None
-                self._north = None
+                self._south = self._human
+                self._north = self._human
 
     def on_strength_menuitem_toggled(self, widget):
         """Emitted when the user sets the engine strength"""
@@ -870,15 +869,16 @@ class GTKView(object):
             name = widget.get_name()
 
             if name == 'easy-menuitem':
-                self._strength = UCIPlayer.Strength.EASY
+                self._strength = Strength.EASY
             elif name == 'medium-menuitem':
-                self._strength = UCIPlayer.Strength.MEDIUM
+                self._strength = Strength.MEDIUM
             elif name == 'hard-menuitem':
-                self._strength = UCIPlayer.Strength.HARD
+                self._strength = Strength.HARD
             elif name == 'expert-menuitem':
-                self._strength = UCIPlayer.Strength.EXPERT
+                self._strength = Strength.EXPERT
 
-            self._settings.set_int('strength', self._strength)
+            ordinal = self._strength.ordinal
+            self._settings.set_int('strength', ordinal)
 
     def on_newgame_button_clicked(self, widget):
         """Emitted on a new game button activation"""
@@ -909,19 +909,20 @@ class GTKView(object):
             self._canvas.update_hovered()
             self.refresh_active_house()
 
-    def on_move_received(self, loop, move):
+    def on_move_received(self, game_loop, move):
         """Adds a move to the match and animates it"""
 
         window = self._main_window.get_window()
-        window.set_cursor(None)
 
         try:
-            self._locked.set()
-            self._animator.make_move(self._match, move)
-            self._match.add_move(move)
-            self._match_changed = True
+            if window is not None:
+                window.set_cursor(None)
+                self._board_lock.set()
+                self._animator.make_move(self._match, move)
+                self._match.add_move(move)
+                self._match_changed = True
         except BaseException:
-            self._locked.clear()
+            self._board_lock.clear()
             self.show_error_bar(
                 _("Error"),
                 _("The received move is not valid")
@@ -929,20 +930,27 @@ class GTKView(object):
 
         self.refresh_actions()
 
+    def on_info_received(self, game_loop, comment):
+        """Shows a player message below the board"""
+
+        self._report_label.set_markup(comment)
+
+    def _on_engine_termination(self, game_loop):
+        """Handles unexpected engine termination errors"""
+
+        exception = RuntimeError('Engine is not responding')
+        self._handle_engine_exception(exception)
+
     def on_move_animation_finished(self, animator):
         """Called after a move animation"""
 
+        if isinstance(self._engine, Engine):
+            self._engine.set_playing_strength(self._strength)
+
         player = self.get_current_player()
 
-        if self._engine is not None:
-            self._engine.set_strength(self._strength)
-            self._engine.set_position(self._match)
-        self._loop.request_move(player)
-
-    def on_state_changed(self, loop):
-        """Emited when the game loop state changes"""
-
-        self._locked.clear()
+        self._game_loop.request_move(player, self._match)
+        self._board_lock.clear()
         self.refresh_state()
 
     # Update view methods
@@ -952,14 +960,19 @@ class GTKView(object):
 
         can_undo = self._match.can_undo()
         can_redo = self._match.can_redo()
+
         self._undo_group.set_sensitive(can_undo)
         self._redo_group.set_sensitive(can_redo)
 
-        if self._locked.is_set():
+        if self._match.has_ended():
             self._move_action.set_sensitive(False)
             self._stop_action.set_sensitive(False)
             self._spinner.stop()
-        elif self._loop.is_thinking():
+        elif self._board_lock.is_set():
+            self._move_action.set_sensitive(False)
+            self._stop_action.set_sensitive(False)
+            self._spinner.stop()
+        elif self._game_loop.is_engine_searching():
             self._move_action.set_sensitive(False)
             self._stop_action.set_sensitive(True)
             self._spinner.start()
@@ -968,8 +981,9 @@ class GTKView(object):
             self._stop_action.set_sensitive(False)
             self._spinner.stop()
 
-        if self._match.has_ended():
-            self._move_action.set_sensitive(False)
+        if self._board_lock.is_set():
+            if self._engine == self.get_current_player():
+                self._stop_action.set_sensitive(True)
 
     def refresh_active_house(self):
         """Highlights the currently hovered house"""
@@ -1002,7 +1016,7 @@ class GTKView(object):
 
         # If it's the start position show match information
 
-        if self._filename is not None and self._match.can_undo() == False:
+        if self._match.can_undo() == False:
             title = ''
             message = ''
 
@@ -1012,8 +1026,9 @@ class GTKView(object):
             result = self._match.get_tag('Result')
             description = self._match.get_tag('Description')
 
-            if not _is_empty(event):
-                title = '%s' % event
+            if self._filename is not None:
+                if not _is_empty(event):
+                    title = '%s' % event
 
             if not _is_empty(description):
                 message = description
@@ -1024,7 +1039,8 @@ class GTKView(object):
                 message = '%s (%s)' % (message, result)
 
             if title or message:
-                self.show_info_bar(title or _("Match"), message, App.FOLDER_ICON)
+                icon = App.FOLDER_ICON if self._filename else App.CREATE_ICON
+                self.show_info_bar(title or _("Match"), message, icon)
             elif self._infobar.is_visible():
                 self._infobar.set_visible(False)
 
@@ -1113,7 +1129,7 @@ class GTKView(object):
         label.set_markup('<b>%s</b>: %s' % (title, message))
         image.set_from_file(util.resource_path(icon))
 
-        self._infobar.set_message_type(Gtk.MessageType.ERROR)
+        self._infobar.set_message_type(Gtk.MessageType.OTHER)
         self._infobar.set_visible(True)
 
     def show_info_dialog(self, title, message, text=None):
@@ -1261,26 +1277,6 @@ class GTKView(object):
 
     # Match manipulation methods
 
-    def _get_exception_message(self, exception):
-        """Extracts an error message from an exception"""
-
-        message = None
-
-        if hasattr(exception, 'message'):
-            if exception.message is not None \
-            and exception.message != '':
-                message = exception.message
-
-        if hasattr(exception, 'strerror'):
-            if exception.strerror is not None \
-            and exception.strerror != '':
-                message = exception.strerror
-
-        if message is None:
-            message = str(exception)
-
-        return message
-
     def open_match(self, path):
         """Open a match file and sets it as current"""
 
@@ -1302,7 +1298,7 @@ class GTKView(object):
                 )
             )
 
-        self._locked.clear()
+        self._board_lock.clear()
 
     def save_match(self, path):
         """Saves the current match to a file"""
@@ -1326,32 +1322,20 @@ class GTKView(object):
         # Start a new match
 
         self._match.new_match()
-
-        # Fill the match with default tags
-
-        user = GLib.get_real_name()
-        date = time.strftime('%Y.%m.%d')
-        event = _("Untitled")
-
-        self._match.set_tag('Event', event)
-        self._match.set_tag('Date', date)
-        self._match.set_tag('South', user)
-        self._match.set_tag('North', user)
-
-        if self._south is not None:
-            name = self._south.get_name()
-            self._match.set_tag('South', name)
-
-        if self._north is not None:
-            name = self._north.get_name()
-            self._match.set_tag('North', name)
+        self._match.set_tag('Event', _("Untitled"))
+        self._match.set_tag('Date', time.strftime('%Y.%m.%d'))
+        self._match.set_tag('South', self._south.get_player_name())
+        self._match.set_tag('North', self._north.get_player_name())
 
         # Rotate the board if needed
 
-        if self._north is None and self._south is not None:
+        south_is_human = isinstance(self._south, Human)
+        north_is_human = isinstance(self._north, Human)
+
+        if north_is_human and not south_is_human:
             if self._canvas.get_rotation() != math.pi:
                 self._rotate_action.activate()
-        elif self._south is None and self._north is not None:
+        elif south_is_human and not north_is_human:
             if self._canvas.get_rotation() != 0.0:
                 self._rotate_action.activate()
         else:
@@ -1361,12 +1345,43 @@ class GTKView(object):
         # Notify this view of a file change
 
         self.on_file_changed(None)
+        self.refresh_infobar()
 
     def reset_engine(self):
         """Aborts any engine computations and setups a new game"""
 
-        if self._engine is not None:
-            self._engine.abort_computation()
-            self._engine.new_match()
-            self._engine.set_strength(self._strength)
-            self._engine.set_position(self._match)
+        try:
+            if isinstance(self._engine, Engine):
+                self._engine.stop_thinking()
+                self._engine.start_new_match()
+                self._engine.set_playing_strength(self._strength)
+        except BaseException as e:
+            self._handle_engine_exception(e)
+
+    def _get_exception_message(self, exception):
+        """Extracts an error message from an exception"""
+
+        message = None
+
+        if hasattr(exception, 'message'):
+            if exception.message is not None \
+            and exception.message != '':
+                message = exception.message
+
+        if hasattr(exception, 'strerror'):
+            if exception.strerror is not None \
+            and exception.strerror != '':
+                message = exception.strerror
+
+        return message or str(exception) or 'Unknown error'
+
+    def _handle_engine_exception(self, exception):
+        """Handles an exception rised by the engine player"""
+
+        self._engine = self._human
+        self._south = self._human
+        self._north = self._human
+
+        title = _('Computer player is disabled')
+        message = _(self._get_exception_message(exception))
+        GLib.idle_add(self.show_error_bar, title, message)
