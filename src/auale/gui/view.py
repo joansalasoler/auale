@@ -63,10 +63,10 @@ class GTKView(object):
         # Game state attributes
 
         self._board_lock = threading.Event()
-        self._engine = None
         self._human = Human()
+        self._engine = self.start_new_engine()
         self._south = self._human
-        self._north = self._human
+        self._north = self._engine
         self._filename = None
         self._match_changed = False
         self._strength = Strength.EASY
@@ -137,9 +137,8 @@ class GTKView(object):
 
         # Let's start everything
 
-        self._load_settings()
-        self._start_engine()
-        self.start_match()
+        self.load_settings()
+        self.start_new_match()
 
     # Utility methods
 
@@ -162,7 +161,7 @@ class GTKView(object):
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-    def _load_settings(self):
+    def load_settings(self):
         """Loads application settings"""
 
         # Remember and restore sound mute
@@ -185,44 +184,30 @@ class GTKView(object):
         value = self._settings.get_int('strength')
         self._update_strength_menu(value)
 
-    def _start_engine(self):
-        """Initializes the engine process"""
-
-        path = None
-        command = None
+    def start_new_engine(self):
+        """Initializes a new engine process"""
 
         try:
-            # If an engine command is provided use it
+            engine = Engine(self.get_engine_command())
+            engine.connect('termination', self._on_engine_termination)
+        except BaseException:
+            title = _('Computer player is disabled')
+            message = _('Could not start the engine')
+            self.show_error_message(title, message)
 
-            if 'command' in self._options:
-                command = self._options['command'].split()
-                path = shutil.which(command[0])
-                command[0] = path
+        return engine or Human()
 
-            if path is None and 'command' in self._options:
-                raise Exception(_('Not a valid engine command'))
+    def get_engine_command(self):
+        """Finds a command to execute the engine"""
 
-            # If Aalina is installed use it
+        if 'command' in self._options:
+            command = self._options['command'].split()
+            return (shutil.which(command[0]),)
 
-            if path is None:
-                path = shutil.which('aalina')
-                command = [path]
+        path = os.path.abspath(GTKView.__ENGINE_PATH)
+        command = (shutil.which('java'), '-jar', path)
 
-            # Otherwise, use the provided Aalina.jar file
-
-            if path is None:
-                command = [
-                    shutil.which('java'), '-jar',
-                    os.path.abspath(GTKView.__ENGINE_PATH)
-                ]
-
-            # Start the engine in a new process
-
-            self._engine = Engine(command)
-            self._engine.connect('termination', self._on_engine_termination)
-            self._north = self._engine
-        except Exception as e:
-            self._handle_engine_exception(e)
+        return command
 
     def _update_strength_menu(self, value):
         """Updates the active strength menu item"""
@@ -478,18 +463,13 @@ class GTKView(object):
         if response == Gtk.ResponseType.OK:
             self._game_loop.abort_request()
             self._animator.stop_move()
-
-            self.start_match()
-            self.reset_engine()
-            self.refresh_view()
-
             self._mixer.on_game_start()
 
             player = self.get_current_player()
 
-            self._game_loop.request_move(player, self._match)
-            self._board_lock.clear()
-            self.refresh_state()
+            self.start_new_match()
+            self.set_active_player(player)
+            self.refresh_view()
 
         self._newmatch_dialog.hide()
 
@@ -536,7 +516,7 @@ class GTKView(object):
             self._game_loop.abort_request()
             self._animator.stop_move()
             self.open_match(dialog.get_filename())
-            self.reset_engine()
+            self.set_active_player(self._human)
             self.refresh_view()
 
         dialog.destroy()
@@ -637,7 +617,7 @@ class GTKView(object):
         self._game_loop.abort_request()
         self._animator.stop_move()
         self.open_match(path)
-        self.reset_engine()
+        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_file_changed(self, path):
@@ -791,13 +771,7 @@ class GTKView(object):
 
         self._game_loop.abort_request()
         self._animator.stop_move()
-
-        if isinstance(self._engine, Engine):
-            self._engine.set_playing_strength(self._strength)
-
-        self._game_loop.request_move(self._engine, self._match)
-        self._board_lock.clear()
-        self.refresh_state()
+        self.set_active_player(self._engine)
 
     def on_stop_activate(self, widget):
         """Asks the engine to stop thinking"""
@@ -935,19 +909,28 @@ class GTKView(object):
 
         self._report_label.set_markup(comment)
 
-    def _on_engine_termination(self, game_loop):
+    def _on_engine_termination(self, engine):
         """Handles unexpected engine termination errors"""
 
-        exception = RuntimeError('Engine is not responding')
-        self._handle_engine_exception(exception)
+        self._engine = Human()
+        self._south = self._human
+        self._north = self._human
+
+        title = _('Computer player is disabled')
+        message = _('Engine is not responding')
+        GLib.idle_add(self.show_error_message, title, message)
 
     def on_move_animation_finished(self, animator):
         """Called after a move animation"""
 
+        player = self.get_current_player()
+        self.set_active_player(player)
+
+    def set_active_player(self, player):
+        """Sets a new player to move on the current match"""
+
         if isinstance(self._engine, Engine):
             self._engine.set_playing_strength(self._strength)
-
-        player = self.get_current_player()
 
         self._game_loop.request_move(player, self._match)
         self._board_lock.clear()
@@ -1251,7 +1234,7 @@ class GTKView(object):
                 _("Cannot save current match")
             )
 
-    def start_match(self):
+    def start_new_match(self):
         """Starts a new match"""
 
         # Start a new match
@@ -1281,25 +1264,3 @@ class GTKView(object):
 
         self.on_file_changed(None)
         self.refresh_infobar()
-
-    def reset_engine(self):
-        """Aborts any engine computations and setups a new game"""
-
-        try:
-            if isinstance(self._engine, Engine):
-                self._engine.stop_thinking()
-                self._engine.start_new_match()
-                self._engine.set_playing_strength(self._strength)
-        except BaseException as e:
-            self._handle_engine_exception(e)
-
-    def _handle_engine_exception(self, exception):
-        """Handles an exception rised by the engine player"""
-
-        self._engine = self._human
-        self._south = self._human
-        self._north = self._human
-
-        title = _('Computer player is disabled')
-        message = _('Engine is not responding')
-        GLib.idle_add(self.show_error_message, title, message)
