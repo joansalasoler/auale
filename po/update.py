@@ -22,9 +22,9 @@ import re
 import shutil
 import subprocess
 import sys
-import util
 
-from gui import App
+from gui import Constants
+from utils import Utils
 
 # Import the util and App modules from the package
 
@@ -52,7 +52,7 @@ if not (xgettext and msgmerge and msgfmt):
 # Change cwd to the root folder
 
 folder = os.path.dirname(os.path.abspath(__file__))
-os.chdir(util.resource_path('%s/../' % folder))
+os.chdir(Utils.resource_path('%s/../' % folder))
 
 # Update the template file with new strings
 
@@ -61,9 +61,9 @@ print("-- Updating template file.")
 command = (
     xgettext,
     '--sort-output',
-    '--package-name=%s' % App.NAME,
-    '--package-version=%s' % App.VERSION,
-    '--output=po/%s.pot' % App.DOMAIN,
+    '--package-name=%s' % Constants.APP_NAME,
+    '--package-version=%s' % Constants.APP_VERSION,
+    '--output=po/%s.pot' % Constants.APP_DOMAIN,
     '--msgid-bugs-address=%s' % BUGS_ADDRESS,
     '--files-from=po/POTFILES.in',
 )
@@ -102,7 +102,7 @@ for name in os.listdir('po'):
     subprocess.call((
         msgmerge, '--verbose', '--update',
         'po/%s.po' % code,
-        'po/%s.pot' % App.DOMAIN
+        'po/%s.pot' % Constants.APP_DOMAIN
     ))
 
     print("-- Formatting translation: %s." % code)
@@ -112,6 +112,6 @@ for name in os.listdir('po'):
 
     subprocess.call((
         msgfmt, '--verbose', '--check',
-        '--output-file=%s/%s.mo' % (folder, App.DOMAIN),
+        '--output-file=%s/%s.mo' % (folder, Constants.APP_DOMAIN),
         'po/%s.po' % code
     ))

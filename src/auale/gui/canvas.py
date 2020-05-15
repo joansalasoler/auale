@@ -16,21 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
 import math
-import util
 import warnings
 import cairo
-
-gi.require_version('Gdk', '3.0')
-gi.require_version('Gtk', '3.0')
-gi.require_version('Rsvg', '2.0')
 
 from gi.repository import Rsvg
 from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import Gtk
+from utils import Utils
 
 
 class Board(Gtk.DrawingArea):
@@ -77,9 +72,9 @@ class Board(Gtk.DrawingArea):
         )
     }
 
-    __LABELS_PATH = util.resource_path('./res/image/labels.svg')
-    __NUMBERS_PATH = util.resource_path('./res/image/numbers.svg')
-    __BACKGROUND_PATH = util.resource_path('./res/image/background.png')
+    __LABELS_PATH = Utils.resource_path('./res/image/labels.svg')
+    __NUMBERS_PATH = Utils.resource_path('./res/image/numbers.svg')
+    __BACKGROUND_PATH = Utils.resource_path('./res/image/background.png')
 
     def __init__(self):
         """Initalize this canva object"""

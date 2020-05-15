@@ -21,15 +21,15 @@ import math
 import os
 import sys
 import threading
-import util
 
-from gui import App
+from utils import Utils
+from .constants import Constants
 
 _SDL_IS_DISABLED = False
 
 try:
     if 'win' in sys.platform:
-        path = util.resource_path('./lib/sdl')
+        path = Utils.resource_path('./lib/sdl')
         os.environ['PYSDL2_DLL_PATH'] = path
 
     import sdl2 as sdl
@@ -49,11 +49,11 @@ class Mixer():
 
     # Audio files path
 
-    __DROP_PATH = util.resource_path('./res/sound/drop.wav').encode('utf-8')
-    __GATHER_PATH = util.resource_path('./res/sound/gather.wav').encode('utf-8')
-    __PICK_UP_PATH = util.resource_path('./res/sound/pickup.wav').encode('utf-8')
-    __ROTATE_PATH = util.resource_path('./res/sound/rotate.wav').encode('utf-8')
-    __START_PATH = util.resource_path('./res/sound/start.wav').encode('utf-8')
+    __DROP_PATH = Utils.resource_path('./res/sound/drop.wav').encode('utf-8')
+    __GATHER_PATH = Utils.resource_path('./res/sound/gather.wav').encode('utf-8')
+    __PICK_UP_PATH = Utils.resource_path('./res/sound/pickup.wav').encode('utf-8')
+    __ROTATE_PATH = Utils.resource_path('./res/sound/rotate.wav').encode('utf-8')
+    __START_PATH = Utils.resource_path('./res/sound/start.wav').encode('utf-8')
 
     def __init__(self):
         """Initializes a new mixer object"""
@@ -72,9 +72,9 @@ class Mixer():
         # Set PulseAudio environment variables
 
         if hasattr(os, 'putenv'):
-            os.putenv('PULSE_PROP_application.name', App.NAME)
-            os.putenv('PULSE_PROP_application.icon_name', App.ICON)
-            os.putenv('PULSE_PROP_media.role', App.ROLE)
+            os.putenv('PULSE_PROP_application.name', Constants.APP_NAME)
+            os.putenv('PULSE_PROP_application.icon_name', Constants.APP_ICON)
+            os.putenv('PULSE_PROP_media.role', Constants.APP_ROLE)
 
         # Initialize SDL audio and mixer
 

@@ -16,42 +16,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
 import math
 import os
 import shutil
 import threading
 import time
-import util
 import webbrowser
 
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
-
+from game import Match
+from game import Oware
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
-from game import Match
-from game import Oware
-from gui import Animator
-from gui import App
-from gui import Board
-from gui import GameLoop
-from gui import Mixer
 from uci import Engine
 from uci import Human
 from uci import Strength
+from utils import Utils
+
+from .animator import Animator
+from .canvas import Board
+from .constants import Constants
+from .loop import GameLoop
+from .mixer import Mixer
 
 
 class GTKView(object):
     """Represents an oware window"""
 
-    __GLADE_PATH = util.resource_path('./res/glade/auale.ui')
-    __CSS_PATH = util.resource_path('./res/glade/auale.css')
-    __ENGINE_PATH = util.resource_path('./res/engine/Aalina.jar')
+    __GLADE_PATH = Utils.resource_path('./res/glade/auale.ui')
+    __CSS_PATH = Utils.resource_path('./res/glade/auale.css')
+    __ENGINE_PATH = Utils.resource_path('./res/engine/Aalina.jar')
 
     def __init__(self, options={}):
         """Builds this interface and runs it"""
@@ -79,12 +75,12 @@ class GTKView(object):
         self._mixer = Mixer()
         self._animator = Animator(self._canvas, self._mixer)
         self._builder = Gtk.Builder()
-        self._settings = util.get_gio_settings(App.ID)
+        self._settings = Utils.get_gio_settings(Constants.APP_ID)
 
         # Initialize this Gtk interface
 
         self._add_css_provider(GTKView.__CSS_PATH)
-        self._builder.set_translation_domain(App.DOMAIN)
+        self._builder.set_translation_domain(Constants.APP_DOMAIN)
         self._builder.add_from_file(GTKView.__GLADE_PATH)
         self._builder.connect_signals(self)
 
@@ -262,7 +258,7 @@ class GTKView(object):
             _("How to play oware"),
             _("You can find the <a href=\"%s\" title=\"Oware abapa rules\">"
               "rules of the game</a> on our website. Have fun playing!")
-            % App.RULES_URL, App.HELP_ICON
+            % Constants.RULES_URL, Constants.HELP_ICON
         )
 
         self._settings.set_boolean('show-tips', False)
@@ -630,14 +626,14 @@ class GTKView(object):
 
         if path is None:
             name = _("Unsaved match")
-            title = '%s - %s' % (App.NAME, name)
+            title = '%s - %s' % (Constants.APP_NAME, name)
             self._main_window.set_title(title)
             return
 
         # Set window properties
 
         name = os.path.basename(path)
-        title = '%s - %s' % (App.NAME, name)
+        title = '%s - %s' % (Constants.APP_NAME, name)
         self._main_window.set_title(title)
 
         # Add the path to recent files
@@ -679,17 +675,17 @@ class GTKView(object):
     def on_home_activate(self, widget):
         """Start home page"""
 
-        webbrowser.open(App.HOME_URL, autoraise=True)
+        webbrowser.open(Constants.HOME_URL, autoraise=True)
 
     def on_support_activate(self, widget):
         """Start help and support forum"""
 
-        webbrowser.open(App.HELP_URL, autoraise=True)
+        webbrowser.open(Constants.HELP_URL, autoraise=True)
 
     def on_rules_activate(self, widget):
         """Show game rules"""
 
-        webbrowser.open(App.RULES_URL, autoraise=True)
+        webbrowser.open(Constants.RULES_URL, autoraise=True)
 
     def on_properties_activate(self, widget):
         """Show a match tags edition dialog"""
@@ -1029,7 +1025,7 @@ class GTKView(object):
                 message = '%s (%s)' % (message, result)
 
             if title or message:
-                icon = App.FOLDER_ICON if self._filename else App.CREATE_ICON
+                icon = Constants.FOLDER_ICON if self._filename else Constants.CREATE_ICON
                 self.show_message(title or _("Match"), message, icon)
             elif self._infobar.is_visible():
                 self._infobar.set_visible(False)
@@ -1055,7 +1051,7 @@ class GTKView(object):
 
         elif self._match.get_comment() is not None:
             comment = GLib.markup_escape_text(self._match.get_comment())
-            self.show_message(None, comment, App.COMMENT_ICON)
+            self.show_message(None, comment, Constants.COMMENT_ICON)
 
         # Otherwise, hide the infobar
 
@@ -1089,9 +1085,7 @@ class GTKView(object):
         self._canvas.set_board(board)
         self._canvas.queue_draw()
 
-    # Message and confirmation dialogs
-
-    def show_message(self, title, message, icon=App.INFORMATION_ICON):
+    def show_message(self, title, message, icon=Constants.INFORMATION_ICON):
         """Shows a message to the user"""
 
         label = self._builder.get_object('infobar-label')
@@ -1105,12 +1099,12 @@ class GTKView(object):
             markup = '<b>%s</b>: %s' % (title, message)
 
         label.set_markup(markup)
-        image.set_from_file(util.resource_path(icon))
+        image.set_from_file(Utils.resource_path(icon))
 
         self._infobar.set_message_type(Gtk.MessageType.OTHER)
         self._infobar.set_visible(True)
 
-    def show_error_message(self, title, message, icon=App.ERROR_ICON):
+    def show_error_message(self, title, message, icon=Constants.ERROR_ICON):
         """Shows an error message to the user"""
 
         self.show_message(title, message, icon)
@@ -1208,8 +1202,6 @@ class GTKView(object):
         dialog.set_modal(True)
 
         return dialog
-
-    # Match manipulation methods
 
     def open_match(self, path):
         """Open a match file and sets it as current"""

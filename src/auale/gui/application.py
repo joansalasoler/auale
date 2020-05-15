@@ -19,14 +19,15 @@
 import logging
 import signal
 import sys
-import util
 
-from gui import App
-from gui import GTKView
 from gi.repository import GLib
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import Gtk
+from utils import Utils
+
+from .constants import Constants
+from .view import GTKView
 
 
 class GTKApplication(Gtk.Application):
@@ -39,7 +40,7 @@ class GTKApplication(Gtk.Application):
         """Starts the application"""
 
         super(GTKApplication, self).__init__(
-            application_id=App.ID,
+            application_id=Constants.APP_ID,
             flags=Gio.ApplicationFlags.HANDLES_OPEN
         )
 
@@ -110,7 +111,7 @@ class GTKApplication(Gtk.Application):
     def on_startup(self, application):
         """Emitted on application startup"""
 
-        self._settings = util.get_gio_settings(App.ID)
+        self._settings = Utils.get_gio_settings(Constants.APP_ID)
         self._settings.delay()
 
     def on_shutdown(self, application):
@@ -140,7 +141,7 @@ class GTKApplication(Gtk.Application):
         # Show program version and exit
 
         if options.contains('version'):
-            print('%s %s' % (App.NAME, App.VERSION))
+            print('%s %s' % (Constants.APP_NAME, Constants.APP_VERSION))
             sys.exit(0)
 
         if options.contains('debug'):

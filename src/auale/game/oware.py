@@ -18,7 +18,8 @@
 
 import pickle
 import re
-import util
+
+from utils import Utils
 
 
 class Oware(object):
@@ -30,7 +31,7 @@ class Oware(object):
     NULL_MOVE = -1
 
     __RULESET = "Oware Abapa"
-    __MACHINERY_PATH = util.resource_path('./res/other/machinery.pkl')
+    __MACHINERY_PATH = Utils.resource_path('./res/other/machinery.pkl')
 
     __file = open(__MACHINERY_PATH, 'rb')
 

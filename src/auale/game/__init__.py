@@ -1,4 +1,7 @@
-from game.match import Match
-from game.oware import Oware
+from .match import Match
+from .oware import Oware
 
-__all__ = ['Oware', 'Match']
+__all__ = [
+    'Oware',
+    'Match'
+]
