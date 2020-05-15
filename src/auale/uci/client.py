@@ -192,8 +192,8 @@ class Client(Thread, GObject.GObject):
         """Evaluates a bestmove response"""
 
         if not self._is_waiting.is_set():
-            self._is_waiting.set()
             self.emit('bestmove-received', params)
+            self._is_waiting.set()
 
     def _get_search_arguments(self):
         """Builds the arguments for the go command"""
