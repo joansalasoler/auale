@@ -48,6 +48,13 @@ class Client(Thread, GObject.GObject):
         )
     )
 
+    __failure_signal = (
+        GObject.SignalFlags.RUN_LAST,
+        GObject.TYPE_NONE, (
+          GObject.TYPE_STRING,
+        )
+    )
+
     __termination_signal = (
         GObject.SignalFlags.RUN_LAST,
         GObject.TYPE_NONE, ()
@@ -59,7 +66,8 @@ class Client(Thread, GObject.GObject):
         'option-received': __response_signal,
         'bestmove-received': __response_signal,
         'response-timeout': __timeout_signal,
-        'termination': __termination_signal
+        'termination': __termination_signal,
+        'failure': __failure_signal
     }
 
     def __init__(self, filein, fileout):
@@ -107,7 +115,7 @@ class Client(Thread, GObject.GObject):
             self._wait_for('uci', self._is_running)
 
         if not self._is_running.is_set():
-            raise RuntimeError('Engine is not responding')
+            self.emit('failure', 'Engine is not responding')
 
     def start_new_match(self):
         """Notify the player a new match will start"""
@@ -283,18 +291,23 @@ class Client(Thread, GObject.GObject):
     def _read_response(self):
         """Reads a response from the input file"""
 
-        response = self._filein.readline().strip()
-        self._logger.debug(f'< { response }')
+        try:
+            response = self._filein.readline().strip()
+            self._logger.debug(f'< { response }')
+        except BrokenPipeError:
+            self.emit('failure', 'Broken pipe')
 
         return response
 
     def _send_command(self, command):
         """Writes a command to the output file"""
 
-        if not self._is_terminated.is_set():
+        try:
             self._logger.debug(f'> { command }')
             self._fileout.write(f'{ command }\n')
             self._fileout.flush()
+        except BrokenPipeError:
+            self.emit('failure', 'Broken pipe')
 
     def run(self):
         """Evaluates responses while the input file is open"""

@@ -75,6 +75,7 @@ class Engine(Client):
         """Listens for response timeouts"""
 
         if self._process.poll() is None:
+            self.emit('failure', 'Response timeout')
             self._terminate_process()
 
     def _on_termination(self, client):
@@ -83,6 +84,7 @@ class Engine(Client):
         try:
             self._process.wait(self.__quit_timeout)
         except subprocess.TimeoutExpired:
+            self.emit('failure', 'Quit timeout')
             self._terminate_process()
 
     def _create_process(self, command):

@@ -29,3 +29,6 @@ class Human(object):
         """Obtains this player name"""
 
         return self._name
+
+    def quit(self):
+        pass
