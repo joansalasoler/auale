@@ -47,20 +47,12 @@ class Match(object):
         self._has_ended = False
         self._current_index = 0
         self._tags = {}
-
-        self.new_match()
+        self._new_match()
 
     def clone(self):
         """Creates a copy of this match"""
 
         return copy.copy(self)
-
-    def new_match(self):
-        """Starts a new match with the defaul position"""
-
-        turn = self._game.SOUTH
-        board = self._game.get_initial_board()
-        self.set_position(board, turn)
 
     def get_game(self):
         """Obtains the game that is being played"""
@@ -419,6 +411,13 @@ class Match(object):
         self._positions = match._positions
         self._has_ended = match._has_ended
         self._current_index = match._current_index
+
+    def _new_match(self):
+        """Starts a new match with the defaul position"""
+
+        turn = self._game.SOUTH
+        board = self._game.get_initial_board()
+        self.set_position(board, turn)
 
     def _unescape(self, value):
         """Unescapes a tag value"""

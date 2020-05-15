@@ -69,7 +69,7 @@ class GTKView(object):
 
         # Interface objects
 
-        self._match = Match(Oware)
+        self._match = None
         self._game_loop = GameLoop()
         self._canvas = Board()
         self._mixer = Mixer()
@@ -110,9 +110,6 @@ class GTKView(object):
         overlay.add_overlay(self._report_vbox)
         overlay.add(self._canvas)
 
-        self._canvas.grab_focus()
-        self._canvas.set_board(self._match.get_board())
-
         self._window_group.add_window(self._main_window)
         self._window_group.add_window(self._about_dialog)
         self._window_group.add_window(self._newmatch_dialog)
@@ -136,7 +133,8 @@ class GTKView(object):
         self.load_settings()
         self.start_new_match()
 
-    # Utility methods
+        self._canvas.set_board(self._match.get_board())
+        self._canvas.grab_focus()
 
     def _connect_signals(self, cobject):
         """Automatically connects the signals of an object"""
@@ -1219,6 +1217,7 @@ class GTKView(object):
         """Open a match file and sets it as current"""
 
         try:
+            self._match = Match(Oware)
             self._match.load(path)
             self.on_file_changed(path)
             item = self._builder.get_object('neither_side_radiomenuitem')
@@ -1250,7 +1249,7 @@ class GTKView(object):
 
         # Start a new match
 
-        self._match.new_match()
+        self._match = Match(Oware)
         self._match.set_tag('Event', _("Untitled"))
         self._match.set_tag('Date', time.strftime('%Y.%m.%d'))
         self._match.set_tag('South', self._south.get_player_name())
