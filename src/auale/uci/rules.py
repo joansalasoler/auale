@@ -22,6 +22,7 @@ from .parser import Parser
 
 INTEGER = r'[-+]?\d+'
 MOVE = r'[a-fA-F]'
+NULL_MOVE = r'0000'
 NUMBER = r'\d+'
 OPTION_TYPE = r'check|spin|combo|button|string'
 SCORE_TYPE = r'lowerbound|upperbound'
@@ -37,7 +38,7 @@ RULES = (
         rf'name\s+(?P<name>{ STRING })',
         rf'author\s+(?P<author>{ STRING })',
     )),
-    (rf'(?P<order>bestmove)\s+(?P<move>{ MOVE })', (
+    (rf'(?P<order>bestmove)\s+(?P<move>{ NULL_MOVE }|{ MOVE })', (
         rf'ponder\s+(?P<ponder>{ MOVE })',
     )),
     (rf'(?P<order>option)', (
