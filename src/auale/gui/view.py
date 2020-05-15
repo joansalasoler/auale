@@ -336,6 +336,7 @@ class GTKView(object):
 
         self._settings.sync()
         self._mixer.stop_mixer()
+        self._engine.quit()
         self._north.quit()
         self._south.quit()
 
