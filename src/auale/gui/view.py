@@ -189,7 +189,7 @@ class GTKView(object):
 
         try:
             engine = Engine(self.get_engine_command())
-            engine.connect('termination', self._on_engine_termination)
+            engine.connect('failure', self.on_engine_failure)
         except BaseException:
             title = _('Computer player is disabled')
             message = _('Could not start the engine')
@@ -325,9 +325,8 @@ class GTKView(object):
 
         self._settings.sync()
         self._mixer.stop_mixer()
-
-        if isinstance(self._engine, Engine):
-            self._engine.quit()
+        self._north.quit()
+        self._south.quit()
 
     def on_main_window_key_press_event(self, widget, event):
         """Interprets key presses"""
@@ -823,18 +822,22 @@ class GTKView(object):
         if widget.get_active():
             name = widget.get_name()
 
+            if isinstance(self._south, Engine):
+                if isinstance(self._north, Engine):
+                    self._north.quit()
+
             if name == 'south-side-menuitem':
                 self._south = self._engine
                 self._north = self._human
             elif name == 'north-side-menuitem':
                 self._south = self._human
                 self._north = self._engine
-            elif name == 'both-side-menuitem':
-                self._south = self._engine
-                self._north = self._engine
             elif name == 'neither-side-menuitem':
                 self._south = self._human
                 self._north = self._human
+            elif name == 'both-side-menuitem':
+                self._south = self._engine
+                self._north = self.start_new_engine()
 
     def on_strength_menuitem_toggled(self, widget):
         """Emitted when the user sets the engine strength"""
@@ -909,16 +912,20 @@ class GTKView(object):
 
         self._report_label.set_markup(comment)
 
-    def _on_engine_termination(self, engine):
+    def on_engine_failure(self, engine, reason):
         """Handles unexpected engine termination errors"""
 
-        self._engine = Human()
-        self._south = self._human
-        self._north = self._human
+        if engine == self._engine:
+            self._engine = Human()
+
+        if engine == self._south:
+            self._south = self._human
+
+        if engine == self._north:
+            self._north = self._human
 
         title = _('Computer player is disabled')
-        message = _('Engine is not responding')
-        GLib.idle_add(self.show_error_message, title, message)
+        GLib.idle_add(self.show_error_message, title, _(reason))
 
     def on_move_animation_finished(self, animator):
         """Called after a move animation"""
@@ -929,8 +936,8 @@ class GTKView(object):
     def set_active_player(self, player):
         """Sets a new player to move on the current match"""
 
-        if isinstance(self._engine, Engine):
-            self._engine.set_playing_strength(self._strength)
+        if isinstance(player, Engine):
+            player.set_playing_strength(self._strength)
 
         self._game_loop.request_move(player, self._match)
         self._board_lock.clear()
@@ -965,7 +972,7 @@ class GTKView(object):
             self._spinner.stop()
 
         if self._board_lock.is_set():
-            if self._engine == self.get_current_player():
+            if isinstance(self.get_current_player(), Engine):
                 self._stop_action.set_sensitive(True)
 
     def refresh_active_house(self):
