@@ -52,12 +52,6 @@ class GTKApplication(Gtk.Application):
         options = []
 
         option = GLib.OptionEntry()
-        option.long_name = 'version'
-        option.short_name = ord('v')
-        option.description = _("Show program's version number and exit")
-        options.append(option)
-
-        option = GLib.OptionEntry()
         option.long_name = 'debug'
         option.short_name = ord('d')
         option.description = _("Enables the debug mode")
@@ -68,7 +62,13 @@ class GTKApplication(Gtk.Application):
         option.short_name = ord('e')
         option.arg = GLib.OptionArg.STRING
         option.arg_description = _("command")
-        option.description = _("Sets the game engine to use")
+        option.description = _("Sets the engine to use")
+        options.append(option)
+
+        option = GLib.OptionEntry()
+        option.long_name = 'version'
+        option.short_name = ord('v')
+        option.description = _("Show program's version number and exit")
         options.append(option)
 
         self.add_main_option_entries(options)
