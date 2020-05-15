@@ -273,7 +273,7 @@ class GTKView(object):
         if not self._settings.get_boolean('show-tips'):
             return
 
-        self.show_info_bar(
+        self.show_message(
             _("How to play oware"),
             _("You can find the <a href=\"%s\" title=\"Oware abapa rules\">"
               "rules of the game</a> on our website. Have fun playing!")
@@ -923,7 +923,7 @@ class GTKView(object):
                 self._match_changed = True
         except BaseException:
             self._board_lock.clear()
-            self.show_error_bar(
+            self.show_error_message(
                 _("Error"),
                 _("The received move is not valid")
             )
@@ -1040,7 +1040,7 @@ class GTKView(object):
 
             if title or message:
                 icon = App.FOLDER_ICON if self._filename else App.CREATE_ICON
-                self.show_info_bar(title or _("Match"), message, icon)
+                self.show_message(title or _("Match"), message, icon)
             elif self._infobar.is_visible():
                 self._infobar.set_visible(False)
 
@@ -1059,13 +1059,13 @@ class GTKView(object):
                 title = _("This match was drawn")
                 description = _("Players gathered an equal number of seeds")
 
-            self.show_info_bar(title, description)
+            self.show_message(title, description)
 
         # If the match has comments, show them
 
         elif self._match.get_comment() is not None:
             comment = GLib.markup_escape_text(self._match.get_comment())
-            self.show_info_bar(None, comment, App.COMMENT_ICON)
+            self.show_message(None, comment, App.COMMENT_ICON)
 
         # Otherwise, hide the infobar
 
@@ -1101,8 +1101,8 @@ class GTKView(object):
 
     # Message and confirmation dialogs
 
-    def show_info_bar(self, title, message, icon=App.INFORMATION_ICON):
-        """Shows an infobar information to the user"""
+    def show_message(self, title, message, icon=App.INFORMATION_ICON):
+        """Shows a message to the user"""
 
         label = self._builder.get_object('infobar-label')
         image = self._builder.get_object('infobar-image')
@@ -1120,66 +1120,10 @@ class GTKView(object):
         self._infobar.set_message_type(Gtk.MessageType.OTHER)
         self._infobar.set_visible(True)
 
-    def show_error_bar(self, title, message, icon=App.ERROR_ICON):
-        """Shows an infobar error to the user"""
-
-        label = self._builder.get_object('infobar-label')
-        image = self._builder.get_object('infobar-image')
-
-        label.set_markup('<b>%s</b>: %s' % (title, message))
-        image.set_from_file(util.resource_path(icon))
-
-        self._infobar.set_message_type(Gtk.MessageType.OTHER)
-        self._infobar.set_visible(True)
-
-    def show_info_dialog(self, title, message, text=None):
-        """Shows an information message to the user"""
-
-        dialog = self.new_message_dialog(
-            Gtk.MessageType.INFO, title, message, text)
-
-        dialog.connect('response', self.on_message_dialog_response)
-        dialog.show()
-
-    def show_error_dialog(self, title, message, text=None):
+    def show_error_message(self, title, message, icon=App.ERROR_ICON):
         """Shows an error message to the user"""
 
-        dialog = self.new_message_dialog(
-            Gtk.MessageType.ERROR, title, message, text)
-
-        dialog.connect('response', self.on_message_dialog_response)
-        dialog.show()
-
-    def on_message_dialog_response(self, dialog, response):
-        """Default handler for message dialogs"""
-
-        dialog.destroy()
-
-    def new_message_dialog(self, type, title, message, text=None):
-        """Creates a new message dialog"""
-
-        dialog = Gtk.MessageDialog(
-            parent=self._main_window,
-            flags=Gtk.DialogFlags.MODAL,
-            buttons=Gtk.ButtonsType.OK
-        )
-
-        self._window_group.add_window(dialog)
-
-        dialog.set_property('message-type', type)
-        dialog.set_property('title', title)
-        dialog.set_property('text', message)
-
-        msgarea = dialog.get_message_area()
-
-        for child in msgarea.get_children():
-            if isinstance(child, Gtk.Label):
-                child.set_property("max-width-chars", 48)
-
-        if text is not None:
-            dialog.set_property('secondary-text', text)
-
-        return dialog
+        self.show_message(title, message, icon)
 
     def new_confirmation_dialog(self, title, message, text, discard):
         """Creates a new confirmation dialog"""
@@ -1287,15 +1231,9 @@ class GTKView(object):
             item.set_active(True)
             self._match.undo_all_moves()
         except Exception as e:
-            message = self._get_exception_message(e)
-
-            self.show_error_dialog(
+            self.show_error_message(
                 _("Error opening match"),
-                _("Match file cannot be opened"),
-                '%s «%s»: %s' % (
-                    _("Unable to open file"),
-                    path, _(message)
-                )
+                _("Match file cannot be opened")
             )
 
         self._board_lock.clear()
@@ -1308,12 +1246,9 @@ class GTKView(object):
             self.on_file_changed(path)
             self.refresh_infobar()
         except Exception as e:
-            message = self._get_exception_message(e)
-
-            self.show_error_dialog(
+            self.show_error_message(
                 _("Error saving match"),
-                _("Cannot save current match"),
-                _(message)
+                _("Cannot save current match")
             )
 
     def start_match(self):
@@ -1358,23 +1293,6 @@ class GTKView(object):
         except BaseException as e:
             self._handle_engine_exception(e)
 
-    def _get_exception_message(self, exception):
-        """Extracts an error message from an exception"""
-
-        message = None
-
-        if hasattr(exception, 'message'):
-            if exception.message is not None \
-            and exception.message != '':
-                message = exception.message
-
-        if hasattr(exception, 'strerror'):
-            if exception.strerror is not None \
-            and exception.strerror != '':
-                message = exception.strerror
-
-        return message or str(exception) or 'Unknown error'
-
     def _handle_engine_exception(self, exception):
         """Handles an exception rised by the engine player"""
 
@@ -1383,5 +1301,5 @@ class GTKView(object):
         self._north = self._human
 
         title = _('Computer player is disabled')
-        message = _(self._get_exception_message(exception))
-        GLib.idle_add(self.show_error_bar, title, message)
+        message = _('Engine is not responding')
+        GLib.idle_add(self.show_error_message, title, message)
