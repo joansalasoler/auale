@@ -229,13 +229,30 @@ class GTKView(object):
         return True
 
     def user_can_move(self):
-        """Returns true if the user is allowed to move"""
+        """Returns if the user is allowed to move now"""
 
-        return not (
-            self._board_lock.is_set() or
-            self._game_loop.is_engine_searching() or
-            self._match.has_ended()
-        )
+        if self._board_lock.is_set():
+            return False
+
+        return not self._match.has_ended()
+
+    def engine_can_move(self):
+        """Returns if an engine is allowed to move now"""
+
+        player = self.get_current_player()
+
+        if not self._board_lock.is_set():
+            return False
+
+        if not isinstance(player, Engine):
+            return False
+
+        return not self._match.has_ended()
+
+    def engine_is_enabled(self):
+        """Returns if the engine is enabled"""
+
+        return isinstance(self._engine, Engine)
 
     def get_current_player(self):
         """Returns the player to move"""
@@ -935,8 +952,10 @@ class GTKView(object):
         if isinstance(player, Engine):
             player.set_playing_strength(self._strength)
 
+        if isinstance(player, Human):
+            self._board_lock.clear()
+
         self._game_loop.request_move(player, self._match)
-        self._board_lock.clear()
         self.refresh_state()
 
     # Update view methods
@@ -950,26 +969,19 @@ class GTKView(object):
         self._undo_group.set_sensitive(can_undo)
         self._redo_group.set_sensitive(can_redo)
 
-        if self._match.has_ended():
-            self._move_action.set_sensitive(False)
+        if self.user_can_move():
+            can_move = self.engine_is_enabled()
+            self._move_action.set_sensitive(can_move)
             self._stop_action.set_sensitive(False)
             self._spinner.stop()
-        elif self._board_lock.is_set():
-            self._move_action.set_sensitive(False)
-            self._stop_action.set_sensitive(False)
-            self._spinner.stop()
-        elif self._game_loop.is_engine_searching():
+        elif self.engine_can_move():
             self._move_action.set_sensitive(False)
             self._stop_action.set_sensitive(True)
             self._spinner.start()
         else:
-            self._move_action.set_sensitive(True)
+            self._move_action.set_sensitive(False)
             self._stop_action.set_sensitive(False)
             self._spinner.stop()
-
-        if self._board_lock.is_set():
-            if isinstance(self.get_current_player(), Engine):
-                self._stop_action.set_sensitive(True)
 
     def refresh_active_house(self):
         """Highlights the currently hovered house"""
