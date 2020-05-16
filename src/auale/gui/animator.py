@@ -62,6 +62,24 @@ class Animator(GObject.GObject):
             self._animate_canvas, None
         )
 
+    def rotate_board(self):
+        """Queue a board rotation animation"""
+
+        angle = self._canvas.get_rotation()
+        target = (angle == 0.0) and math.pi or 0.0
+        self._add(self._animate_rotation, target)
+
+    def make_move(self, match, move):
+        """Queue a move animation"""
+
+        frames = self._compute_move_frames(match, move)
+        self._add(self._animate_move, frames)
+
+    def abort_move(self):
+        """Stops a move animation"""
+
+        self._remove(self._animate_move)
+
     def _animate_canvas(self, widget, clock, data=None):
         """Canvas animation loop"""
 
@@ -115,24 +133,6 @@ class Animator(GObject.GObject):
 
             if index is not None:
                 self._queue.pop(index)
-
-    def rotate_board(self):
-        """Queue a board rotation animation"""
-
-        angle = self._canvas.get_rotation()
-        target = (angle == 0.0) and math.pi or 0.0
-        self._add(self._animate_rotation, target)
-
-    def make_move(self, match, move):
-        """Queue a move animation"""
-
-        frames = self._compute_move_frames(match, move)
-        self._add(self._animate_move, frames)
-
-    def stop_move(self):
-        """Stops a move animation"""
-
-        self._remove(self._animate_move)
 
     def _animate_rotation(self, delay, step, target):
         """Canvas rotation animation method"""

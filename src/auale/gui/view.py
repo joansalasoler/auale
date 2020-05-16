@@ -263,6 +263,12 @@ class GTKView(object):
 
         return self._north
 
+    def abort_current_move(self):
+        """Aborts the current move request and animation"""
+
+        self._game_loop.abort_move()
+        self._animator.abort_move()
+
     def show_tips(self):
         """Shows help messages at startup"""
 
@@ -472,8 +478,7 @@ class GTKView(object):
         """Handles the new match dialog responses"""
 
         if response == Gtk.ResponseType.OK:
-            self._game_loop.abort_request()
-            self._animator.stop_move()
+            self.abort_current_move()
             self._mixer.on_game_start()
 
             player = self.get_current_player()
@@ -524,8 +529,7 @@ class GTKView(object):
         """Handles open dialogs responses"""
 
         if response == Gtk.ResponseType.ACCEPT:
-            self._game_loop.abort_request()
-            self._animator.stop_move()
+            self.abort_current_move()
             self.open_match(dialog.get_filename())
             self.set_active_player(self._human)
             self.refresh_view()
@@ -625,8 +629,7 @@ class GTKView(object):
         uri = widget.get_current_uri()
         path = GLib.filename_from_uri(uri)[0]
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self.open_match(path)
         self.set_active_player(self._human)
         self.refresh_view()
@@ -780,23 +783,20 @@ class GTKView(object):
     def on_move_now_activate(self, widget):
         """Asks the engine to perform a move"""
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self.set_active_player(self._engine)
 
     def on_stop_activate(self, widget):
         """Asks the engine to stop thinking"""
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self._board_lock.clear()
         self.refresh_view()
 
     def on_undo_activate(self, widget):
         """Undoes the last move"""
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self._match.undo_last_move()
         self._board_lock.clear()
         self.refresh_view()
@@ -804,8 +804,7 @@ class GTKView(object):
     def on_redo_activate(self, widget):
         """Redoes the last move"""
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self._match.redo_last_move()
         self._board_lock.clear()
         self.refresh_view()
@@ -813,8 +812,7 @@ class GTKView(object):
     def on_undo_all_activate(self, widget):
         """Undoes all the performed moves"""
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self._match.undo_all_moves()
         self._board_lock.clear()
         self.refresh_view()
@@ -822,8 +820,7 @@ class GTKView(object):
     def on_redo_all_activate(self, widget):
         """Redoes all the undone moves"""
 
-        self._game_loop.abort_request()
-        self._animator.stop_move()
+        self.abort_current_move()
         self._match.redo_all_moves()
         self._board_lock.clear()
         self.refresh_view()
