@@ -228,10 +228,12 @@ class Client(Thread, GObject.GObject):
 
         index = match.get_capture_index()
         board = self._get_board_argument(match, index)
-        moves = self._get_moves_argument(match, index)
 
         options.append(board)
-        options.append(moves)
+
+        if index < match.get_current_index():
+            moves = self._get_moves_argument(match, index)
+            options.append(moves)
 
         return self._to_string(options)
 
