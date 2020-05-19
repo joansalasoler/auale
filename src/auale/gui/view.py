@@ -132,6 +132,7 @@ class GTKView(object):
 
         self.load_settings()
         self.start_new_match()
+        self.set_active_player(self._human)
 
         self._canvas.set_board(self._match.get_board())
         self._canvas.grab_focus()
@@ -222,9 +223,7 @@ class GTKView(object):
     def hide_on_delete(self, widget, event):
         """Hides a window and prevents it from being destroyed"""
 
-        widget.hide()
-
-        return True
+        return widget.hide_on_delete()
 
     def user_can_move(self):
         """Returns if the user is allowed to move now"""
@@ -531,7 +530,6 @@ class GTKView(object):
         if response == Gtk.ResponseType.ACCEPT:
             self.abort_current_move()
             self.open_match(dialog.get_filename())
-            self.set_active_player(self._human)
             self.refresh_view()
 
         dialog.destroy()
@@ -631,7 +629,6 @@ class GTKView(object):
 
         self.abort_current_move()
         self.open_match(path)
-        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_file_changed(self, path):
@@ -790,7 +787,7 @@ class GTKView(object):
         """Asks the engine to stop thinking"""
 
         self.abort_current_move()
-        self._board_lock.clear()
+        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_undo_activate(self, widget):
@@ -798,7 +795,7 @@ class GTKView(object):
 
         self.abort_current_move()
         self._match.undo_last_move()
-        self._board_lock.clear()
+        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_redo_activate(self, widget):
@@ -806,7 +803,7 @@ class GTKView(object):
 
         self.abort_current_move()
         self._match.redo_last_move()
-        self._board_lock.clear()
+        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_undo_all_activate(self, widget):
@@ -814,7 +811,7 @@ class GTKView(object):
 
         self.abort_current_move()
         self._match.undo_all_moves()
-        self._board_lock.clear()
+        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_redo_all_activate(self, widget):
@@ -822,7 +819,7 @@ class GTKView(object):
 
         self.abort_current_move()
         self._match.redo_all_moves()
-        self._board_lock.clear()
+        self.set_active_player(self._human)
         self.refresh_view()
 
     def on_side_menuitem_toggled(self, widget):
@@ -953,8 +950,6 @@ class GTKView(object):
 
         self._game_loop.request_move(player, self._match)
         self.refresh_state()
-
-    # Update view methods
 
     def refresh_actions(self):
         """Set actions properties"""
@@ -1227,7 +1222,7 @@ class GTKView(object):
                 _("Match file cannot be opened")
             )
 
-        self._board_lock.clear()
+        self.set_active_player(self._human)
 
     def save_match(self, path):
         """Saves the current match to a file"""
