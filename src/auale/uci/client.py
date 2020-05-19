@@ -123,12 +123,13 @@ class Client(Thread, GObject.GObject):
         if not self._is_running.is_set():
             self.emit('failure', 'Engine is not responding')
 
-    def start_new_match(self):
+    def start_new_match(self, match=None):
         """Notify the player a new match will start"""
 
         if self._is_waiting.is_set():
-            self._send_command('ucinewgame')
-            self._synchronize()
+            if match != self._match or not self._match:
+                self._send_command('ucinewgame')
+                self._synchronize()
 
     def start_thinking(self, match):
         """Asks the player to start thinking on the given match"""
