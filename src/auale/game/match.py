@@ -59,6 +59,11 @@ class Match(object):
 
         return self._game
 
+    def get_length(self):
+        """Number of stored moves on the match"""
+
+        return len(self._moves)
+
     def get_current_index(self):
         """Return the index of the current move"""
 

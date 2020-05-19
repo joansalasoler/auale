@@ -268,6 +268,17 @@ class GTKView(object):
         self._game_loop.abort_move()
         self._animator.abort_move()
 
+    def request_match_reset(self):
+        """
+        Clones the active match if it was rewinded. This must be called
+        whenever we are adding a new first move to an existing match to
+        make sure the game loop receives a new match object.
+        """
+
+        if self._match.get_current_index() == 0:
+            if self._match.get_length() > 0:
+                self._match = self._match.clone()
+
     def show_tips(self):
         """Shows help messages at startup"""
 
@@ -369,9 +380,6 @@ class GTKView(object):
 
         # Interpret the move
 
-        if not self.user_can_move():
-            return
-
         move_keys = (
             (Gdk.KEY_A, Gdk.KEY_a),
             (Gdk.KEY_B, Gdk.KEY_b),
@@ -386,8 +394,7 @@ class GTKView(object):
         for move in range(len(move_keys)):
             if event.keyval in move_keys[move]:
                 house = move + (turn == -1 and 6 or 0)
-                if self._match.is_legal_move(house):
-                    self.on_move_received(self._game_loop, house)
+                self.on_house_button_press_event(self._canvas, house)
                 break
 
     def on_house_button_press_event(self, widget, house):
@@ -395,6 +402,7 @@ class GTKView(object):
 
         if self.user_can_move():
             if self._match.is_legal_move(house):
+                self.request_match_reset()
                 self.on_move_received(self._game_loop, house)
 
     def on_house_enter_notify_event(self, widget, house):
@@ -781,6 +789,7 @@ class GTKView(object):
         """Asks the engine to perform a move"""
 
         self.abort_current_move()
+        self.request_match_reset()
         self.set_active_player(self._engine)
 
     def on_stop_activate(self, widget):
