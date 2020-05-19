@@ -83,6 +83,7 @@ class Client(Thread, GObject.GObject):
         self._is_running = Event()
         self._is_ready = Event()
 
+        self._match = None
         self._search_depth = 10
         self._search_timeout = 1000
 
@@ -93,6 +94,11 @@ class Client(Thread, GObject.GObject):
         waiting = self._is_waiting.is_set()
 
         return running and not waiting
+
+    def get_current_match(self):
+        """Last match the engine was asked to search on"""
+
+        return self._match
 
     def set_search_depth(self, depth):
         """Sets how many plies the player may search"""
@@ -128,6 +134,7 @@ class Client(Thread, GObject.GObject):
         """Asks the player to start thinking on the given match"""
 
         if self._is_waiting.is_set():
+            self._match = match
             self._is_waiting.clear()
             search_args = self._get_search_arguments()
             position_args = self._get_position_arguments(match)
@@ -138,6 +145,7 @@ class Client(Thread, GObject.GObject):
         """Asks the player to start pondering on the given match"""
 
         if self._is_waiting.is_set():
+            self._match = match
             self._is_waiting.clear()
             position_args = self._get_position_arguments(match)
             self._send_command(f'position { position_args }')
