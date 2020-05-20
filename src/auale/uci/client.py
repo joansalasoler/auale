@@ -255,7 +255,7 @@ class Client(Thread, GObject.GObject):
         """Obtains a moves notation for the given match index"""
 
         options = None
-        length = 1 + match.get_current_index()
+        length = match.get_current_index()
         moves = match.get_moves()[index:length]
 
         if moves:
