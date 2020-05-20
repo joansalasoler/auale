@@ -64,7 +64,7 @@ class Client(Thread, GObject.GObject):
         'id-received': __response_signal,
         'info-received': __response_signal,
         'option-received': __response_signal,
-        'bestmove-received': __response_signal,
+        'move-received': __response_signal,
         'response-timeout': __timeout_signal,
         'termination': __termination_signal,
         'failure': __failure_signal
@@ -201,7 +201,7 @@ class Client(Thread, GObject.GObject):
         """Evaluates a bestmove response"""
 
         if not self._is_waiting.is_set():
-            self.emit('bestmove-received', params)
+            self.emit('move-received', params)
             self._is_waiting.set()
 
     def _get_search_arguments(self):
