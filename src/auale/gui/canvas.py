@@ -93,9 +93,9 @@ class Board(Gtk.DrawingArea):
         self._COLOR = {
             'HOUSE': (0.96, 0.96, 0.96),
             'HOUSE_ACTIVE': (1.0, 1.0, 0.55),
-            'HOUSE_HIGHLIGHT': (0.88, 0.95, 1.0),
+            'HOUSE_HIGHLIGHT': (0.75, 0.89, 1.0),
             'HOUSE_STROKE': (0.2, 0.2, 0.2),
-            'SEED': (0.55, 0.75, 0.0),
+            'SEED': (0.47, 0.72, 0.12),
             'SEED_STROKE': (0.10, 0.5, 0.2)
         }
 
