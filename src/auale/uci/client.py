@@ -142,13 +142,13 @@ class Client(Thread, GObject.GObject):
             self._send_command(f'position { position_args }')
             self._send_command(f'go { search_args }')
 
-    def start_pondering(self, match):
+    def start_pondering(self, match, move=None):
         """Asks the player to start pondering on the given match"""
 
         if self._is_waiting.is_set():
             self._match = match
             self._is_waiting.clear()
-            position_args = self._get_position_arguments(match)
+            position_args = self._get_position_arguments(match, move)
             self._send_command(f'position { position_args }')
             self._send_command('go ponder')
 
@@ -222,22 +222,6 @@ class Client(Thread, GObject.GObject):
 
         return self._to_string(options)
 
-    def _get_position_arguments(self, match):
-        """Builds the arguments for the position command"""
-
-        options = []
-
-        index = match.get_capture_index()
-        board = self._get_board_argument(match, index)
-
-        options.append(board)
-
-        if index < match.get_current_index():
-            moves = self._get_moves_argument(match, index)
-            options.append(moves)
-
-        return self._to_string(options)
-
     def _get_board_argument(self, match, index):
         """Obtains a board notation for the given match index"""
 
@@ -251,17 +235,35 @@ class Client(Thread, GObject.GObject):
 
         return options
 
-    def _get_moves_argument(self, match, index):
+    def _get_position_arguments(self, match, move=None):
+        """Builds the arguments for the position command"""
+
+        options = []
+
+        index = match.get_capture_index()
+        board = self._get_board_argument(match, index)
+        moves = self._get_moves_argument(match, index, move)
+
+        options.append(board)
+        options.append(moves)
+
+        return self._to_string(options)
+
+    def _get_moves_argument(self, match, index, move=None):
         """Obtains a moves notation for the given match index"""
 
         options = None
+
         length = match.get_current_index()
         moves = match.get_moves()[index:length]
 
-        if moves:
+        if isinstance(move, int):
+            moves = moves + (move,)
+
+        if moves and len(moves) > 0:
             game = match.get_game()
-            options = game.to_moves_notation(moves)
-            options = f'moves { options }'
+            notation = game.to_moves_notation(moves)
+            options = f'moves { notation }'
 
         return options
 
