@@ -308,7 +308,8 @@ class Client(Thread, GObject.GObject):
             response = self._filein.readline().strip()
             self._logger.debug(f'< { response }')
         except BrokenPipeError:
-            self.emit('failure', 'Broken pipe')
+            if not self._is_terminated.is_set():
+                self.emit('failure', 'Broken pipe')
 
         return response
 
@@ -320,7 +321,8 @@ class Client(Thread, GObject.GObject):
             self._fileout.write(f'{ command }\n')
             self._fileout.flush()
         except BrokenPipeError:
-            self.emit('failure', 'Broken pipe')
+            if not self._is_terminated.is_set():
+                self.emit('failure', 'Broken pipe')
 
     def run(self):
         """Evaluates responses while the input file is open"""
