@@ -1000,11 +1000,8 @@ class GTKView(object):
     def refresh_highlight(self):
         """Highlights the last performed move"""
 
-        try:
-            move = self._match.get_previous_move()
-            self._canvas.set_highlight(move)
-        except IndexError:
-            self._canvas.set_highlight(None)
+        move = self._match.get_previous_move()
+        self._canvas.set_highlight(move)
 
     def refresh_infobar(self):
         """Sets information bar properties"""

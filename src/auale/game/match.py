@@ -112,7 +112,7 @@ class Match(object):
         """Returns the previous move on the match history"""
 
         if self._current_index <= 0:
-            raise IndexError
+            return self._game.NULL_MOVE
 
         return self._moves[self._current_index - 1]
 
