@@ -25,12 +25,15 @@ from .strength import Strength
 class Engine(Client):
     """Client for an external UCI engine"""
 
+    __counter = 0
     __quit_timeout = 8.0
 
     def __init__(self, command):
         process = self._create_process(command)
         Client.__init__(self, process.stdout, process.stdin)
+        Engine.__counter += 1
 
+        self._id = Engine.__counter
         self._process = process
         self._strength = Strength.EASY
         self._author = 'Unknown author'
@@ -119,3 +122,6 @@ class Engine(Client):
         except subprocess.TimeoutExpired:
             self._logger.warning('Killing engine')
             self._process.kill()
+
+    def __repr__(self):
+        return '<Engine({0}, {1})>'.format(self._id, self._name)

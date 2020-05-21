@@ -306,7 +306,7 @@ class Client(Thread, GObject.GObject):
 
         try:
             response = self._filein.readline().strip()
-            self._logger.debug(f'< { response }')
+            self._logger.debug(f'{ self } < { response }')
         except BrokenPipeError:
             if not self._is_terminated.is_set():
                 self.emit('failure', 'Broken pipe')
@@ -317,7 +317,7 @@ class Client(Thread, GObject.GObject):
         """Writes a command to the output file"""
 
         try:
-            self._logger.debug(f'> { command }')
+            self._logger.debug(f'{ self } > { command }')
             self._fileout.write(f'{ command }\n')
             self._fileout.flush()
         except BrokenPipeError:
