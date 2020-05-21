@@ -236,12 +236,7 @@ class GTKView(object):
     def engine_can_move(self):
         """Returns if an engine is allowed to move now"""
 
-        player = self.get_current_player()
-
         if not self._board_lock.is_set():
-            return False
-
-        if not isinstance(player, Engine):
             return False
 
         return not self._match.has_ended()
@@ -953,6 +948,7 @@ class GTKView(object):
 
         if isinstance(player, Engine):
             player.set_playing_strength(self._strength)
+            self._board_lock.set()
 
         if isinstance(player, Human):
             self._board_lock.clear()
