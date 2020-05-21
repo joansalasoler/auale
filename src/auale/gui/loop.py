@@ -16,138 +16,146 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import time
-import threading
-
+from threading import Lock
 from gi.repository import GLib
 from gi.repository import GObject
-from uci import UCIPlayer
+from uci import Engine
+from .cache import PonderCache
 
 
-class GameLoop(threading.Thread, GObject.GObject):
+class GameLoop(GObject.GObject):
     """Represents the game loop"""
+
+    __move_delay = 1.6
 
     __gtype_name__ = 'GameLoop'
 
     __gsignals__ = {
-
-        'state-changed': (
-            GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE, ()
-        ),
-
         'move-received': (
             GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE,
-            (GObject.TYPE_INT,)
+            GObject.TYPE_NONE, (
+                GObject.TYPE_INT,
+            )
+        ),
+
+        'info-received': (
+            GObject.SIGNAL_RUN_FIRST,
+            GObject.TYPE_NONE, (
+                GObject.TYPE_STRING,
+            )
         )
     }
 
-    MOVE_DELAY = 1.6
-
     def __init__(self):
-        """Initializes this game loop"""
-
         GObject.GObject.__init__(self)
-        threading.Thread.__init__(self)
 
-        self._match = None
-        self._player = None
-        self._is_running = False
-        self._lock = threading.Lock()
-        self._switch = threading.Condition(self._lock)
-        self._aborted = threading.Event()
-        self._computed = threading.Event()
-        self._computed.set()
+        self._active_player = None
+        self._current_player = None
+        self._previous_player = None
+        self._request_lock = Lock()
+        self._ponder_cache = PonderCache(256)
 
-    def is_thinking(self):
-        """Tells if the engine is thinking"""
+    def request_move(self, player, match):
+        """Requests a player to make a move"""
 
-        return not self._computed.is_set()
+        with self._request_lock:
+            self._active_player = None
 
-    def request_move(self, player):
-        """Requests a move to the current player"""
+            if self._is_entering_player(player):
+                self._connect_player(player)
 
-        with self._switch:
-            self._player = player
-            self._switch.notify_all()
+            if self._is_substitute_player(player):
+                self._switch_to_waiting(self._previous_player)
+                self._disconnect_player(self._previous_player)
 
-    def run(self):
-        """Switches turns till this thread is stopped"""
+            self._previous_player = self._current_player
+            self._current_player = player
 
-        with self._switch:
-            self._is_running = True
+            if self._current_player != self._previous_player:
+                self._switch_to_waiting(self._previous_player)
+                self._switch_to_pondering(self._previous_player, match)
 
-            while self._is_running:
-                self._switch.wait()
-                if self._is_running:
-                    self._request_action()
+            self._switch_to_waiting(self._current_player)
+            self._switch_to_thinking(self._current_player, match)
 
-    def abort(self):
-        """Aborts any running move computation"""
+    def abort_move(self):
+        """Aborts any ongoing move requests"""
 
-        self._aborted.set()
+        with self._request_lock:
+            self._active_player = None
+            self._switch_to_waiting(self._current_player)
+            self._switch_to_waiting(self._previous_player)
 
-        try:
-            if self._player is not None:
-                while not self._computed.is_set():
-                    self._player.stop()
-                    self._computed.wait(0.2)
-        except BaseException:
-            pass  # Not computing
+    def _is_entering_player(self, player):
+        """Checks if its a new player entering the match"""
 
-        self._computed.wait()
-        self._aborted.clear()
+        return player != self._current_player and \
+               player != self._previous_player
 
-    def stop(self):
-        """Stops this game loop thread"""
+    def _is_substitute_player(self, player):
+        """Checks if the player substitutes a previous one"""
 
-        self.abort()
+        return player != self._previous_player and \
+               self._previous_player != self._current_player
 
-        with self._switch:
-            self._is_running = False
-            self._switch.notify_all()
+    def _connect_player(self, player):
+        """Connects a player to the signal handlers"""
 
-    def _request_action(self):
-        """Request a move to the player"""
+        if isinstance(player, Engine):
+            player.connect('move-received', self._on_move_received)
+            player.connect('info-received', self._on_info_received)
 
-        if self._player is None:
-            GLib.idle_add(self.emit, 'state-changed')
-            return
+    def _disconnect_player(self, player):
+        """Disconnects a player from the signal handlers"""
 
-        try:
-            self._computed.clear()
-            GLib.idle_add(self.emit, 'state-changed')
-            self._compute_move()
-            self._computed.set()
-        except BaseException:
-            self._computed.set()
-            GLib.idle_add(self.emit, 'state-changed')
+        if isinstance(player, Engine):
+            player.disconnect_by_func(self._on_info_received)
+            player.disconnect_by_func(self._on_move_received)
 
-    def _compute_move(self):
-        """Requests a move to the player"""
+    def _switch_to_waiting(self, player):
+        """Switches a player state to waiting for a command"""
 
-        start_time = time.time()
+        if isinstance(player, Engine):
+            player.stop_thinking()
 
-        # Compute a move and set the player to ponder
+    def _switch_to_thinking(self, player, match):
+        """Switches a player state to searching for a move"""
 
-        if not self._aborted.is_set():
-            move = self._player.retrieve_move()
+        if isinstance(player, Engine):
+            self._active_player = player
+            player.start_new_match(match)
+            player.start_thinking(match)
 
-        if not self._aborted.is_set():
-            if self._player.get_strength() > UCIPlayer.Strength.MEDIUM:
-                self._player.start_pondering()
+    def _switch_to_pondering(self, player, match):
+        """Switches a player state to pondering a position"""
 
-        # Wait before emiting a signal
+        if isinstance(player, Engine):
+            strength = player.get_playing_strength()
 
-        end_time = time.time()
-        delay = end_time - start_time
+            if strength.allows_pondering:
+                move = self._ponder_cache.fetch(match)
+                player.start_new_match(match)
+                player.start_pondering(match, move)
 
-        if delay < GameLoop.MOVE_DELAY:
-            wait_time = GameLoop.MOVE_DELAY - delay
-            self._aborted.wait(wait_time)
+    def _on_move_received(self, player, values):
+        """Handles the reception of an engine move"""
 
-        # Emit a move-received signal
+        if not self._request_lock.locked():
+            with self._request_lock:
+                if player == self._active_player:
+                    self._active_player = None
 
-        if not self._aborted.is_set():
-            GLib.idle_add(self.emit, 'move-received', move)
+                    match = player.get_current_match()
+                    game = match.get_game()
+                    move = game.to_move(values['move'])
+
+                    GLib.idle_add(self.emit, 'move-received', move)
+
+                    if values['ponder'] is not None:
+                        value = game.to_move(values['ponder'])
+                        self._ponder_cache.store(match, move, value)
+
+    def _on_info_received(self, player, values):
+        """Handles the reception of an engine report"""
+
+        pass # TODO: Not implemented yet
