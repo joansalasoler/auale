@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import copy
-import codecs
-import re
 
 
 class Match(object):
@@ -48,6 +46,13 @@ class Match(object):
         self._current_index = 0
         self._tags = {}
         self._new_match()
+
+    def _new_match(self):
+        """Starts a new match with the defaul position"""
+
+        turn = self._game.SOUTH
+        board = self._game.get_initial_board()
+        self.set_position(board, turn)
 
     def clone(self):
         """Creates a copy of this match"""
@@ -304,6 +309,11 @@ class Match(object):
 
         self._tags[name.strip()] = value.strip()
 
+    def get_tag_roster(self):
+        """Obtains the mandatory tag identifiers"""
+
+        return self.__TAG_ROSTER
+
     def get_tags(self):
         """Returns a tuple view of this match tags"""
 
@@ -366,192 +376,3 @@ class Match(object):
             tokens.append(self._tags['Result'])
 
         return tuple(tokens)
-
-    def save(self, path):
-        """Save this match to a file"""
-
-        with codecs.open(path, 'w', 'utf-8') as fileo:
-            self._write_tags(fileo)
-            if len(self._moves) > 0:
-                fileo.write('\n')
-                self._write_moves(fileo)
-
-    def load(self, path):
-        """Load a match from a file"""
-
-        # Read the match from a file
-
-        try:
-            with codecs.open(path, 'r', 'utf-8') as fileo:
-                header = fileo.read(8)
-
-                if header != '[Variant':
-                    raise ValueError()
-
-                string = header + fileo.read()
-
-            (tags, index) = self._read_tags(string, 0)
-            (moves, comments, index) = self._read_moves(string, index)
-
-            match = Match(self._game)
-
-            if 'FEN' in tags:
-                notation = tags['FEN']
-                (board, turn) = self._game.to_position(notation)
-                match.set_position(board, turn)
-
-            for move in moves:
-                match.add_move(move)
-        except BaseException:
-            raise ValueError(
-                "Not a valid match file")
-
-        # Set this match properties
-
-        self._tags = tags
-        self._turn = match._turn
-        self._board = match._board
-        self._moves = match._moves
-        self._comments = comments
-        self._positions = match._positions
-        self._has_ended = match._has_ended
-        self._current_index = match._current_index
-
-    def _new_match(self):
-        """Starts a new match with the defaul position"""
-
-        turn = self._game.SOUTH
-        board = self._game.get_initial_board()
-        self.set_position(board, turn)
-
-    def _unescape(self, value):
-        """Unescapes a tag value"""
-
-        value = value.replace('\\"', '\"')
-        value = value.replace('\\\\', '\\')
-
-        return value
-
-    def _escape(self, value):
-        """Escapes a tag value"""
-
-        value = value.replace('\\', '\\\\')
-        value = value.replace('\"', '\\"')
-
-        return value
-
-    def _read_tags(self, string, index):
-        """Reads all header tags from the string"""
-
-        pattern = re.compile(r'\s*\[\s*(\w+)\s+"((?:[^"]|\\")*)"\s*\]')
-
-        # Create a new default tag set
-
-        tags = {}
-
-        for tag in self.__TAG_ROSTER:
-            tags[tag] = '?'
-
-        tags['Variant'] = self._game.get_ruleset_name()
-        tags['Result'] = '*'
-
-        # Parse tags from the string
-
-        while index < len(string):
-            m = pattern.match(string, index)
-
-            if m is None:
-                break
-
-            tag = m.group(1)
-            value = self._unescape(m.group(2))
-            tags[tag] = value
-            index = m.end(0)
-
-        return (tags, index)
-
-    def _read_moves(self, string, index):
-        """Reads all the moves from the string"""
-
-        move_pattern = re.compile(r'([A-Fa-f])')
-        comments = [None]
-        moves = []
-
-        while index < len(string):
-            if string[index] == '{':
-                comment, index = self._read_comment(string, index)
-
-                if len(comments) > 0:
-                    comments[-1] = comment
-            elif string[index] == '(':
-                variation, index = self._read_variation(string, index)
-            else:
-                m = move_pattern.match(string, index)
-                if m is not None:
-                    notation = m.group(1)
-                    move = self._game.to_move(notation)
-                    comments.append(None)
-                    moves.append(move)
-                index += 1
-
-        return (moves, comments, index)
-
-    def _read_comment(self, string, index):
-        """Reads a single comment from the string"""
-
-        comment = None
-
-        if index < len(string):
-            pattern = re.compile(r'([^}]*)')
-            m = pattern.match(string, index + 1)
-
-            if m is not None:
-                index = m.end(1)
-                comment = ' '.join(m.group(1).split())
-
-        return (comment, index)
-
-    def _read_variation(self, string, index):
-        """Reads a single comment from the string"""
-
-        variation = None
-
-        if index < len(string):
-            pattern = re.compile(r'([^)]*)')
-            m = pattern.match(string, index + 1)
-
-            if m is not None:
-                variation = m.group(1)
-                index = m.end(1)
-
-        return (variation, index)
-
-    def _write_tags(self, fileo):
-        """Writes this match tags to a file"""
-
-        for tag in self.__TAG_ROSTER:
-            value = self._escape(self._tags[tag])
-            string = '[%s "%s"]\n' % (tag, value)
-            fileo.write(string)
-
-        for tag in self._tags:
-            if tag not in self.__TAG_ROSTER:
-                value = self._escape(self._tags[tag])
-                string = '[%s "%s"]\n' % (tag, value)
-                fileo.write(string)
-
-    def _write_moves(self, fileo):
-        """Writes moves from a match to a file"""
-
-        tokens = self.get_notation()
-        line = str(tokens[0])
-
-        for token in tokens[1:]:
-            if 1 + len(line) + len(token) < 80:
-                line = '%s %s' % (line, token)
-                continue
-
-            fileo.write('%s\n' % line)
-            line = str(token)
-
-        fileo.write('%s\n' % line)
