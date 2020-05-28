@@ -32,6 +32,8 @@ class Constants(object):
     HELP_URL = 'http://www.joansala.com/auale/help/'
     RULES_URL = 'http://www.joansala.com/auale/rules/'
 
+    ICONS_PATH = 'res/icons'
+
     COMMENT_ICON = './res/image/comment.svg'
     CREATE_ICON = './res/image/create.svg'
     ERROR_ICON = './res/image/error.svg'

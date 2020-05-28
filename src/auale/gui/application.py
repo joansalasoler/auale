@@ -74,6 +74,13 @@ class GTKApplication(Gtk.Application):
 
         self.add_main_option_entries(options)
 
+        # Custom theme icons
+
+        Gio.ThemedIcon.new('auale')
+        theme = Gtk.IconTheme.get_default()
+        icons_path = Utils.resource_path(Constants.ICONS_PATH)
+        theme.append_search_path(icons_path)
+
         # Application actions
 
         action_type = GLib.VariantType.new('s')
