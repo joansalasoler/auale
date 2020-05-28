@@ -19,11 +19,11 @@
 from gi.repository import Gtk
 
 
-@Gtk.Template.from_file('gui/widgets/new_match_dialog.ui')
-class NewMatchDialog(Gtk.Dialog):
-    """Dialog to start a new match"""
+@Gtk.Template.from_file('gui/dialogs/properties_dialog.ui')
+class PropertiesDialog(Gtk.Dialog):
+    """Match properties dialog"""
 
-    __gtype_name__ = 'NewMatchDialog'
+    __gtype_name__ = 'PropertiesDialog'
 
     def __init__(self):
-        super(NewMatchDialog, self).__init__()
+        super(PropertiesDialog, self).__init__()

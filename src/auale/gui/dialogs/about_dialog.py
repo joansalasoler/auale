@@ -19,7 +19,7 @@
 from gi.repository import Gtk
 
 
-@Gtk.Template.from_file('gui/widgets/about_dialog.ui')
+@Gtk.Template.from_file('gui/dialogs/about_dialog.ui')
 class AboutDialog(Gtk.AboutDialog):
     """About dialog"""
 
