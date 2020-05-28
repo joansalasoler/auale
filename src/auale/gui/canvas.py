@@ -120,13 +120,7 @@ class Board(Gtk.DrawingArea):
             self._numbers = None
             self._wallpaper = None
 
-        self.add_events(
-            Gdk.EventMask.POINTER_MOTION_MASK |
-            Gdk.EventMask.BUTTON_PRESS_MASK |
-            Gdk.EventMask.ENTER_NOTIFY_MASK |
-            Gdk.EventMask.LEAVE_NOTIFY_MASK
-        )
-
+        self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
         self.connect('draw', self.do_draw_event)
         self.set_property('can-focus', True)
 
