@@ -4,6 +4,7 @@ from .about_dialog import AboutDialog
 from .match_chooser_dialog import MatchChooserDialog
 from .new_match_dialog import NewMatchDialog
 from .open_match_dialog import OpenMatchDialog
+from .oware_board import OwareBoard
 from .properties_dialog import PropertiesDialog
 from .recent_chooser_menuitem import RecentChooserMenuitem
 from .recent_chooser_popover_menu import RecentChooserPopoverMenu
@@ -15,6 +16,7 @@ __all__ = [
     'MatchChooserDialog',
     'NewMatchDialog',
     'OpenMatchDialog',
+    'OwareBoard',
     'PropertiesDialog',
     'RecentChooserMenuitem',
     'RecentChooserPopoverMenu',
