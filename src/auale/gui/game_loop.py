@@ -20,7 +20,7 @@ from threading import Lock
 from gi.repository import GLib
 from gi.repository import GObject
 from uci import Engine
-from .cache import PonderCache
+from .ponder_cache import PonderCache
 
 
 class GameLoop(GObject.GObject):
@@ -154,7 +154,6 @@ class GameLoop(GObject.GObject):
                         self._ponder_cache.store(match, move, value)
 
                     GLib.idle_add(self.emit, 'move-received', move)
-
 
     def _on_info_received(self, player, values):
         """Handles the reception of an engine report"""

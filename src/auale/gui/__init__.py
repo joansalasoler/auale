@@ -2,7 +2,7 @@
 
 from .animator import Animator
 from .constants import Constants
-from .loop import GameLoop
+from .game_loop import GameLoop
 from .mixer import Mixer
 from .windows import ApplicationWindow
 
