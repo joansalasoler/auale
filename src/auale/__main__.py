@@ -17,14 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gi
 import sys
 
-from gui import Constants
-from gui import GTKApplication
-from utils import Utils
-
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('Rsvg', '2.0')
 
 if __name__ == "__main__":
-    Utils.install_gettext(Constants.APP_DOMAIN)
-    application = GTKApplication()
-    application.run(sys.argv)
+    import auale
+    # Utils.install_gettext(Constants.APP_DOMAIN)
+    app = auale.Auale()
+    app.run(sys.argv)

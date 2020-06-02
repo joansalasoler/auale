@@ -26,6 +26,7 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from utils import Utils
 
+from gui import ApplicationWindow
 from .constants import Constants
 from .view import GTKView
 
@@ -81,6 +82,15 @@ class GTKApplication(Gtk.Application):
         icons_path = Utils.resource_path(Constants.ICONS_PATH)
         theme.append_search_path(icons_path)
 
+        # Custom CSS provider
+
+        screen = Gdk.Screen.get_default()
+        provider = Gtk.CssProvider()
+        provider.load_from_path('gui/windows/application_window.css')
+        priority = Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+
+        Gtk.StyleContext.add_provider_for_screen(screen, provider, priority)
+
         # Application actions
 
         action_type = GLib.VariantType.new('s')
@@ -130,17 +140,23 @@ class GTKApplication(Gtk.Application):
     def on_activate(self, application):
         """Emitted to activate the application"""
 
-        view = GTKView(self._view_options)
+        view = ApplicationWindow()
         application.show_view(view)
-        view.show_tips()
+
+        # view = GTKView(self, self._view_options)
+        # application.show_view(view)
+        # view.show_tips()
 
     def on_open(self, application, files, n, hint):
         """Emitted to open one ore more files"""
 
         for path in (f.get_path() for f in files):
-            view = GTKView(self._view_options)
-            view.open_match(path)
+            view = ApplicationWindow()
             application.show_view(view)
+
+            # view = GTKView(self, self._view_options)
+            # view.open_match(path)
+            # application.show_view(view)
 
     def on_handle_options(self, application, options):
         """Emitted to parse local command line options"""
@@ -223,14 +239,14 @@ class GTKApplication(Gtk.Application):
         if maximize:
             window.maximize()
 
-    def show_view(self, view):
+    def show_view(self, window):
         """Adds a view to the application and shows it"""
 
-        window = view.get_window()
+        # window = view.get_window()
         window.connect('delete-event', self.on_window_delete)
 
         self.set_window_size(window)
         self.add_window(window)
 
         window.show_all()
-        view.refresh_view()
+        # view.refresh_view()

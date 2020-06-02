@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
+  <enum id="com.joansala.auale.EngineStrength">
+    <value value="0" nick="easy"/>
+    <value value="1" nick="medium"/>
+    <value value="2" nick="hard"/>
+    <value value="3" nick="expert"/>
+  </enum>
   <schema id="com.joansala.auale" path="/com/joansala/auale/" gettext-domain="auale">
-    <key type="b" name="mute-sound">
+    <key name="mute" type="b">
       <default>false</default>
-      <summary>Start the game with sound disabled.</summary>
+      <summary>Start the game with sound disabled</summary>
     </key>
-    <key type="b" name="show-tips">
+    <key name="strength" enum="com.joansala.auale.EngineStrength">
+      <default>'easy'</default>
+      <summary>Default engine strength</summary>
+    </key>
+    <key name="show-tips" type="b">
       <default>true</default>
-      <summary>Show application tips at startup.</summary>
+      <summary>Show application tips at startup</summary>
     </key>
-    <key type="i" name="strength">
-      <range min="0" max="3"/>
-      <default>0</default>
-      <summary>Default engine strength.</summary>
-    </key>
-    <key type="i" name="window-width">
+    <key type="i" name="width">
       <default>-1</default>
-      <summary>Default main window width.</summary>
+      <summary>Default main window width</summary>
     </key>
-    <key type="i" name="window-height">
+    <key type="i" name="height">
       <default>-1</default>
-      <summary>Default main window height.</summary>
+      <summary>Default main window height</summary>
     </key>
-    <key type="b" name="window-maximize">
+    <key type="b" name="maximize">
       <default>false</default>
-      <summary>Default main window maximized state.</summary>
+      <summary>Default main window maximized state</summary>
+    </key>
+    <key type="s" name="engine">
+      <default>"[default]"</default>
+      <summary>Default engine command to use</summary>
     </key>
   </schema>
 </schemalist>

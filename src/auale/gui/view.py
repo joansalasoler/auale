@@ -30,26 +30,34 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from serialize import OGNSerializer
 from uci import Engine
 from uci import Human
 from uci import Strength
 from utils import Utils
 
 from .animator import Animator
-from .canvas import Board
 from .constants import Constants
 from .loop import GameLoop
 from .mixer import Mixer
+
+from .dialogs import AboutDialog
+from .dialogs import NewMatchDialog
+from .dialogs import OpenMatchDialog
+from .dialogs import ScoresheetDialog
+from .dialogs import RequestSaveDialog
+from .dialogs import SaveMatchDialog
+from .widgets import OwareBoard
+from .widgets import RecentChooserPopoverMenu
 
 
 class GTKView(object):
     """Represents an oware window"""
 
     __GLADE_PATH = Utils.resource_path('./res/glade/auale.ui')
-    __CSS_PATH = Utils.resource_path('./res/glade/auale.css')
     __ENGINE_PATH = Utils.resource_path('./res/engine/Aalina.jar')
 
-    def __init__(self, options={}):
+    def __init__(self, application, options={}):
         """Builds this interface and runs it"""
 
         # Interface options dictionary
@@ -71,15 +79,15 @@ class GTKView(object):
 
         self._match = None
         self._game_loop = GameLoop()
-        self._canvas = Board()
+        self._canvas = OwareBoard()
         self._mixer = Mixer()
         self._animator = Animator(self._canvas, self._mixer)
         self._builder = Gtk.Builder()
         self._settings = Utils.get_gio_settings(Constants.APP_ID)
+        self._ogn = OGNSerializer()
 
         # Initialize this Gtk interface
 
-        self._add_css_provider(GTKView.__CSS_PATH)
         self._builder.set_translation_domain(Constants.APP_DOMAIN)
         self._builder.add_from_file(GTKView.__GLADE_PATH)
         self._builder.connect_signals(self)
@@ -90,32 +98,36 @@ class GTKView(object):
         self._window_group = Gtk.WindowGroup()
 
         self._main_window = self._builder.get_object('main_window')
-        self._undo_group = self._builder.get_object('undo_actiongroup')
-        self._redo_group = self._builder.get_object('redo_actiongroup')
-        self._move_action = self._builder.get_object('move_now_action')
-        self._stop_action = self._builder.get_object('stop_action')
-        self._rotate_action = self._builder.get_object('rotate_toggleaction')
+        # self._undo_group = self._builder.get_object('undo_actiongroup')
+        # self._redo_group = self._builder.get_object('redo_actiongroup')
+        # self._move_action = self._builder.get_object('move_now_action')
+        # self._stop_action = self._builder.get_object('stop_action')
+        # self._rotate_action = self._builder.get_object('rotate_toggleaction')
         self._spinner = self._builder.get_object('spinner')
         self._infobar = self._builder.get_object('infobar')
-        self._about_dialog = self._builder.get_object('about_dialog')
-        self._newmatch_dialog = self._builder.get_object('newmatch_dialog')
-        self._properties_dialog = self._builder.get_object('properties_dialog')
+        self._about_dialog = AboutDialog()
+        self._newmatch_dialog = NewMatchDialog()
+        self._scoresheet_dialog = ScoresheetDialog()
         self._report_vbox = self._builder.get_object('report_vbox')
         self._report_label = self._builder.get_object('report_label')
+        self._recent_chooser = self._builder.get_object('recent_chooser')
+
+        self._about_dialog.set_transient_for(self._main_window)
+        self._scoresheet_dialog.set_transient_for(self._main_window)
+        self._newmatch_dialog.set_transient_for(self._main_window)
 
         # Pack the objects together
 
         overlay = self._builder.get_object('board_overlay')
-        overlay.add_overlay(self._infobar)
-        overlay.add_overlay(self._report_vbox)
+        # overlay.add_overlay(self._infobar)
+        # overlay.add_overlay(self._report_vbox)
+        # overlay.add_overlay(self._spinner)
         overlay.add(self._canvas)
 
         self._window_group.add_window(self._main_window)
         self._window_group.add_window(self._about_dialog)
         self._window_group.add_window(self._newmatch_dialog)
-        self._window_group.add_window(self._properties_dialog)
-
-        self._builder.get_object('north_side_radiomenuitem').activate()
+        self._window_group.add_window(self._scoresheet_dialog)
 
         # Connect event signals for custom objects
 
@@ -126,16 +138,190 @@ class GTKView(object):
         self._canvas.connect('leave-notify-event', self.on_canvas_leave_notify_event)
         self._about_dialog.connect('delete-event', self.hide_on_delete)
         self._newmatch_dialog.connect('delete-event', self.hide_on_delete)
-        self._properties_dialog.connect('delete-event', self.hide_on_delete)
+        self._scoresheet_dialog.connect('delete-event', self.hide_on_delete)
 
         # Let's start everything
 
-        self.load_settings()
+        self.init_settings()
         self.start_new_match()
         self.set_active_player(self._human)
 
         self._canvas.set_board(self._match.get_board())
         self._canvas.grab_focus()
+
+        recent_menu = RecentChooserPopoverMenu()
+        recent_menu.set_action_name('win.open')
+
+        self._recent_chooser.add(recent_menu)
+
+        help_group = Gio.SimpleActionGroup()
+        rules_action = Gio.SimpleAction.new('rules')
+        about_action = Gio.SimpleAction.new('about')
+        help_group.add_action(rules_action)
+        help_group.add_action(about_action)
+
+        match_group = Gio.SimpleActionGroup()
+        new_action = Gio.SimpleAction.new('new')
+        move_now_action = Gio.SimpleAction.new('move_now')
+        stop_action = Gio.SimpleAction.new('stop')
+        rotate_action = Gio.SimpleAction.new_stateful('rotate-board', None, GLib.Variant.new_boolean(False))
+        properties_action = Gio.SimpleAction.new('properties')
+
+        mute_action = self._settings.create_action('mute-sound')
+
+        match_group.add_action(new_action)
+        match_group.add_action(move_now_action)
+        match_group.add_action(stop_action)
+        match_group.add_action(rotate_action)
+        match_group.add_action(mute_action)
+        match_group.add_action(properties_action)
+
+        redo_group = Gio.SimpleActionGroup()
+        redo_all_action = Gio.SimpleAction.new('redo-all')
+        redo_action = Gio.SimpleAction.new('redo')
+        redo_group.add_action(redo_all_action)
+        redo_group.add_action(redo_action)
+
+        save_group = Gio.SimpleActionGroup()
+        save_action = Gio.SimpleAction.new('save')
+        saveas_action = Gio.SimpleAction.new('saveas')
+        save_group.add_action(save_action)
+        save_group.add_action(saveas_action)
+
+        undo_group = Gio.SimpleActionGroup()
+        undo_all_action = Gio.SimpleAction.new('undo-all')
+        undo_action = Gio.SimpleAction.new('undo')
+        undo_group.add_action(undo_all_action)
+        undo_group.add_action(undo_action)
+
+        open_group = Gio.SimpleActionGroup()
+        open_action = Gio.SimpleAction.new('open', GLib.VariantType.new('s'))
+        open_group.add_action(open_action)
+
+        quit_action = Gio.SimpleAction.new('quit')
+
+        side_action = Gio.SimpleAction.new_stateful('set-side', GLib.VariantType.new('s'), GLib.Variant.new_string('north'))
+        # strength_action = Gio.SimpleAction.new_stateful('set-strength', GLib.VariantType.new('s'), GLib.Variant.new_string('easy'))
+
+        strength_action = self._settings.create_action('strength')
+
+        self._main_window.add_action(side_action)
+        self._main_window.add_action(strength_action)
+        self._main_window.add_action(new_action)
+        self._main_window.add_action(move_now_action)
+        self._main_window.add_action(stop_action)
+        self._main_window.add_action(rotate_action)
+        self._main_window.add_action(mute_action)
+        self._main_window.add_action(properties_action)
+        self._main_window.add_action(redo_all_action)
+        self._main_window.add_action(redo_action)
+        self._main_window.add_action(save_action)
+        self._main_window.add_action(saveas_action)
+        self._main_window.add_action(undo_all_action)
+        self._main_window.add_action(undo_action)
+        self._main_window.add_action(open_action)
+        self._main_window.add_action(quit_action)
+        self._main_window.add_action(about_action)
+        self._main_window.add_action(rules_action)
+
+        quit_action.connect('activate', self.on_quit_activate)
+        about_action.connect('activate', self.on_about_activate)
+        rotate_action.connect('change-state', self.on_rotate_activate)
+        rules_action.connect('activate', self.on_rules_activate)
+        new_action.connect('activate', self.on_new_activate)
+        move_now_action.connect('activate', self.on_move_now_activate)
+        stop_action.connect('activate', self.on_stop_activate)
+        properties_action.connect('activate', self.on_properties_activate)
+        redo_all_action.connect('activate', self.on_redo_all_activate)
+        redo_action.connect('activate', self.on_redo_activate)
+        save_action.connect('activate', self.on_save_activate)
+        saveas_action.connect('activate', self.on_save_activate)
+        undo_all_action.connect('activate', self.on_undo_all_activate)
+        undo_action.connect('activate', self.on_undo_activate)
+        open_action.connect('activate', self.on_open_activate)
+
+        self._settings.connect('changed::mute-sound', self.on_mute_activate)
+        self._settings.connect('changed::strength', self.on_set_strength_activate)
+
+        side_action.connect('activate', self.on_set_side_activate)
+
+        application.set_accels_for_action('win.rotate-board', ('<Primary>R',))
+        application.set_accels_for_action('win.rules', ('F1',))
+        application.set_accels_for_action('win.new', ('<Primary>N',))
+        application.set_accels_for_action('win.redo_all', ('End',))
+        application.set_accels_for_action('win.redo', ('Page_Down',))
+        application.set_accels_for_action('win.save', ('<Primary>S',))
+        application.set_accels_for_action('win.saveas', ('<Primary><Shift>S',))
+        application.set_accels_for_action('win.undo_all', ('Home',))
+        application.set_accels_for_action('win.undo', ('Page_Up',))
+        application.set_accels_for_action('win.open', ('<Primary>O',))
+
+        # manager = Gtk.RecentManager()
+        # ofilter = self._builder.get_object('match_recentfilter')
+        #
+        # match = Match(Oware)
+        #
+        # def _is_empty(value):
+        #     return value == '?' or not value
+        #
+        # for item in manager.get_items():
+        #     info = Gtk.RecentFilterInfo()
+        #     info.contains = Gtk.RecentFilterFlags.AGE | Gtk.RecentFilterFlags.APPLICATION | Gtk.RecentFilterFlags.GROUP | Gtk.RecentFilterFlags.URI | Gtk.RecentFilterFlags.DISPLAY_NAME | Gtk.RecentFilterFlags.MIME_TYPE
+        #     info.display_name = item.get_display_name()
+        #     info.uri = item.get_uri()
+        #     info.mime_type = item.get_mime_type()
+        #     info.age = item.get_age()
+        #     info.applications.extend(item.get_applications())
+        #     info.groups.extend(item.get_groups())
+        #
+        #
+        #     if ofilter.filter(info):
+        #         path = GLib.filename_from_uri(item.get_uri())[0]
+        #
+        #         if item.exists():
+        #             with open(path, 'r', encoding='utf-8') as file:
+        #                 tags = self._ogn.read_header(file, 512)
+        #                 print(tags)
+        #
+        #             m = None
+        #
+        #             with open(path, 'r', encoding='utf-8') as file:
+        #                 m = self._ogn.load(file)
+        #                 s = self._ogn.dumps(m)
+        #                 x = self._ogn.loads(s)
+        #                 y = self._ogn.dumps(x)
+        #                 print(s)
+        #                 print(x)
+        #                 print(y)
+        #
+        #             with open('/home/joan/Baixades/test.ogn', 'w', encoding='utf-8') as file:
+        #                 self._ogn.dump(m, file)
+        #
+        #             print(item.get_display_name())
+        #             print(item.get_uri_display())
+        #
+        #             title = ''
+        #             message = ''
+        #
+        #             event = tags['Event'] if 'Event' in tags else None
+        #             south = tags['South'] if 'South' in tags else None
+        #             north = tags['North'] if 'North' in tags else None
+        #             result = tags['Result'] if 'Result' in tags else None
+        #             description = tags['Description'] if 'Description' in tags else None
+        #
+        #             if not _is_empty(event):
+        #                 title = '%s' % event
+        #
+        #             if not _is_empty(description):
+        #                 message = description
+        #             elif not _is_empty(south) and not _is_empty(north):
+        #                 message = '%s - %s' % (south, north)
+        #
+        #             if not _is_empty(result) and result != '*':
+        #                 message = '%s (%s)' % (message, result)
+        #
+        #             print(title, message)
+        #             print('--')
 
     def _connect_signals(self, cobject):
         """Automatically connects the signals of an object"""
@@ -145,39 +331,18 @@ class GTKView(object):
             method = getattr(self, attr)
             cobject.connect(name, method)
 
-    def _add_css_provider(self, path):
-        """Adds a new class provider for the screen"""
-
-        provider = Gtk.CssProvider()
-        provider.load_from_path(path)
-
-        Gtk.StyleContext.add_provider_for_screen(
-            Gdk.Screen.get_default(), provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-
-    def load_settings(self):
+    def init_settings(self):
         """Loads application settings"""
 
-        # Remember and restore sound mute
-
-        mute_action = self._builder.get_object('mute_toggleaction')
-
-        self._settings.bind(
-            'mute-sound', mute_action, 'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-
-        # Disable sound menu if SDL is not available
+        value = self._settings.get_string('strength')
+        self._update_strength_menu(value)
 
         if self._mixer.is_disabled():
-            mitem = self._builder.get_object('mute_menuitem')
-            mitem.set_sensitive(False)
+            button = self._builder.get_object('mute_button')
+            button.set_visible(False)
 
-        # Retrieve last used computer strength
-
-        value = self._settings.get_int('strength')
-        self._update_strength_menu(value)
+        if self._settings.get_boolean('mute-sound'):
+            self._mixer.toggle_mute()
 
     def start_new_engine(self):
         """Initializes a new engine process"""
@@ -204,21 +369,32 @@ class GTKView(object):
 
         return command
 
+    def on_set_side_activate(self, action, value):
+
+        action.set_state(value)
+        print(action, value, type(value), value.get_type())
+
+    def on_set_strength_activate(self, action, value):
+
+        print(action, value)
+
     def _update_strength_menu(self, value):
         """Updates the active strength menu item"""
 
-        if value == Strength.EASY.ordinal:
-            item = self._builder.get_object('easy_strength_radiomenuitem')
-            item.activate()
-        elif value == Strength.MEDIUM.ordinal:
-            item = self._builder.get_object('medium_strength_radiomenuitem')
-            item.activate()
-        elif value == Strength.HARD.ordinal:
-            item = self._builder.get_object('hard_strength_radiomenuitem')
-            item.activate()
-        elif value == Strength.EXPERT.ordinal:
-            item = self._builder.get_object('expert_strength_radiomenuitem')
-            item.activate()
+        # if value == Strength.EASY.ordinal:
+        #     item = self._builder.get_object('easy_strength_radiomenuitem')
+        #     item.activate()
+        # elif value == Strength.MEDIUM.ordinal:
+        #     item = self._builder.get_object('medium_strength_radiomenuitem')
+        #     item.activate()
+        # elif value == Strength.HARD.ordinal:
+        #     item = self._builder.get_object('hard_strength_radiomenuitem')
+        #     item.activate()
+        # elif value == Strength.EXPERT.ordinal:
+        #     item = self._builder.get_object('expert_strength_radiomenuitem')
+        #     item.activate()
+
+        pass
 
     def hide_on_delete(self, widget, event):
         """Hides a window and prevents it from being destroyed"""
@@ -302,22 +478,13 @@ class GTKView(object):
         if self._match_changed == False:
             return False
 
-        dialog = self.new_unsaved_confirmation_dialog(
-            _("Do you want to save the match before closing?"),
-            _("The current match has unsaved changes. Your changes will "
-              "be lost if you don't save them."),
-            _("Close without saving")
-        )
-
-        dialog.connect('response', self.on_main_window_delete_response)
-        dialog.show()
+        response = self.run_confirm_close_dialog()
+        self.on_main_window_delete_response(response)
 
         return True
 
-    def on_main_window_delete_response(self, dialog, response):
+    def on_main_window_delete_response(self, response):
         """Main window delete-event response handler"""
-
-        dialog.destroy()
 
         if response == Gtk.ResponseType.ACCEPT:
             self._main_window.destroy()
@@ -326,6 +493,8 @@ class GTKView(object):
 
             if self._filename is not None:
                 dialog.set_filename(self._filename)
+            else:
+                dialog.set_current_name(_('untitled.ogn'))
 
             dialog.connect('response', self.on_save_and_quit_response)
             dialog.show()
@@ -363,15 +532,15 @@ class GTKView(object):
 
         # Forward and rewind actions
 
-        if event.keyval == Gdk.KEY_End:
-            action = self._builder.get_object("redo_all_action")
-            action.activate()
-            return
-
-        if event.keyval == Gdk.KEY_Home:
-            action = self._builder.get_object("undo_all_action")
-            action.activate()
-            return
+        # if event.keyval == Gdk.KEY_End:
+        #     action = self._builder.get_object("redo_all_action")
+        #     action.activate()
+        #     return
+        #
+        # if event.keyval == Gdk.KEY_Home:
+        #     action = self._builder.get_object("undo_all_action")
+        #     action.activate()
+        #     return
 
         # Interpret the move
 
@@ -431,33 +600,26 @@ class GTKView(object):
         window.set_cursor(None)
         widget.set_active(None)
 
-    def on_new_activate(self, widget):
+    def on_new_activate(self, action, value):
         """On new game activate"""
 
         if self._match_changed == False:
             self._newmatch_dialog.show()
             return
 
-        dialog = self.new_unsaved_confirmation_dialog(
-            _("Do you want to save the current match?"),
-            _("The current match has unsaved changes. Your changes will "
-              "be lost if you don't save them."),
-            _("Discard unsaved changes")
-        )
+        response = self.run_confirm_unsaved_dialog()
+        self.on_new_activate_response(response)
 
-        dialog.connect('response', self.on_new_activate_response)
-        dialog.show()
-
-    def on_new_activate_response(self, dialog, response):
+    def on_new_activate_response(self, response):
         """New match action response handler"""
-
-        dialog.destroy()
 
         if response == Gtk.ResponseType.REJECT:
             dialog = self.new_save_dialog()
 
             if self._filename is not None:
                 dialog.set_filename(self._filename)
+            else:
+                dialog.set_current_name(_('untitled.ogn'))
 
             dialog.connect('response', self.on_save_and_new_response)
             dialog.show()
@@ -491,7 +653,7 @@ class GTKView(object):
 
         self._newmatch_dialog.hide()
 
-    def on_open_activate(self, widget):
+    def on_open_activate(self, action, path=None):
         """Open a match file dialog"""
 
         if self._match_changed == False:
@@ -499,26 +661,19 @@ class GTKView(object):
             dialog.connect('response', self.on_open_dialog_response)
             dialog.show()
         else:
-            dialog = self.new_unsaved_confirmation_dialog(
-                _("Do you want to save the current match?"),
-                _("The current match has unsaved changes. Your changes will "
-                  "be lost if you don't save them."),
-                _("Discard unsaved changes")
-            )
+            response = self.run_confirm_unsaved_dialog()
+            self.on_open_activate_response(response)
 
-            dialog.connect('response', self.on_open_activate_response)
-            dialog.show()
-
-    def on_open_activate_response(self, dialog, response):
+    def on_open_activate_response(self, response):
         """Open match action response handler"""
-
-        dialog.destroy()
 
         if response == Gtk.ResponseType.REJECT:
             dialog = self.new_save_dialog()
 
             if self._filename is not None:
                 dialog.set_filename(self._filename)
+            else:
+                dialog.set_current_name(_('untitled.ogn'))
 
             dialog.connect('response', self.on_save_and_open_response)
             dialog.show()
@@ -551,19 +706,21 @@ class GTKView(object):
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
 
-    def on_save_activate(self, widget):
+    def on_save_activate(self, action, value):
         """Save a match file dialog"""
 
-        if widget.get_name() == 'save_action':
-            if self._filename is not None:
-                self.save_match(self._filename)
-                return
+        # if widget.get_name() == 'save_action':
+        #     if self._filename is not None:
+        #         self.save_match(self._filename)
+        #         return
 
         dialog = self.new_save_dialog()
 
-        if widget.get_name() == 'saveas_action':
-            if self._filename is not None:
-                dialog.set_filename(self._filename)
+        # if widget.get_name() == 'saveas_action':
+        if self._filename is not None:
+            dialog.set_filename(self._filename)
+        else:
+            dialog.set_current_name(_('untitled.ogn'))
 
         dialog.connect('response', self.on_save_dialog_response)
         dialog.show()
@@ -585,20 +742,11 @@ class GTKView(object):
             self.open_recent_match()
             return
 
-        dialog = self.new_unsaved_confirmation_dialog(
-            _("Do you want to save the current match?"),
-            _("The current match has unsaved changes. Your changes will "
-              "be lost if you don't save them."),
-            _("Discard unsaved changes")
-        )
+        response = self.run_confirm_unsaved_dialog()
+        self.on_open_recent_response(response)
 
-        dialog.connect('response', self.on_open_recent_response)
-        dialog.show()
-
-    def on_open_recent_response(self, dialog, response):
+    def on_open_recent_response(self, response):
         """Open recent match action response handler"""
-
-        dialog.destroy()
 
         if response == Gtk.ResponseType.REJECT:
             dialog = self.new_save_dialog()
@@ -623,15 +771,30 @@ class GTKView(object):
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
 
+    def run_confirm_close_dialog(self):
+        return self.run_confirm_unsaved_dialog()
+
+    def run_confirm_unsaved_dialog(self):
+        """Confirm if the user wants to save match changes"""
+
+        dialog = RequestSaveDialog()
+        dialog.set_transient_for(self._main_window)
+        self._window_group.add_window(dialog)
+
+        response = dialog.run()
+        dialog.hide()
+
+        return response
+
     def open_recent_match(self):
         """Open the last chosen recent match file"""
 
-        widget = self._builder.get_object('open_recent_action')
-        uri = widget.get_current_uri()
-        path = GLib.filename_from_uri(uri)[0]
-
-        self.abort_current_move()
-        self.open_match(path)
+        # widget = self._builder.get_object('open_recent_action')
+        # uri = widget.get_current_uri()
+        # path = GLib.filename_from_uri(uri)[0]
+        #
+        # self.abort_current_move()
+        # self.open_match(path)
         self.refresh_view()
 
     def on_file_changed(self, path):
@@ -661,8 +824,10 @@ class GTKView(object):
         manager = Gtk.RecentManager.get_default()
         manager.add_item(uri)
 
-    def on_rotate_activate(self, widget):
+    def on_rotate_activate(self, action, value):
         """Rotates the current canvas board"""
+
+        action.set_state(value)
 
         # If the window is not visible, just rotate the canvas
 
@@ -675,15 +840,15 @@ class GTKView(object):
 
         window = self._main_window.get_window()
         window.set_cursor(None)
-        self._rotate_action.set_sensitive(False)
+        # self._rotate_action.set_sensitive(False)
         self._animator.rotate_board()
 
-    def on_mute_activate(self, widget):
+    def on_mute_activate(self, settings, key):
         """Enables and disables sound effects"""
 
         self._mixer.toggle_mute()
 
-    def on_quit_activate(self, widget):
+    def on_quit_activate(self, action, value):
         """Quits this interface"""
 
         event = Gdk.Event.new(Gdk.EventType.DELETE)
@@ -691,22 +856,12 @@ class GTKView(object):
         if not self._main_window.emit('delete-event', event):
             self._main_window.destroy()
 
-    def on_home_activate(self, widget):
-        """Start home page"""
-
-        webbrowser.open(Constants.HOME_URL, autoraise=True)
-
-    def on_support_activate(self, widget):
-        """Start help and support forum"""
-
-        webbrowser.open(Constants.HELP_URL, autoraise=True)
-
-    def on_rules_activate(self, widget):
+    def on_rules_activate(self, action, value):
         """Show game rules"""
 
         webbrowser.open(Constants.RULES_URL, autoraise=True)
 
-    def on_properties_activate(self, widget):
+    def on_properties_activate(self, action, value):
         """Show a match tags edition dialog"""
 
         protected_tags = ('FEN', 'Result', 'Variant')
@@ -721,12 +876,12 @@ class GTKView(object):
             if tag not in protected_tags:
                 titer = store.append((_(tag), value))
 
-        view.set_cursor(0)
-        view.grab_focus()
+        # view.set_cursor(0)
+        # view.grab_focus()
 
-        self._properties_dialog.show()
+        self._scoresheet_dialog.show()
 
-    def on_properties_dialog_response(self, widget, response):
+    def on_scoresheet_dialog_response(self, widget, response):
         """Handles the properties dialog responses"""
 
         if response == Gtk.ResponseType.ACCEPT:
@@ -753,7 +908,7 @@ class GTKView(object):
 
             self.refresh_infobar()
 
-        self._properties_dialog.hide()
+        self._scoresheet_dialog.hide()
 
     def on_properties_treeview_row_activated(self, widget, path, column):
         """Starts property edition on activating a row"""
@@ -770,7 +925,7 @@ class GTKView(object):
         siter = store.get_iter(path)
         store.set_value(siter, 1, new_text.strip())
 
-    def on_about_activate(self, widget):
+    def on_about_activate(self, action, value):
         """Shows the about dialog"""
 
         self._about_dialog.show()
@@ -780,21 +935,21 @@ class GTKView(object):
 
         self._about_dialog.hide()
 
-    def on_move_now_activate(self, widget):
+    def on_move_now_activate(self, action, value):
         """Asks the engine to perform a move"""
 
         self.abort_current_move()
         self.request_match_reset()
         self.set_active_player(self._engine)
 
-    def on_stop_activate(self, widget):
+    def on_stop_activate(self, action, value):
         """Asks the engine to stop thinking"""
 
         self.abort_current_move()
         self.set_active_player(self._human)
         self.refresh_view()
 
-    def on_undo_activate(self, widget):
+    def on_undo_activate(self, action, value):
         """Undoes the last move"""
 
         self.abort_current_move()
@@ -802,7 +957,7 @@ class GTKView(object):
         self.set_active_player(self._human)
         self.refresh_view()
 
-    def on_redo_activate(self, widget):
+    def on_redo_activate(self, action, value):
         """Redoes the last move"""
 
         self.abort_current_move()
@@ -810,7 +965,7 @@ class GTKView(object):
         self.set_active_player(self._human)
         self.refresh_view()
 
-    def on_undo_all_activate(self, widget):
+    def on_undo_all_activate(self, action, value):
         """Undoes all the performed moves"""
 
         self.abort_current_move()
@@ -818,7 +973,7 @@ class GTKView(object):
         self.set_active_player(self._human)
         self.refresh_view()
 
-    def on_redo_all_activate(self, widget):
+    def on_redo_all_activate(self, action, value):
         """Redoes all the undone moves"""
 
         self.abort_current_move()
@@ -872,25 +1027,32 @@ class GTKView(object):
 
         name = widget.get_name()
 
-        if name == 'newgame-south-button':
-            item = self._builder.get_object('north_side_radiomenuitem')
-            item.set_active(True)
-        elif name == 'newgame-north-button':
-            item = self._builder.get_object('south_side_radiomenuitem')
-            item.set_active(True)
-        elif name == 'newgame-edit-button':
-            item = self._builder.get_object('neither_side_radiomenuitem')
-            item.set_active(True)
-        elif name == 'newgame-watch-button':
-            item = self._builder.get_object('both_side_radiomenuitem')
-            item.set_active(True)
+        # if name == 'newgame-south-button':
+        #     item = self._builder.get_object('north_side_radiomenuitem')
+        #     item.set_active(True)
+        # elif name == 'newgame-north-button':
+        #     item = self._builder.get_object('south_side_radiomenuitem')
+        #     item.set_active(True)
+        # elif name == 'newgame-edit-button':
+        #     item = self._builder.get_object('neither_side_radiomenuitem')
+        #     item.set_active(True)
+        # elif name == 'newgame-watch-button':
+        #     item = self._builder.get_object('both_side_radiomenuitem')
+        #     item.set_active(True)
 
         self._newmatch_dialog.response(Gtk.ResponseType.OK)
+
+
+    def on_move_animation_finished(self, animator):
+        """Called after a move animation"""
+
+        player = self.get_current_player()
+        self.set_active_player(player)
 
     def on_rotate_animation_finished(self, animator):
         """Called after a board rotation animation"""
 
-        self._rotate_action.set_sensitive(True)
+        # self._rotate_action.set_sensitive(True)
 
         if self.user_can_move():
             self._canvas.update_hovered()
@@ -915,7 +1077,7 @@ class GTKView(object):
                 _("The received move is not valid")
             )
 
-        self.refresh_actions()
+        # self.refresh_actions()
 
     def on_info_received(self, game_loop, comment):
         """Shows a player message below the board"""
@@ -937,11 +1099,6 @@ class GTKView(object):
         title = _('Computer player is disabled')
         GLib.idle_add(self.show_error_message, title, _(reason))
 
-    def on_move_animation_finished(self, animator):
-        """Called after a move animation"""
-
-        player = self.get_current_player()
-        self.set_active_player(player)
 
     def set_active_player(self, player):
         """Sets a new player to move on the current match"""
@@ -962,21 +1119,21 @@ class GTKView(object):
         can_undo = self._match.can_undo()
         can_redo = self._match.can_redo()
 
-        self._undo_group.set_sensitive(can_undo)
-        self._redo_group.set_sensitive(can_redo)
+        # self._undo_group.set_sensitive(can_undo)
+        # self._redo_group.set_sensitive(can_redo)
 
         if self.user_can_move():
             can_move = self.engine_is_enabled()
-            self._move_action.set_sensitive(can_move)
-            self._stop_action.set_sensitive(False)
+            # self._move_action.set_sensitive(can_move)
+            # self._stop_action.set_sensitive(False)
             self._spinner.stop()
         elif self.engine_can_move():
-            self._move_action.set_sensitive(False)
-            self._stop_action.set_sensitive(True)
+            # self._move_action.set_sensitive(False)
+            # self._stop_action.set_sensitive(True)
             self._spinner.start()
         else:
-            self._move_action.set_sensitive(False)
-            self._stop_action.set_sensitive(False)
+            # self._move_action.set_sensitive(False)
+            # self._stop_action.set_sensitive(False)
             self._spinner.stop()
 
     def refresh_active_house(self):
@@ -1032,8 +1189,8 @@ class GTKView(object):
             if title or message:
                 icon = Constants.FOLDER_ICON if self._filename else Constants.CREATE_ICON
                 self.show_message(title or _("Match"), message, icon)
-            elif self._infobar.is_visible():
-                self._infobar.set_visible(False)
+            # elif self._infobar.is_visible():
+            #     self._infobar.set_visible(False)
 
         # If the game ended, show a result message
 
@@ -1060,8 +1217,8 @@ class GTKView(object):
 
         # Otherwise, hide the infobar
 
-        else:
-            self._infobar.set_visible(False)
+        # else:
+        #     self._infobar.set_visible(False)
 
     def refresh_state(self):
         """Refresh actions and board state"""
@@ -1107,104 +1264,28 @@ class GTKView(object):
         image.set_from_file(Utils.resource_path(icon))
 
         self._infobar.set_message_type(Gtk.MessageType.OTHER)
-        self._infobar.set_visible(True)
+        # self._infobar.set_visible(True)
 
     def show_error_message(self, title, message, icon=Constants.ERROR_ICON):
         """Shows an error message to the user"""
 
         self.show_message(title, message, icon)
 
-    def new_confirmation_dialog(self, title, message, text, discard):
-        """Creates a new confirmation dialog"""
-
-        dialog = Gtk.MessageDialog(
-            parent=self._main_window,
-            flags=Gtk.DialogFlags.MODAL,
-            message_type=Gtk.MessageType.QUESTION,
-        )
-
-        self._window_group.add_window(dialog)
-
-        dialog.add_button(discard, Gtk.ResponseType.ACCEPT)
-        dialog.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
-        dialog.add_button(Gtk.STOCK_SAVE, Gtk.ResponseType.REJECT)
-
-        dialog.set_property('title', title)
-        dialog.set_property('text', message)
-        dialog.set_property('secondary-text', text)
-
-        msgarea = dialog.get_message_area()
-
-        for child in msgarea.get_children():
-            if isinstance(child, Gtk.Label):
-                child.set_property("max-width-chars", 48)
-
-        return dialog
-
-    def new_unsaved_confirmation_dialog(self, message, text, discard):
-        """Creates a new unsaved-match confirmation dialog"""
-
-        dialog = self.new_confirmation_dialog(
-            _("Match with unsaved changes"),
-            message, text, discard
-        )
-
-        return dialog
-
     def new_open_dialog(self):
         """Create a new open match file dialog"""
 
-        dialog = Gtk.FileChooserDialog(
-            title=_("Open an oware match"),
-            parent=self._main_window,
-            action=Gtk.FileChooserAction.OPEN,
-            buttons=(
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                Gtk.STOCK_OPEN, Gtk.ResponseType.ACCEPT
-            )
-        )
-
+        dialog = OpenMatchDialog()
+        dialog.set_transient_for(self._main_window)
         self._window_group.add_window(dialog)
-
-        oware_filter = Gtk.FileFilter()
-        oware_filter.set_name(_("Oware match files"))
-        oware_filter.add_mime_type('text/x-oware-ogn')
-        oware_filter.add_pattern('*.ogn')
-
-        files_filter = Gtk.FileFilter()
-        files_filter.set_name(_("Any files"))
-        files_filter.add_pattern('*')
-
-        dialog.add_filter(oware_filter)
-        dialog.add_filter(files_filter)
-        dialog.set_modal(True)
 
         return dialog
 
     def new_save_dialog(self):
         """Create a new save match file dialog"""
 
-        dialog = Gtk.FileChooserDialog(
-            title=_("Save current match"),
-            parent=self._main_window,
-            action=Gtk.FileChooserAction.SAVE,
-            buttons=(
-                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                Gtk.STOCK_SAVE, Gtk.ResponseType.ACCEPT
-            )
-        )
-
+        dialog = SaveMatchDialog()
+        dialog.set_transient_for(self._main_window)
         self._window_group.add_window(dialog)
-
-        oware_filter = Gtk.FileFilter()
-        oware_filter.set_name(_("Oware match files"))
-        oware_filter.add_mime_type('text/x-oware-ogn')
-        oware_filter.add_pattern('*.ogn')
-
-        dialog.add_filter(oware_filter)
-        dialog.set_do_overwrite_confirmation(True)
-        dialog.set_current_name(_("untitled.ogn"))
-        dialog.set_modal(True)
 
         return dialog
 
@@ -1212,12 +1293,12 @@ class GTKView(object):
         """Open a match file and sets it as current"""
 
         try:
-            self._match = Match(Oware)
-            self._match.load(path)
-            self.on_file_changed(path)
-            item = self._builder.get_object('neither_side_radiomenuitem')
-            item.set_active(True)
-            self._match.undo_all_moves()
+            with open(path, 'r', encoding='utf-8') as file:
+                self._match = self._ogn.load(file)
+                self.on_file_changed(path)
+                # item = self._builder.get_object('neither_side_radiomenuitem')
+                # item.set_active(True)
+                self._match.undo_all_moves()
         except Exception as e:
             self.show_error_message(
                 _("Error opening match"),
@@ -1230,9 +1311,10 @@ class GTKView(object):
         """Saves the current match to a file"""
 
         try:
-            self._match.save(path)
-            self.on_file_changed(path)
-            self.refresh_infobar()
+            with open(path, 'w', encoding='utf-8') as file:
+                self._ogn.dump(self._match, file)
+                self.on_file_changed(path)
+                self.refresh_infobar()
         except Exception as e:
             self.show_error_message(
                 _("Error saving match"),
@@ -1255,15 +1337,15 @@ class GTKView(object):
         south_is_human = isinstance(self._south, Human)
         north_is_human = isinstance(self._north, Human)
 
-        if north_is_human and not south_is_human:
-            if self._canvas.get_rotation() != math.pi:
-                self._rotate_action.activate()
-        elif south_is_human and not north_is_human:
-            if self._canvas.get_rotation() != 0.0:
-                self._rotate_action.activate()
-        else:
-            if self._canvas.get_rotation() != 0.0:
-                self._rotate_action.activate()
+        # if north_is_human and not south_is_human:
+        #     if self._canvas.get_rotation() != math.pi:
+        #         self._rotate_action.activate()
+        # elif south_is_human and not north_is_human:
+        #     if self._canvas.get_rotation() != 0.0:
+        #         self._rotate_action.activate()
+        # else:
+        #     if self._canvas.get_rotation() != 0.0:
+        #         self._rotate_action.activate()
 
         # Notify this view of a file change
 

@@ -149,13 +149,14 @@ class GameLoop(GObject.GObject):
                     game = match.get_game()
                     move = game.to_move(values['move'])
 
-                    GLib.idle_add(self.emit, 'move-received', move)
-
                     if values['ponder'] is not None:
                         value = game.to_move(values['ponder'])
                         self._ponder_cache.store(match, move, value)
 
+                    GLib.idle_add(self.emit, 'move-received', move)
+
+
     def _on_info_received(self, player, values):
         """Handles the reception of an engine report"""
 
-        pass # TODO: Not implemented yet
+        pass
