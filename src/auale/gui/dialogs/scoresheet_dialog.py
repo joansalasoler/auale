@@ -19,11 +19,11 @@
 from gi.repository import Gtk
 
 
-@Gtk.Template.from_file('gui/dialogs/properties_dialog.ui')
-class PropertiesDialog(Gtk.Dialog):
-    """Match properties dialog"""
+@Gtk.Template.from_file('gui/dialogs/scoresheet_dialog.ui')
+class ScoresheetDialog(Gtk.Dialog):
+    """Match scoresheet dialog"""
 
-    __gtype_name__ = 'PropertiesDialog'
+    __gtype_name__ = 'ScoresheetDialog'
 
     def __init__(self):
-        super(PropertiesDialog, self).__init__()
+        super(ScoresheetDialog, self).__init__()

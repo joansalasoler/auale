@@ -4,7 +4,7 @@ from .about_dialog import AboutDialog
 from .match_chooser_dialog import MatchChooserDialog
 from .new_match_dialog import NewMatchDialog
 from .open_match_dialog import OpenMatchDialog
-from .properties_dialog import PropertiesDialog
+from .scoresheet_dialog import ScoresheetDialog
 from .request_save_dialog import RequestSaveDialog
 from .save_match_dialog import SaveMatchDialog
 
@@ -13,7 +13,7 @@ __all__ = [
     'MatchChooserDialog',
     'NewMatchDialog',
     'OpenMatchDialog',
-    'PropertiesDialog',
+    'ScoresheetDialog',
     'RequestSaveDialog',
     'SaveMatchDialog',
 ]
