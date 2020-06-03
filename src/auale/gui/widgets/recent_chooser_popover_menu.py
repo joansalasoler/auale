@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import islice
 from gi.repository import Gio
 from gi.repository import Gtk
 
@@ -38,7 +39,7 @@ class RecentChooserPopoverMenu(Gtk.Bin):
         ('uri', Gtk.RecentFilterFlags.URI)
     )
 
-    _manager = Gtk.RecentManager()
+    _manager = Gtk.RecentManager.get_default()
     _container = Gtk.Template.Child('container')
 
     def __init__(self, **kwargs):
@@ -67,44 +68,28 @@ class RecentChooserPopoverMenu(Gtk.Bin):
         for child in container.get_children():
             container.remove(child)
 
-        for item in manager.get_items()[:self.__MAX_ITEMS]:
-            info = self.create_recent_filter_info(item)
+        items = self.get_filtered_items(manager)
 
-            if self._filter.filter(info) and item.exists():
-                menuitem = self.create_menuitem(item)
-                button = menuitem.get_child()
-                menuitem.connect('focus', self.on_menuitem_focus)
-                button.connect('clicked', self.on_menuitem_clicked)
-                container.add(menuitem)
+        for item in islice(items, self.__MAX_ITEMS):
+            menuitem = self.create_menuitem(item)
+            button = menuitem.get_child()
+            menuitem.connect('focus', self.on_menuitem_focus)
+            button.connect('clicked', self.on_menuitem_clicked)
+            container.add(menuitem)
 
         window = self.get_child()
         adjustment = window.get_vadjustment()
         adjustment.set_value(0)
 
-    def on_menuitem_clicked(self, menuitem):
-        """Hides the popover when a menuitem is activated"""
+    def get_filtered_items(self, manager):
+        """Filters the items of a recent file manager"""
 
-        popover = menuitem.get_ancestor(Gtk.Popover)
+        for item in manager.get_items():
+            info = self.create_recent_filter_info(item)
 
-        if isinstance(popover, Gtk.Popover):
-            popover.hide()
-
-    def on_menuitem_focus(self, menuitem, direction):
-        """Ensures the focused menuitem is visible"""
-
-        window = self.get_child()
-        window_height = window.get_allocated_height()
-        adjustment = window.get_vadjustment()
-        allocation = menuitem.get_allocation()
-
-        top = allocation.y
-        bottom = top + allocation.height
-        scroll_top = adjustment.get_value()
-
-        if top < scroll_top:
-            adjustment.set_value(top)
-        elif bottom > window_height + scroll_top:
-            adjustment.set_value(bottom - window_height)
+            if self._filter.filter(info):
+                if not item.is_local() or item.exists():
+                    yield item
 
     def create_menuitem(self, item):
         """Creates a new menuitem for the menu"""
@@ -139,3 +124,28 @@ class RecentChooserPopoverMenu(Gtk.Bin):
             setattr(info, name, value)
 
         return info
+
+    def on_menuitem_clicked(self, menuitem):
+        """Hides the popover when a menuitem is activated"""
+
+        popover = menuitem.get_ancestor(Gtk.Popover)
+
+        if isinstance(popover, Gtk.Popover):
+            popover.hide()
+
+    def on_menuitem_focus(self, menuitem, direction):
+        """Ensures the focused menuitem is visible"""
+
+        window = self.get_child()
+        window_height = window.get_allocated_height()
+        adjustment = window.get_vadjustment()
+        allocation = menuitem.get_allocation()
+
+        top = allocation.y
+        bottom = top + allocation.height
+        scroll_top = adjustment.get_value()
+
+        if top < scroll_top:
+            adjustment.set_value(top)
+        elif bottom > window_height + scroll_top:
+            adjustment.set_value(bottom - window_height)
