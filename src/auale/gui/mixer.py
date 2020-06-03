@@ -19,19 +19,13 @@
 import logging
 import math
 import os
-import sys
 import threading
 
-from utils import Utils
-from .constants import Constants
+from gi.repository import Gio
 
 _SDL_IS_DISABLED = False
 
 try:
-    if 'win' in sys.platform:
-        path = Utils.resource_path('./lib/sdl')
-        os.environ['PYSDL2_DLL_PATH'] = path
-
     import sdl2 as sdl
     import sdl2.sdlmixer as mixer
 except BaseException as e:
@@ -42,18 +36,11 @@ except BaseException as e:
 class Mixer():
     """Plays sounds according to received events"""
 
-    # Total number of open mixer objects. This is used to quit SDL
-    # when no mixer objects are in use
-
     __OPENED_COUNT = 0
-
-    # Audio files path
-
-    __DROP_PATH = Utils.resource_path('./res/sound/drop.wav').encode('utf-8')
-    __GATHER_PATH = Utils.resource_path('./res/sound/gather.wav').encode('utf-8')
-    __PICK_UP_PATH = Utils.resource_path('./res/sound/pickup.wav').encode('utf-8')
-    __ROTATE_PATH = Utils.resource_path('./res/sound/rotate.wav').encode('utf-8')
-    __START_PATH = Utils.resource_path('./res/sound/start.wav').encode('utf-8')
+    __DROP_PATH = '/com/joansala/auale/sounds/drop.wav'
+    __GATHER_PATH = '/com/joansala/auale/sounds/gather.wav'
+    __ROTATE_PATH = '/com/joansala/auale/sounds/rotate.wav'
+    __START_PATH = '/com/joansala/auale/sounds/start.wav'
 
     def __init__(self):
         """Initializes a new mixer object"""
@@ -72,9 +59,9 @@ class Mixer():
         # Set PulseAudio environment variables
 
         if hasattr(os, 'putenv'):
-            os.putenv('PULSE_PROP_application.name', Constants.APP_NAME)
-            os.putenv('PULSE_PROP_application.icon_name', Constants.APP_ICON)
-            os.putenv('PULSE_PROP_media.role', Constants.APP_ROLE)
+            os.putenv('PULSE_PROP_application.name', 'Aualé')
+            os.putenv('PULSE_PROP_application.icon_name', 'auale')
+            os.putenv('PULSE_PROP_media.role', 'game')
 
         # Initialize SDL audio and mixer
 
@@ -90,13 +77,10 @@ class Mixer():
 
         mixer.Mix_AllocateChannels(1 + self._last_channel)
 
-        # Load available sounds files
-
-        self._wav_drop = mixer.Mix_LoadWAV(Mixer.__DROP_PATH)
-        self._wav_gather = mixer.Mix_LoadWAV(Mixer.__GATHER_PATH)
-        self._wav_pickup = mixer.Mix_LoadWAV(Mixer.__PICK_UP_PATH)
-        self._wav_rotate = mixer.Mix_LoadWAV(Mixer.__ROTATE_PATH)
-        self._wav_start = mixer.Mix_LoadWAV(Mixer.__START_PATH)
+        self._wav_drop = self.new_sample_from_resource(self.__DROP_PATH)
+        self._wav_gather = self.new_sample_from_resource(self.__GATHER_PATH)
+        self._wav_start = self.new_sample_from_resource(self.__START_PATH)
+        self._wav_rotate = self.new_sample_from_resource(self.__ROTATE_PATH)
 
         Mixer.__OPENED_COUNT += 1
 
@@ -201,8 +185,7 @@ class Mixer():
     def on_house_pickup(self, house, seeds):
         """Plays a sound for a seeds pick up event"""
 
-        if not _SDL_IS_DISABLED:
-            self.play_on_house(house, self._wav_pickup)
+        pass
 
     def on_house_drop(self, house, seeds):
         """Plays a sound for a seed drop event"""
@@ -215,3 +198,19 @@ class Mixer():
 
         if not _SDL_IS_DISABLED:
             self.play_on_house(2.5, self._wav_start)
+
+    @staticmethod
+    def new_sample_from_resource(resource_path):
+        """Loads a WAVE sample from resource file"""
+
+        try:
+            sample = None
+            flags = Gio.ResourceLookupFlags.NONE
+            data = Gio.resources_lookup_data(resource_path, flags)
+            rw = sdl.SDL_RWFromMem(data.get_data(), data.get_size())
+            sample = mixer.Mix_LoadWAV_RW(rw, 1)
+        except BaseException as e:
+            logging.warn(f'Could not load resource { resource_path }')
+            logging.debug(e)
+
+        return sample

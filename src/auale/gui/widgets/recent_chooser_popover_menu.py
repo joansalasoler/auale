@@ -23,7 +23,7 @@ from . import RecentChooserMenuitem
 from ..filters import OGNRecentFilter
 
 
-@Gtk.Template.from_file('gui/widgets/recent_chooser_popover_menu.ui')
+@Gtk.Template(resource_path='/com/joansala/auale/gtk/widgets/recent_chooser_popover_menu.ui')
 class RecentChooserPopoverMenu(Gtk.Bin):
     """A recent chooser widget that can be used on a popover"""
 

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
+from i18n import gettext as _
 
 
 class OGNRecentFilter(Gtk.RecentFilter):
@@ -27,6 +28,6 @@ class OGNRecentFilter(Gtk.RecentFilter):
     def __init__(self):
         super(OGNRecentFilter, self).__init__()
 
-        self.set_name(_("Oware match files"))
+        self.set_name(_('Oware match files'))
         self.add_mime_type('text/x-oware-ogn')
         self.add_pattern('*.ogn')

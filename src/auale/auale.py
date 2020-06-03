@@ -20,16 +20,17 @@ import os
 import sys
 import signal
 import logging
+import gui
 
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from gui.windows import ApplicationWindow
 from config import accelerators
 from config import actions
 from config import options
-from gui import ApplicationWindow
 
 
 class Auale(Gtk.Application):
@@ -37,9 +38,9 @@ class Auale(Gtk.Application):
 
     __gtype_name__ = 'Auale'
 
-    __ID = 'com.joansala.auale'
     __VERSION = '2.0.0'
     __DISPLAY_NAME = 'Aualé'
+    __ID = 'com.joansala.auale'
     __FLAGS = Gio.ApplicationFlags.HANDLES_OPEN
 
     def __init__(self):
@@ -83,22 +84,18 @@ class Auale(Gtk.Application):
         action = self.lookup_action('engine')
         action.set_state(state)
 
-    def setup_application_icons(self):
-        """Registers this application's icon theme"""
-
-        Gio.ThemedIcon.new('auale')
-        theme = Gtk.IconTheme.get_default()
-        theme.append_search_path('resources/icons')
-
     def setup_application_theme(self):
         """Registers this application's CSS provider"""
 
+        Gio.ThemedIcon.new('auale')
+
         provider = Gtk.CssProvider()
         screen = Gdk.Screen.get_default()
+        base_path = self.get_resource_base_path()
         priority = Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
 
         Gtk.StyleContext.add_provider_for_screen(screen, provider, priority)
-        provider.load_from_path('gui/application.css')
+        provider.load_from_resource(f'{ base_path }/gtk/application.css')
 
     def add_application_window(self, uri=None):
         """Adds a new application window"""
@@ -182,7 +179,6 @@ class Auale(Gtk.Application):
     def on_application_startup(self, app):
         """Handles the application initialization"""
 
-        self.setup_application_icons()
         self.setup_application_theme()
         self.connect_application_actions()
 

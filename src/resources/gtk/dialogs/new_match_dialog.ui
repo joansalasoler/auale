@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0
+<!-- Generated with glade 3.36.0 
 
-Aualé -
+Aualé - 
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 
 This library is free software; you can redistribute it and/or
@@ -19,10 +19,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 -->
-<interface>
+<interface domain="auale">
   <requires lib="gtk+" version="3.22"/>
-  <!-- interface-local-resource-path ../res/image -->
-  <!-- interface-css-provider-path auale.css -->
+  <!-- interface-local-resource-path ../../icons -->
   <!-- interface-license-type lgplv2 -->
   <!-- interface-name Aual\303\251 -->
   <!-- interface-copyright 2014-2020 Joan Sala Soler <contact@joansala.com> -->
@@ -93,7 +92,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                           <object class="GtkImage" id="south-image">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="pixbuf">../image/human.svg</property>
+                            <property name="icon_name">human-player</property>
+                            <property name="icon_size">6</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -182,7 +182,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                           <object class="GtkImage" id="north-image">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="pixbuf">../image/computer.svg</property>
+                            <property name="icon_name">computer-player</property>
+                            <property name="icon_size">6</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -271,7 +272,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                           <object class="GtkImage" id="watch-image">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="pixbuf">../image/watch.svg</property>
+                            <property name="icon_name">watch-game</property>
+                            <property name="icon_size">6</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -360,7 +362,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                           <object class="GtkImage" id="edit-image">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="pixbuf">../image/edit.svg</property>
+                            <property name="icon_name">edit-match</property>
+                            <property name="icon_size">6</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>

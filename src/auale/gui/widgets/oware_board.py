@@ -17,15 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-import warnings
 import cairo
+import logging
 
-from gi.repository import Rsvg
-from gi.repository import GdkPixbuf
-from gi.repository import GObject
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import Gio
+from gi.repository import GObject
 from gi.repository import Gtk
-from utils import Utils
+from gi.repository import Rsvg
 
 
 class OwareBoard(Gtk.DrawingArea):
@@ -34,7 +34,6 @@ class OwareBoard(Gtk.DrawingArea):
     __gtype_name__ = 'OwareBoard'
 
     __gproperties__ = {
-
         'board': (
             GObject.TYPE_PYOBJECT,
             "Board",
@@ -52,7 +51,6 @@ class OwareBoard(Gtk.DrawingArea):
     }
 
     __gsignals__ = {
-
         'house-enter-notify-event': (
             GObject.SIGNAL_RUN_FIRST,
             GObject.TYPE_NONE,
@@ -72,9 +70,9 @@ class OwareBoard(Gtk.DrawingArea):
         )
     }
 
-    __LABELS_PATH = Utils.resource_path('./res/image/labels.svg')
-    __NUMBERS_PATH = Utils.resource_path('./res/image/numbers.svg')
-    __BACKGROUND_PATH = Utils.resource_path('./res/image/background.png')
+    __LABELS_PATH = '/com/joansala/auale/images/labels.svg'
+    __NUMBERS_PATH = '/com/joansala/auale/images/numbers.svg'
+    __BACKGROUND_PATH = '/com/joansala/auale/images/background.png'
 
     def __init__(self):
         """Initalize this canva object"""
@@ -107,22 +105,28 @@ class OwareBoard(Gtk.DrawingArea):
         self._wallpaper = None
         self._background_path = ''
         self._angle = 0.0
-
-        # Initialize graphic components
-
-        try:
-            self._labels = Rsvg.Handle().new_from_file(self.__LABELS_PATH)
-            self._numbers = Rsvg.Handle().new_from_file(self.__NUMBERS_PATH)
-            self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(self.__BACKGROUND_PATH)
-            self._background_path = self.__BACKGROUND_PATH
-        except BaseException:
-            self._labels = None
-            self._numbers = None
-            self._wallpaper = None
+        self._labels = self.new_labels_svg_handle()
+        self._numbers = self.new_numbers_svg_handle()
+        self._wallpaper = self.new_default_wallpaper()
 
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
         self.connect('draw', self.do_draw_event)
         self.set_property('can-focus', True)
+
+    def new_default_wallpaper(self):
+        """Obtains the default wallpaper image"""
+
+        return GdkPixbuf.Pixbuf.new_from_resource(self.__BACKGROUND_PATH)
+
+    def new_labels_svg_handle(self):
+        """Obtains a new labels SVG handle"""
+
+        return self.new_svg_from_resource(self.__LABELS_PATH)
+
+    def new_numbers_svg_handle(self):
+        """Obtains a new numbers SVG handle"""
+
+        return self.new_svg_from_resource(self.__NUMBERS_PATH)
 
     def do_get_property(self, prop):
         """Gets a property value"""
@@ -149,7 +153,7 @@ class OwareBoard(Gtk.DrawingArea):
                 self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(value)
                 self._background_path = value
             except BaseException:
-                warnings.warn('cannot load background image')
+                logging.warn('Cannot load background image')
 
     def do_draw_event(self, widget, context):
         """Performs all drawing operations"""
@@ -345,11 +349,11 @@ class OwareBoard(Gtk.DrawingArea):
 
         context.rectangle(0, 0, width, height)
 
-        try:
+        if self._wallpaper:
             Gdk.cairo_set_source_pixbuf(context, self._wallpaper, 0, 0)
             pattern = context.get_source()
             pattern.set_extend(2)
-        except BaseException:
+        else:
             context.set_source_rgb(0.7, 0.5, 0.3)
 
         context.fill()
@@ -448,3 +452,17 @@ class OwareBoard(Gtk.DrawingArea):
         """Returns the active house"""
 
         return self._highlighted_house
+
+    def new_svg_from_resource(self, resource_path):
+        """Creates a new SVG handle from a resource path"""
+
+        try:
+            handle = None
+            flags = Gio.ResourceLookupFlags.NONE
+            data = Gio.resources_lookup_data(resource_path, flags)
+            handle = Rsvg.Handle.new_from_data(data.get_data())
+        except BaseException as e:
+            logging.warn(f'Could not load resource { resource_path }')
+            logging.debug(e)
+
+        return handle

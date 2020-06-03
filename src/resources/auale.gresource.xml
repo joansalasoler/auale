@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/joansala/auale">
+    <file>gtk/widgets/recent_chooser_popover_menu.ui</file>
+    <file>gtk/widgets/recent_chooser_menuitem.ui</file>
+    <file>gtk/dialogs/new_match_dialog.ui</file>
+    <file>gtk/dialogs/scoresheet_dialog.ui</file>
+    <file>gtk/dialogs/about_dialog.ui</file>
+    <file>gtk/application.css</file>
+    <file>gtk/windows/application_window.css</file>
+    <file>gtk/windows/application_window.ui</file>
+    <file>images/auale.ico</file>
+    <file>images/background.png</file>
+    <file>images/numbers.svg</file>
+    <file>images/labels.svg</file>
+    <file>auale.gresource.xml</file>
+    <file>icons/128x128/apps/auale.svg</file>
+    <file>icons/48x48/apps/auale.svg</file>
+    <file>icons/48x48/actions/human-player.svg</file>
+    <file>icons/48x48/actions/watch-game.svg</file>
+    <file>icons/48x48/actions/edit-match.svg</file>
+    <file>icons/48x48/actions/computer-player.svg</file>
+    <file>icons/scalable/apps/auale.svg</file>
+    <file>icons/scalable/mimetypes/text-x-oware-ogn-symbolic.svg</file>
+    <file>sounds/gather.wav</file>
+    <file>sounds/drop.wav</file>
+    <file>sounds/start.wav</file>
+    <file>sounds/rotate.wav</file>
+  </gresource>
+</gresources>

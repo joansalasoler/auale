@@ -20,7 +20,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 
-@Gtk.Template.from_file('gui/widgets/recent_chooser_menuitem.ui')
+@Gtk.Template(resource_path='/com/joansala/auale/gtk/widgets/recent_chooser_menuitem.ui')
 class RecentChooserMenuitem(Gtk.Bin):
     """A menuitem on a recent chooser popover menu"""
 

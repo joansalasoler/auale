@@ -19,9 +19,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 -->
-<interface>
+<interface domain="auale">
   <requires lib="gtk+" version="3.22"/>
-  <!-- interface-local-resource-path ../res/image -->
+  <!-- interface-local-resource-path ../../icons -->
   <!-- interface-css-provider-path application_window.css -->
   <!-- interface-license-type lgplv2 -->
   <!-- interface-name Aual\303\251 -->
@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="width_request">300</property>
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="documents_menu_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_start">10</property>
@@ -45,6 +45,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="receives_default">False</property>
             <property name="tooltip_text" translatable="yes">Opens a match file</property>
             <property name="action_name">win.open</property>
+            <property name="action_target">''</property>
             <property name="text" translatable="yes">_Open match...</property>
           </object>
           <packing>
@@ -184,7 +185,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="width_request">300</property>
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="actions_menu_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_start">10</property>
@@ -482,7 +483,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </packing>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="player_menu_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_start">10</property>
@@ -601,7 +602,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </packing>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="strength_menu_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_start">10</property>
@@ -938,6 +939,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Goes to the previous position</property>
                 <property name="action_name">win.save</property>
+                <property name="action_target">''</property>
                 <property name="icon">save_match_icon</property>
                 <property name="text" translatable="yes">Previous move</property>
                 <property name="centered">True</property>

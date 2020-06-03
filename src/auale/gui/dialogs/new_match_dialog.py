@@ -19,7 +19,7 @@
 from gi.repository import Gtk
 
 
-@Gtk.Template.from_file('gui/dialogs/new_match_dialog.ui')
+@Gtk.Template(resource_path='/com/joansala/auale/gtk/dialogs/new_match_dialog.ui')
 class NewMatchDialog(Gtk.Dialog):
     """Dialog to start a new match"""
 

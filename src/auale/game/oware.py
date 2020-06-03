@@ -16,10 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import pickle
 import re
-
-from utils import Utils
 
 
 class Oware(object):
@@ -30,11 +29,11 @@ class Oware(object):
     DRAW = 0
     NULL_MOVE = -1
 
-    __RULESET = "Oware Abapa"
-    __MACHINERY_PATH = Utils.resource_path('./res/other/machinery.pkl')
+    __base = os.path.dirname(__file__)
+    __path = os.path.join(__base, 'oware.pkl')
+    __file = open(__path, 'rb')
 
-    __file = open(__MACHINERY_PATH, 'rb')
-
+    _RULESET = "Oware Abapa"
     _EMPTY_ROW = (0, 0, 0, 0, 0, 0)
     _EMPTY_ROWL = [0, 0, 0, 0, 0, 0]
     _SEED_DRILL = pickle.load(__file)
@@ -47,7 +46,7 @@ class Oware(object):
     def get_ruleset_name():
         """Returns the implemented ruleset name"""
 
-        return Oware.__RULESET
+        return Oware._RULESET
 
     @staticmethod
     def get_initial_board():

@@ -17,26 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import locale
+import sys
 
-class Constants(object):
-    """Application constants"""
+# On the Windows platform 'libintl' must loaded to enable gettext
+# support for the application. This module ensures that the correct
+# gettext library is loaded and can be imported by othe modules.
 
-    APP_NAME = 'Aualé'
-    APP_VERSION = '1.1.2'
-    APP_ID = 'com.joansala.auale'
-    APP_DOMAIN = 'auale'
-    APP_ICON = 'auale'
-    APP_ROLE = 'game'
+module = locale
 
-    HOME_URL = 'http://www.joansala.com/auale/'
-    HELP_URL = 'http://www.joansala.com/auale/help/'
-    RULES_URL = 'http://www.joansala.com/auale/rules/'
+if 'win' in sys.platform:
+    if not hasattr(locale, 'bindtextdomain'):
+        from ctypes import cdll
+        module = cdll.LoadLibrary('libintl-8.dll')
 
-    ICONS_PATH = 'res/icons'
-
-    COMMENT_ICON = './res/image/comment.svg'
-    CREATE_ICON = './res/image/create.svg'
-    ERROR_ICON = './res/image/error.svg'
-    FOLDER_ICON = './res/image/folder.svg'
-    HELP_ICON = './res/image/help.svg'
-    INFORMATION_ICON = './res/image/information.svg'
+gettext = module.gettext

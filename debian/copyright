@@ -11,14 +11,6 @@ Files: src/auale/res/sound/*
 Copyright: 2014-2015 Arnau Sala Soler <contact@arnausalasoler.com>
 License: GPL-3+
 
-Files:
- src/auale/res/image/computer.svg
- src/auale/res/image/edit.svg
- src/auale/res/image/human.svg
- src/auale/res/image/watch.svg
-Copyright: 2007-2013 Daniel Foré <daniel@elementaryos.org>
-License: GPL-3+
-
 Files: src/auale/sdl2/*
 Copyright: 2012-2014 Marcus von Appen <marcus@sysfault.org>
 License: CC0 or Zlib

@@ -23,15 +23,17 @@ from game import Oware
 from gi.repository import Gtk
 
 from ..widgets import OwareBoard
+from ..widgets import RecentChooserPopoverMenu
 
 
-@Gtk.Template.from_file('gui/windows/application_window.ui')
+@Gtk.Template(resource_path='/com/joansala/auale/gtk/windows/application_window.ui')
 class ApplicationWindow(Gtk.ApplicationWindow):
     """Main application window"""
 
     __gtype_name__ = 'ApplicationWindow'
 
     _board_overlay = Gtk.Template.Child('board_overlay')
+    _recent_chooser = Gtk.Template.Child('recent_chooser')
 
     def __init__(self, application):
         super(ApplicationWindow, self).__init__()
@@ -40,6 +42,10 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         self._canvas = OwareBoard()
         self._settings = None
 
+        recent_menu = RecentChooserPopoverMenu()
+        recent_menu.set_action_name('win.open')
+
+        self._recent_chooser.add(recent_menu)
         self._board_overlay.add(self._canvas)
         self._canvas.grab_focus()
 

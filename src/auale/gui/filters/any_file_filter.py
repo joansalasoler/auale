@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
+from i18n import gettext as _
 
 
 class AnyFileFilter(Gtk.FileFilter):
@@ -27,5 +28,5 @@ class AnyFileFilter(Gtk.FileFilter):
     def __init__(self):
         super(AnyFileFilter, self).__init__()
 
-        self.set_name(_("Any files"))
+        self.set_name(_('Any files'))
         self.add_pattern('*')

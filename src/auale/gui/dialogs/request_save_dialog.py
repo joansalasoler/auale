@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
+from i18n import gettext as _
 
 
 class RequestSaveDialog(Gtk.MessageDialog):

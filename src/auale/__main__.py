@@ -17,15 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
 import sys
-
-gi.require_version('Gdk', '3.0')
-gi.require_version('Gtk', '3.0')
-gi.require_version('Rsvg', '2.0')
+import auale
 
 if __name__ == "__main__":
-    import auale
-    # Utils.install_gettext(Constants.APP_DOMAIN)
     app = auale.Auale()
     app.run(sys.argv)

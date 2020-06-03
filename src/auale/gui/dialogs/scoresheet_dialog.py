@@ -17,9 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
+from i18n import gettext as _
 
 
-@Gtk.Template.from_file('gui/dialogs/scoresheet_dialog.ui')
+@Gtk.Template(resource_path='/com/joansala/auale/gtk/dialogs/scoresheet_dialog.ui')
 class ScoresheetDialog(Gtk.Dialog):
     """Match scoresheet dialog"""
 
