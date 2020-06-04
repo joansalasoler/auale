@@ -29,4 +29,4 @@ class AccelsFactory(object):
         """Connects the set of configured options to a target"""
 
         for descriptor in self._descriptors:
-            target.add_accelerator(*descriptor)
+            target.set_accels_for_action(*descriptor)

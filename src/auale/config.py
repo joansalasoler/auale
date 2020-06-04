@@ -71,17 +71,17 @@ OPTION_DESCRIPTORS = (
 # =============================================================================
 
 ACCELS_DESCRIPTORS = (
-    ('<Primary><Shift>S',   'win.save-as',),
-    ('<Primary>N',          'win.new',),
-    ('<Primary>O',          'win.open',),
-    ('<Primary>R',          'win.rotate',),
-    ('<Primary>S',          'win.save',),
-    ('End',                 'win.redo-all',),
-    ('F1',                  'win.rules',),
-    ('F11',                 'win.immersive',),
-    ('Home',                'win.undo-all',),
-    ('Page_Down',           'win.redo',),
-    ('Page_Up',             'win.undo',),
+    ('win.save-as',         ('<Primary><Shift>S',)),
+    ('win.new',             ('<Primary>N',)),
+    ('win.open',            ('<Primary>O',)),
+    ('win.rotate',          ('<Primary>R',)),
+    ('win.save',            ('<Primary>S',)),
+    ('win.redo-all',        ('End',)),
+    ('win.rules',           ('F1',)),
+    ('win.immersive',       ('F11',)),
+    ('win.undo-all',        ('Home',)),
+    ('win.redo',            ('Page_Down',)),
+    ('win.undo',            ('Page_Up',)),
 )
 
 # =============================================================================
