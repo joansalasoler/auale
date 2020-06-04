@@ -113,6 +113,9 @@ class Auale(Gtk.Application):
         self.connect_window_actions(window)
         self.connect_window_signals(window)
 
+        if isinstance(uri, str) and uri:
+            window.open_match_from_uri(uri)
+
         return window
 
     def connect_application_commands(self):
@@ -209,7 +212,7 @@ class Auale(Gtk.Application):
         for window in self.get_windows():
             window.destroy()
 
-        self.self.activate_action('quit')
+        self.activate_action('quit')
         sys.exit(os.EX_OK)
 
     def on_window_realize(self, window):

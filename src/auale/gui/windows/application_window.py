@@ -16,12 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
-
 from game import Match
 from game import Oware
 from gi.repository import Gtk
+from i18n import gettext as _
 
+from ..services import MatchManager
+from ..widgets import MatchInfobar
 from ..widgets import OwareBoard
 from ..widgets import RecentChooserPopoverMenu
 
@@ -33,21 +34,42 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'ApplicationWindow'
 
     _board_overlay = Gtk.Template.Child('board_overlay')
-    _recent_chooser = Gtk.Template.Child('recent_chooser')
+    _headerbar = Gtk.Template.Child('main_headerbar')
+    _recents_menu_box = Gtk.Template.Child('recents_menu_box')
 
     def __init__(self, application):
         super(ApplicationWindow, self).__init__()
 
         self._match = Match(Oware)
         self._canvas = OwareBoard()
+        self._infobar = MatchInfobar()
+        self._match_manager = MatchManager()
         self._settings = None
 
-        recent_menu = RecentChooserPopoverMenu()
-        recent_menu.set_action_name('win.open')
+        self.setup_window_widgets()
+        self.connect_window_signals()
 
-        self._recent_chooser.add(recent_menu)
+    def setup_window_widgets(self):
+        """Attach an initialize this window's widgets"""
+
+        match = self._match_manager.get_match()
+
+        recents_menu = RecentChooserPopoverMenu()
+        recents_menu.set_action_name('win.open')
+
+        self._recents_menu_box.add(recents_menu)
+        self._board_overlay.add_overlay(self._infobar)
         self._board_overlay.add(self._canvas)
+
+        self._infobar.show_match_information(match)
+        self._canvas.set_board(match.get_board())
         self._canvas.grab_focus()
+
+    def connect_window_signals(self):
+        """Connects the required signals to this window"""
+
+        self._canvas.connect('house-pressed', self.on_canvas_house_pressed)
+        self._match_manager.connect('file-changed', self.on_match_file_changed)
 
     def get_local_settings(self):
         """Gets this window's local settings instance"""
@@ -64,6 +86,27 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
         pass
 
+    def open_match_from_uri(self, uri):
+        """Open a match on this window given an URI path"""
+
+        try:
+            self._match_manager.load_from_uri(uri)
+        except BaseException:
+            title = _("Error opening match")
+            summary = _('Match file cannot be opened')
+            self._infobar.show_error_message(f'<b>{ title }</b>: { summary }')
+
+    def on_match_file_changed(self, manager, match):
+        """Emitted when the match file changes"""
+
+        file = manager.get_file()
+        name = file.get_parse_name()
+        board = match.get_board()
+
+        self._infobar.show_match_information(match)
+        self._headerbar.set_subtitle(name)
+        self._canvas.set_board(board)
+
     def on_about_action_activate(self, action, value):
         """..."""
 
@@ -76,6 +119,15 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
     def on_move_action_activate(self, action, value):
         """..."""
+
+        pass
+
+    def on_move_from_action_activate(self, action, move):
+        """..."""
+
+        pass
+
+    def on_canvas_house_pressed(self, canvas, house):
 
         pass
 

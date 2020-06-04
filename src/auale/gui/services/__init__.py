@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from .animator import Animator
 from .game_loop import GameLoop
-from .mixer import Mixer
+from .match_manager import MatchManager
 from .ponder_cache import PonderCache
 
+from .animator import Animator
+from .mixer import Mixer
+
 __all__ = [
-    'Animator',
     'GameLoop',
-    'Mixer',
+    'MatchManager',
     'PonderCache',
+    'Animator',
+    'Mixer',
 ]
