@@ -36,6 +36,7 @@ ACTION_DESCRIPTORS = (
         ('simple',          ('about',)),
         ('simple',          ('close',)),
         ('simple',          ('move',)),
+        ('simple',          ('move-from', 's')),
         ('simple',          ('new',)),
         ('simple',          ('open', 's',)),
         ('simple',          ('redo-all',)),
@@ -82,6 +83,12 @@ ACCELS_DESCRIPTORS = (
     ('win.undo-all',        ('Home',)),
     ('win.redo',            ('Page_Down',)),
     ('win.undo',            ('Page_Up',)),
+    ('win.move-from::a',    ('A',)),
+    ('win.move-from::b',    ('B',)),
+    ('win.move-from::c',    ('C',)),
+    ('win.move-from::d',    ('D',)),
+    ('win.move-from::e',    ('E',)),
+    ('win.move-from::f',    ('F',)),
 )
 
 # =============================================================================
