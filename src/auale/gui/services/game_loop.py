@@ -26,25 +26,8 @@ from .ponder_cache import PonderCache
 class GameLoop(GObject.GObject):
     """Represents the game loop"""
 
-    __move_delay = 1.6
-
     __gtype_name__ = 'GameLoop'
-
-    __gsignals__ = {
-        'move-received': (
-            GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE, (
-                GObject.TYPE_INT,
-            )
-        ),
-
-        'info-received': (
-            GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE, (
-                GObject.TYPE_STRING,
-            )
-        )
-    }
+    __move_delay = 1.6
 
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -54,6 +37,14 @@ class GameLoop(GObject.GObject):
         self._previous_player = None
         self._request_lock = Lock()
         self._ponder_cache = PonderCache(256)
+
+    @GObject.Signal
+    def move_received(self, move: int):
+        """Emitted when the active player makes a move"""
+
+    @GObject.Signal
+    def info_received(self, report: str):
+        """Emitted when a player wants to send a search report"""
 
     def request_move(self, player, match):
         """Requests a player to make a move"""
@@ -153,9 +144,9 @@ class GameLoop(GObject.GObject):
                         value = game.to_move(values['ponder'])
                         self._ponder_cache.store(match, move, value)
 
-                    GLib.idle_add(self.emit, 'move-received', move)
+                    GLib.idle_add(self.move_received.emit, move)
 
     def _on_info_received(self, player, values):
         """Handles the reception of an engine report"""
 
-        pass
+        GLib.idle_add(self.info_received.emit, '')

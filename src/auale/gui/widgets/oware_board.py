@@ -33,69 +33,30 @@ class OwareBoard(Gtk.DrawingArea):
 
     __gtype_name__ = 'OwareBoard'
 
-    __gproperties__ = {
-        'board': (
-            GObject.TYPE_PYOBJECT,
-            "Board",
-            "A list defining an Oware position",
-            GObject.PARAM_READWRITE
-        ),
-
-        'background-image': (
-            GObject.TYPE_STRING,
-            "Background image",
-            "Background image as a PNG file path",
-            "",
-            GObject.PARAM_READWRITE
-        )
-    }
-
-    __gsignals__ = {
-        'house-enter-notify-event': (
-            GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE,
-            (GObject.TYPE_INT,)
-        ),
-
-        'house-leave-notify-event': (
-            GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE,
-            (GObject.TYPE_INT,)
-        ),
-
-        'house-button-press-event': (
-            GObject.SIGNAL_RUN_FIRST,
-            GObject.TYPE_NONE,
-            (GObject.TYPE_INT,)
-        )
-    }
-
     __LABELS_PATH = '/com/joansala/auale/images/labels.svg'
     __NUMBERS_PATH = '/com/joansala/auale/images/numbers.svg'
     __BACKGROUND_PATH = '/com/joansala/auale/images/background.png'
 
+    _NOTATION = 'ABCDEFabcdef'
+
+    _COLORS = {
+        'HOUSE': (0.96, 0.96, 0.96),
+        'HOUSE_ACTIVE': (1.0, 1.0, 0.55),
+        'HOUSE_HIGHLIGHT': (0.75, 0.89, 1.0),
+        'HOUSE_STROKE': (0.2, 0.2, 0.2),
+        'SEED': (0.47, 0.72, 0.12),
+        'SEED_STROKE': (0.10, 0.5, 0.2)
+    }
+
+    _HOUSE_POSITIONS = (
+        (-275.0, 55.0), (-165.0, 55.0), (-55.0, 55.0),
+        (55.0, 55.0), (165.0, 55.0), (275.0, 55.0),
+        (275.0, -55.0), (165.0, -55.0), (55.0, -55.0),
+        (-55.0, -55.0), (-165.0, -55.0), (-275.0, -55.0)
+    )
+
     def __init__(self):
-        """Initalize this canva object"""
-
         super(OwareBoard, self).__init__()
-
-        self._NOTATION = 'ABCDEFabcdef'
-
-        self._HOUSE_POSITIONS = (
-            (-275.0, 55.0), (-165.0, 55.0), (-55.0, 55.0),
-            (55.0, 55.0), (165.0, 55.0), (275.0, 55.0),
-            (275.0, -55.0), (165.0, -55.0), (55.0, -55.0),
-            (-55.0, -55.0), (-165.0, -55.0), (-275.0, -55.0)
-        )
-
-        self._COLOR = {
-            'HOUSE': (0.96, 0.96, 0.96),
-            'HOUSE_ACTIVE': (1.0, 1.0, 0.55),
-            'HOUSE_HIGHLIGHT': (0.75, 0.89, 1.0),
-            'HOUSE_STROKE': (0.2, 0.2, 0.2),
-            'SEED': (0.47, 0.72, 0.12),
-            'SEED_STROKE': (0.10, 0.5, 0.2)
-        }
 
         self._context = None
         self._board = (0,) * 14
@@ -103,8 +64,8 @@ class OwareBoard(Gtk.DrawingArea):
         self._active_house = -1
         self._highlighted_house = -1
         self._wallpaper = None
-        self._background_path = ''
         self._angle = 0.0
+
         self._labels = self.new_labels_svg_handle()
         self._numbers = self.new_numbers_svg_handle()
         self._wallpaper = self.new_default_wallpaper()
@@ -112,6 +73,60 @@ class OwareBoard(Gtk.DrawingArea):
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
         self.connect('draw', self.do_draw_event)
         self.set_property('can-focus', True)
+
+    @GObject.Signal
+    def house_enter(self, house: int):
+        """Emitted when the pointer enters a house"""
+
+    @GObject.Signal
+    def house_leave(self, house: int):
+        """Emitted when the pointer leaves a house"""
+
+    @GObject.Signal
+    def house_pressed(self, house: int):
+        """Emitted when a house is pressed"""
+
+    def get_rotation(self):
+        """Returns this canvas rotation angle in radians"""
+
+        return self._angle
+
+    def get_active(self):
+        """Returns the current active house index"""
+
+        return self._active_house
+
+    def get_highlight(self):
+        """Returns the active house"""
+
+        return self._highlighted_house
+
+    def get_board(self):
+        """Obtains the displayed board tuple"""
+
+        return self._board
+
+    def set_active(self, house):
+        """Sets the active house"""
+
+        self._active_house = house
+
+    def set_highlight(self, house):
+        """Sets the highligted house"""
+
+        self._highlighted_house = house
+
+    def set_board(self, board):
+        """Sets the displayed board position as a tuple"""
+
+        if not isinstance(board, tuple):
+            raise TypeError('Board must be a tuple')
+
+        if len(board) != 14 or sum(board) > 48:
+            raise ValueError('Not a valid board tuple')
+
+        self._hovered_house = -1
+        self._board = board
 
     def new_default_wallpaper(self):
         """Obtains the default wallpaper image"""
@@ -127,33 +142,6 @@ class OwareBoard(Gtk.DrawingArea):
         """Obtains a new numbers SVG handle"""
 
         return self.new_svg_from_resource(self.__NUMBERS_PATH)
-
-    def do_get_property(self, prop):
-        """Gets a property value"""
-
-        if prop.name == 'board':
-            return self._board
-        elif prop.name == 'background-image':
-            return self._background_path
-
-    def do_set_property(self, prop, value):
-        """Sets a property value"""
-
-        if prop.name == 'board':
-            if not isinstance(value, tuple):
-                raise TypeError('board must be a tuple')
-
-            if len(value) != 14 or sum(value) > 48:
-                raise ValueError('not a valid board tuple')
-
-            self._hovered_house = -1
-            self._board = value
-        elif prop.name == 'background-image':
-            try:
-                self._wallpaper = GdkPixbuf.Pixbuf.new_from_file(value)
-                self._background_path = value
-            except BaseException:
-                logging.warn('Cannot load background image')
 
     def do_draw_event(self, widget, context):
         """Performs all drawing operations"""
@@ -215,16 +203,16 @@ class OwareBoard(Gtk.DrawingArea):
 
         if hovered_house != self._hovered_house:
             if self._hovered_house != -1:
-                self.emit('house-leave-notify-event', self._hovered_house)
+                self.house_leave.emit(self._hovered_house)
             if hovered_house != -1:
-                self.emit('house-enter-notify-event', hovered_house)
+                self.house_enter.emit(hovered_house)
             self._hovered_house = hovered_house
 
     def do_button_press_event(self, event):
         """Button press events"""
 
         if self._hovered_house != -1:
-            self.emit('house-button-press-event', self._hovered_house)
+            self.house_pressed.emit(self._hovered_house)
 
     def do_enter_notify_event(self, event):
         """Recomputes hit detection"""
@@ -235,7 +223,7 @@ class OwareBoard(Gtk.DrawingArea):
         """Unselect any selected house"""
 
         if self._hovered_house != -1:
-            self.emit('house-leave-notify-event', self._hovered_house)
+            self.house_leave.emit(self._hovered_house)
             self._hovered_house = -1
 
     def draw_home(self, context, x, y):
@@ -246,9 +234,9 @@ class OwareBoard(Gtk.DrawingArea):
         context.line_to(x + 50, y + 55)
         context.arc(x, y + 55, 50.0, 0.0, math.pi)
         context.line_to(x - 50, y - 55)
-        context.set_source_rgb(*self._COLOR['HOUSE'])
+        context.set_source_rgb(*self._COLORS['HOUSE'])
         context.fill_preserve()
-        context.set_source_rgb(*self._COLOR['HOUSE_STROKE'])
+        context.set_source_rgb(*self._COLORS['HOUSE_STROKE'])
         context.set_line_width(2.0)
         context.stroke()
 
@@ -258,12 +246,12 @@ class OwareBoard(Gtk.DrawingArea):
         context.new_sub_path()
         context.arc(x, y, 50., 0., 2 * math.pi)
         context.set_source_rgb(
-            *self._COLOR[
+            *self._COLORS[
                 active and 'HOUSE_ACTIVE' or (
                     highlight and 'HOUSE_HIGHLIGHT' or 'HOUSE')]
         )
         context.fill_preserve()
-        context.set_source_rgb(*self._COLOR['HOUSE_STROKE'])
+        context.set_source_rgb(*self._COLORS['HOUSE_STROKE'])
         context.set_line_width(2.0)
         context.stroke()
 
@@ -272,9 +260,9 @@ class OwareBoard(Gtk.DrawingArea):
 
         context.new_sub_path()
         context.arc(x, y, radius, 0.0, 2.0 * math.pi)
-        context.set_source_rgb(*self._COLOR['SEED'])
+        context.set_source_rgb(*self._COLORS['SEED'])
         context.fill_preserve()
-        context.set_source_rgb(*self._COLOR['SEED_STROKE'])
+        context.set_source_rgb(*self._COLORS['SEED_STROKE'])
         context.set_line_width(1.5)
         context.stroke()
 
@@ -408,31 +396,6 @@ class OwareBoard(Gtk.DrawingArea):
         self._angle += angle
         self._hovered_house = -1
 
-    def get_rotation(self):
-        """Returns this canvas rotation angle in radians"""
-
-        return self._angle
-
-    def set_board(self, board):
-        """Sets the board property of this object"""
-
-        self.set_property('board', board)
-
-    def set_active(self, house):
-        """Sets the active house"""
-
-        self._active_house = house
-
-    def set_highlight(self, house):
-        """Sets the highligted house"""
-
-        self._highlighted_house = house
-
-    def get_hovered(self):
-        """Returns the current hovered house index"""
-
-        return self._hovered_house
-
     def update_hovered(self):
         """Updates the hovered house"""
 
@@ -442,16 +405,6 @@ class OwareBoard(Gtk.DrawingArea):
 
         self._hovered_house = -1
         self.do_motion_notify_event(event)
-
-    def get_active(self):
-        """Returns the current active house index"""
-
-        return self._active_house
-
-    def get_highlight(self):
-        """Returns the active house"""
-
-        return self._highlighted_house
 
     def new_svg_from_resource(self, resource_path):
         """Creates a new SVG handle from a resource path"""

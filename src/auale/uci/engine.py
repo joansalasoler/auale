@@ -25,6 +25,7 @@ from .strength import Strength
 class Engine(Client):
     """Client for an external UCI engine"""
 
+    __gtype_name__ = 'Engine'
     __counter = 0
     __quit_timeout = 8.0
 

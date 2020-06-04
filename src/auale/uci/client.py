@@ -27,48 +27,11 @@ from gi.repository import GObject
 from .rules import parser
 
 
-class Client(Thread, GObject.GObject):
+class Client(GObject.GObject, Thread):
     """UCI protocol client implementation."""
 
+    __gtype_name__ = 'Client'
     __response_timeout = 8.0
-
-    __gtype_name__ = 'UCIClient'
-
-    __response_signal = (
-        GObject.SignalFlags.RUN_FIRST,
-        GObject.TYPE_NONE, (
-          GObject.TYPE_PYOBJECT,
-        )
-    )
-
-    __timeout_signal = (
-        GObject.SignalFlags.RUN_FIRST,
-        GObject.TYPE_NONE, (
-          GObject.TYPE_STRING,
-        )
-    )
-
-    __failure_signal = (
-        GObject.SignalFlags.RUN_LAST,
-        GObject.TYPE_NONE, (
-          GObject.TYPE_STRING,
-        )
-    )
-
-    __termination_signal = (
-        GObject.SignalFlags.RUN_LAST,
-        GObject.TYPE_NONE, ()
-    )
-
-    __gsignals__ = {
-        'id-received': __response_signal,
-        'info-received': __response_signal,
-        'option-received': __response_signal,
-        'move-received': __response_signal,
-        'response-timeout': __timeout_signal,
-        'termination': __termination_signal,
-        'failure': __failure_signal
-    }
 
     def __init__(self, filein, fileout):
         GObject.GObject.__init__(self)
@@ -86,6 +49,34 @@ class Client(Thread, GObject.GObject):
         self._match = None
         self._search_depth = 10
         self._search_timeout = 1000
+
+    @GObject.Signal
+    def id_received(self, params: object):
+        """Emitted when a player identified itself"""
+
+    @GObject.Signal
+    def info_received(self, params: object):
+        """Emitted when a player report is received"""
+
+    @GObject.Signal
+    def option_received(self, params: object):
+        """Emitted when a configuration option is received"""
+
+    @GObject.Signal
+    def move_received(self, params: object):
+        """Emitted when a best move report is received"""
+
+    @GObject.Signal
+    def response_timeout(self, order: str):
+        """Emitted when waiting for a response times out"""
+
+    @GObject.Signal(flags=GObject.SignalFlags.RUN_LAST)
+    def failure(self, reason: str):
+        """Emitted on client failures"""
+
+    @GObject.Signal(flags=GObject.SignalFlags.RUN_LAST)
+    def termination(self):
+        """Emitted when the client is stopped"""
 
     def is_searching(self):
         """Checks if the engine is thinking or pondering"""
@@ -121,7 +112,7 @@ class Client(Thread, GObject.GObject):
             self._wait_for('uci', self._is_running)
 
         if not self._is_running.is_set():
-            self.emit('failure', 'Engine is not responding')
+            self.failure.emit('Engine is not responding')
 
     def start_new_match(self, match=None):
         """Notify the player a new match will start"""
@@ -183,25 +174,25 @@ class Client(Thread, GObject.GObject):
         """Evaluates a info response"""
 
         if self._is_running.is_set():
-            self.emit('info-received', params)
+            self.info_received.emit(params)
 
     def _eval_id(self, params):
         """Evaluates an id response"""
 
         if not self._is_running.is_set():
-            self.emit('id-received', params)
+            self.id_received.emit(params)
 
     def _eval_option(self, params):
         """Evaluates an option response"""
 
         if not self._is_running.is_set():
-            self.emit('option-received', params)
+            self.option_received.emit(params)
 
     def _eval_bestmove(self, params):
         """Evaluates a bestmove response"""
 
         if not self._is_waiting.is_set():
-            self.emit('move-received', params)
+            self.move_received.emit(params)
             self._is_waiting.set()
 
     def _get_search_arguments(self):
@@ -288,7 +279,7 @@ class Client(Thread, GObject.GObject):
         if not self._is_terminated.is_set():
             if not event.wait(self.__response_timeout):
                 self._logger.warning('Response timeout')
-                self.emit('response-timeout', order)
+                self.response_timeout.emit(order)
 
     def _eval_response(self, response):
         """Evaluates a received response"""
@@ -309,7 +300,7 @@ class Client(Thread, GObject.GObject):
             self._logger.debug(f'{ self } < { response }')
         except BrokenPipeError:
             if not self._is_terminated.is_set():
-                self.emit('failure', 'Broken pipe')
+                self.failure.emit('Broken pipe')
 
         return response
 
@@ -322,7 +313,7 @@ class Client(Thread, GObject.GObject):
             self._fileout.flush()
         except BrokenPipeError:
             if not self._is_terminated.is_set():
-                self.emit('failure', 'Broken pipe')
+                self.failure.emit('Broken pipe')
 
     def run(self):
         """Evaluates responses while the input file is open"""
@@ -333,4 +324,4 @@ class Client(Thread, GObject.GObject):
         finally:
             self._is_running.clear()
             self._is_terminated.set()
-            self.emit('termination')
+            self.termination.emit()
