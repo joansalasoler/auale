@@ -329,12 +329,14 @@ class Match(object):
         return tuple(tags)
 
     def get_tag(self, tag):
-        """Returns a match tag value"""
+        """Returns a match tag value or none"""
 
-        if tag not in self._tags:
-            return None
+        value = None
 
-        return self._tags[tag]
+        if tag in self._tags and self._tags[tag] != '?':
+            value = self._tags[tag]
+
+        return value
 
     def get_notation(self):
         """Converts this match to a valid notation tuple"""

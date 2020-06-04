@@ -118,7 +118,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="recent_chooser">
+      <object class="GtkBox" id="recents_menu_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_start">10</property>
@@ -753,6 +753,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <object class="GtkOverlay" id="board_overlay">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <child>
+              <placeholder/>
+            </child>
             <child type="overlay">
               <object class="GtkSpinner" id="spinner">
                 <property name="height_request">40</property>
@@ -763,86 +766,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <property name="margin_start">12</property>
                 <property name="margin_end">12</property>
               </object>
-            </child>
-            <child type="overlay">
-              <object class="GtkInfoBar" id="infobar">
-                <property name="height_request">40</property>
-                <property name="visible">True</property>
-                <property name="app_paintable">True</property>
-                <property name="can_focus">False</property>
-                <property name="valign">start</property>
-                <property name="message_type">other</property>
-                <child internal-child="action_area">
-                  <object class="GtkButtonBox">
-                    <property name="can_focus">False</property>
-                    <property name="valign">center</property>
-                    <property name="spacing">5</property>
-                    <property name="layout_style">start</property>
-                    <child>
-                      <object class="GtkLabel" id="infobar-links">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_markup">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                        <property name="non_homogeneous">True</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child internal-child="content_area">
-                  <object class="GtkBox">
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="spacing">10</property>
-                    <child>
-                      <object class="GtkImage" id="infobar-image">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_fallback">True</property>
-                        <property name="icon_size">1</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="infobar-label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_markup">True</property>
-                        <property name="ellipsize">end</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="index">1</property>
-              </packing>
             </child>
             <child type="overlay">
               <object class="GtkBox" id="report_vbox">
