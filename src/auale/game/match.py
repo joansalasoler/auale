@@ -378,3 +378,29 @@ class Match(object):
             tokens.append(self._tags['Result'])
 
         return tuple(tokens)
+
+    def __hash__(self):
+        """Computes a hash for this object"""
+
+        header = tuple(self._tags.items())
+        contents = tuple(self._comments)
+        states = tuple(self._positions)
+
+        return hash((states, header, contents))
+
+    def __eq__(self, other):
+        """Compare two objects for equality"""
+
+        if not isinstance(other, Match):
+            return False
+
+        if other._positions != self._positions:
+            return False
+
+        if other._comments != self._comments:
+            return False
+
+        if other._tags != self.__tags:
+            return False
+
+        return True
