@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 
+<!-- Generated with glade 3.36.0
 
-Aualé - 
+Aualé -
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 
 This library is free software; you can redistribute it and/or
@@ -110,6 +110,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="prompt_unsaved_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">Always ask to save modified matches</property>
+            <property name="action_name">win.prompt-unsaved</property>
+            <property name="text" translatable="yes">Prompt for unsaved changes</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">6</property>
           </packing>
         </child>
       </object>
@@ -739,8 +767,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="default_width">960</property>
     <property name="default_height">594</property>
     <property name="icon_name">auale</property>
-    <signal name="delete-event" handler="on_main_window_delete" swapped="no"/>
-    <signal name="destroy" handler="on_main_window_destroy" swapped="no"/>
     <signal name="key-press-event" handler="on_main_window_key_press_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="window_vbox">
@@ -835,11 +861,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
+              <object class="GtkImage" id="unsaved_indicator">
+                <property name="can_focus">False</property>
+                <property name="no_show_all">True</property>
+                <property name="tooltip_text" translatable="yes">Match with unsaved changes</property>
+                <property name="margin_start">6</property>
+                <property name="margin_end">6</property>
+                <property name="icon_name">unsaved-match</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkModelButton" id="new_match_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Goes to the previous position</property>
+                <property name="tooltip_text" translatable="yes">Starts a new match</property>
                 <property name="action_name">win.new</property>
                 <property name="icon">new_match_icon</property>
                 <property name="text" translatable="yes">Previous move</property>
@@ -852,7 +893,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -860,7 +901,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Goes to the previous position</property>
+                <property name="tooltip_text" translatable="yes">Saves the current match</property>
                 <property name="action_name">win.save</property>
                 <property name="action_target">''</property>
                 <property name="icon">save_match_icon</property>
@@ -874,7 +915,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -891,7 +932,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <style>

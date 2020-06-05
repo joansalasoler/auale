@@ -20,6 +20,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
+from i18n import gettext as _
 
 
 class MatchInfobar(Gtk.InfoBar):
@@ -78,11 +79,12 @@ class MatchInfobar(Gtk.InfoBar):
         north = self._escape_match_tag(match, 'North')
         result = self._escape_match_tag(match, 'Result')
 
-        title = event and f'<b>{ event }</b>: ' or ''
-        scores = result != '*' and f' ({ result })' or ''
+        title = event or _('Match')
         players = f'{ south } vs. { north }'
+        scores = result != '*' and f' ({ result })' or ''
+        message = f'<b>{ title }</b>: { players }{ scores }'
 
-        self.show_file_message(f'{ title }{ players }{ scores }')
+        self.show_file_message(message)
 
     def _show_message(self, icon_name, markup):
         """Show an message with a custom icon"""
