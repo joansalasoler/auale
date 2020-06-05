@@ -15,9 +15,9 @@
       <default>'easy'</default>
       <summary>Default engine strength</summary>
     </key>
-    <key name="show-tips" type="b">
-      <default>true</default>
-      <summary>Show application tips at startup</summary>
+    <key name="prompt-unsaved" type="b">
+      <default>false</default>
+      <summary>Always prompt for unsaved changes</summary>
     </key>
     <key type="i" name="width">
       <default>-1</default>

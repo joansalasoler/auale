@@ -50,6 +50,7 @@ ACTION_DESCRIPTORS = (
         ('simple',          ('undo',)),
         ('setting',         ('engine',)),
         ('setting',         ('mute',)),
+        ('setting',         ('prompt-unsaved',)),
         ('setting',         ('strength',)),
         ('state',           ('immersive', 'false',)),
         ('state',           ('rotate', 'false',)),
