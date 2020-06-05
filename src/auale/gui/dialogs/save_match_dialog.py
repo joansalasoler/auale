@@ -26,8 +26,8 @@ class SaveMatchDialog(MatchChooserDialog):
 
     __gtype_name__ = 'SaveMatchDialog'
 
-    def __init__(self):
-        super(SaveMatchDialog, self).__init__()
+    def __init__(self, window):
+        super(SaveMatchDialog, self).__init__(window)
 
         self.set_title(_('Save current match'))
         self.add_cancel_button(_('Cancel'))

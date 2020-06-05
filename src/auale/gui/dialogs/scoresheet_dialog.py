@@ -26,5 +26,13 @@ class ScoresheetDialog(Gtk.Dialog):
 
     __gtype_name__ = 'ScoresheetDialog'
 
-    def __init__(self):
+    def __init__(self, window):
         super(ScoresheetDialog, self).__init__()
+
+        self.set_transient_for(window)
+        self.connect('delete-event', self.on_delete_event)
+
+    def on_delete_event(self, dialog, event):
+        """Hide the dialog when delete is emitted"""
+
+        return self.hide_on_delete()

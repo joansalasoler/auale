@@ -27,8 +27,8 @@ class OpenMatchDialog(MatchChooserDialog):
 
     __gtype_name__ = 'OpenMatchDialog'
 
-    def __init__(self):
-        super(OpenMatchDialog, self).__init__()
+    def __init__(self, window):
+        super(OpenMatchDialog, self).__init__(window)
 
         self.set_title(_('Open an oware match'))
         self.add_cancel_button(_('Cancel'))

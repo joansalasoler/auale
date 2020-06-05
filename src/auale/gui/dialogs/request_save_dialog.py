@@ -25,7 +25,7 @@ class RequestSaveDialog(Gtk.MessageDialog):
 
     __gtype_name__ = 'RequestSaveDialog'
 
-    def __init__(self):
+    def __init__(self, window):
         super(RequestSaveDialog, self).__init__()
 
         self.set_modal(True)
@@ -38,3 +38,13 @@ class RequestSaveDialog(Gtk.MessageDialog):
         self.set_property('message-type', Gtk.MessageType.QUESTION)
         self.set_property('text', _('Do you want to save the current match?'))
         self.set_property('secondary_text', _('Your changes will be lost if you don\'t save them.'))
+
+        self.set_transient_for(window)
+
+    def confirm(self):
+        """Runs the dialog and then hides it"""
+
+        response = self.run()
+        self.hide()
+
+        return response

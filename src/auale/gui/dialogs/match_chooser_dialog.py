@@ -25,11 +25,18 @@ class MatchChooserDialog(Gtk.FileChooserDialog):
 
     __gtype_name__ = 'MatchChooserDialog'
 
-    def __init__(self):
+    def __init__(self, window):
         super(MatchChooserDialog, self).__init__()
 
         self.add_filter(OGNFileFilter())
+        self.connect('response', self.on_response)
+        self.set_transient_for(window)
         self.set_modal(True)
+
+    def on_response(self, dialog, response):
+        """Hide the dialog when a response is emitted"""
+
+        self.hide()
 
     def add_cancel_button(self, label):
         """Adds a cancel button to the dialog"""
