@@ -18,9 +18,10 @@
 
 from game import Match
 from game import Oware
-from gi.repository import Gtk
 from gi.repository import GLib
+from gi.repository import Gtk
 from i18n import gettext as _
+from uci import Strength
 
 from ..dialogs import AboutDialog
 from ..dialogs import NewMatchDialog
@@ -30,6 +31,8 @@ from ..dialogs import RequestSaveDialog
 from ..dialogs import SaveMatchDialog
 from ..dialogs import ScoresheetDialog
 from ..services import MatchManager
+from ..values import Rotation
+from ..values import Side
 from ..widgets import MatchInfobar
 from ..widgets import OwareBoard
 from ..widgets import RecentChooserPopoverMenu
@@ -107,24 +110,33 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     def set_engine_command(self, command):
         """Sets the engine used by this window"""
 
-        pass
+        value = GLib.Variant.new_string(command)
+        self.activate_action('engine', value)
 
-    def open_match_from_uri(self, uri):
-        """Open a match on this window given an URI path"""
+    def set_engine_side(self, side):
+        """Sets the engine site to move"""
 
-        self._match_manager.load_from_uri(uri)
+        value = GLib.Variant.new_string(side.nick)
+        self.activate_action('side', value)
+
+    def set_match_from_uri(self, uri):
+        """Open a match file on this window"""
+
+        value = GLib.Variant.new_string(uri)
+        self.activate_action('open', value)
 
     def on_match_file_changed(self, manager, match):
         """Emitted when the match file changed"""
 
         file = manager.get_file()
-        name = file.get_parse_name()
+        name = file and file.get_parse_name()
         board = match.get_board()
 
         self._unsaved_indicator.hide()
         self._infobar.show_match_information(match)
         self._headerbar.set_subtitle(name)
         self._canvas.set_board(board)
+        self.set_engine_side(Side.NEITHER)
 
     def on_match_file_unload(self, manager, match):
         """Emitted before the match file is unloaded"""
@@ -139,11 +151,10 @@ class ApplicationWindow(Gtk.ApplicationWindow):
             discard_changes = (response == Gtk.ResponseType.ACCEPT)
 
             if response == Gtk.ResponseType.REJECT:
-                value = GLib.Variant.new_string('')
-                self.activate_action('save', value)
+                self.activate_action('save-as')
 
             if not manager.has_unsaved_changes():
-                self.destroy()
+                discard_changes = True
 
         return discard_changes
 
@@ -191,6 +202,8 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     def on_move_from_action_activate(self, action, move):
         """..."""
 
+        match = self._match_manager.get_match()
+        match.add_move(0)
         pass
 
     def on_canvas_house_pressed(self, canvas, house):
@@ -198,14 +211,28 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         pass
 
     def on_new_action_activate(self, action, value):
-        """..."""
+        """Starts a new match on user request"""
 
-        self._new_match_dialog.run()
+        response = self._new_match_dialog.inquire()
+
+        if response == Gtk.ResponseType.ACCEPT:
+            self._match_manager.load_new_match()
+
+            if not self._match_manager.has_unsaved_changes():
+                side = self._new_match_dialog.get_engine_side()
+                self.set_engine_side(side)
 
     def on_open_action_activate(self, action, value):
-        """..."""
+        """Opens a match from a file"""
 
-        self._open_match_dialog.run()
+        uri = value.get_string() or None
+        response = uri or self._open_match_dialog.run()
+
+        if response == Gtk.ResponseType.ACCEPT:
+            uri = self._open_match_dialog.get_uri()
+
+        if uri and isinstance(uri, str):
+            self._match_manager.load_from_uri(uri)
 
     def on_redo_all_action_activate(self, action, value):
         """..."""
@@ -224,6 +251,13 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
     def on_save_as_action_activate(self, action, value):
         """Saves the current match to a new file"""
+
+        file = self._match_manager.get_file()
+        name = '' if file else _('untitled.ogn')
+        uri = file.get_uri() if file else ''
+
+        self._save_match_dialog.set_uri(uri)
+        self._save_match_dialog.set_current_name(name)
 
         response = self._save_match_dialog.run()
 
@@ -282,13 +316,18 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         action.set_state(value)
 
     def on_rotate_action_change_state(self, action, value):
-        """..."""
+        """Flips the board canvas"""
 
+        is_rotated = value.get_boolean()
+        rotation = is_rotated and Rotation.ROTATED or Rotation.STRAIGHT
+        self._canvas.set_rotation(rotation.angle)
         action.set_state(value)
 
     def on_side_action_change_state(self, action, value):
-        """..."""
+        """Emitted on engine playing side changes"""
 
+        engine_side = Side.value_of(value.get_string())
+        self._canvas.set_rotation(engine_side.view_angle)
         action.set_state(value)
 
     def on_window_delete_event(self, window, event):

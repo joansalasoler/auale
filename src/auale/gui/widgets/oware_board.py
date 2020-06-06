@@ -110,11 +110,13 @@ class OwareBoard(Gtk.DrawingArea):
         """Sets the active house"""
 
         self._active_house = house
+        self.queue_draw()
 
     def set_highlight(self, house):
         """Sets the highligted house"""
 
         self._highlighted_house = house
+        self.queue_draw()
 
     def set_board(self, board):
         """Sets the displayed board position as a tuple"""
@@ -127,6 +129,14 @@ class OwareBoard(Gtk.DrawingArea):
 
         self._hovered_house = -1
         self._board = board
+        self.queue_draw()
+
+    def set_rotation(self, angle):
+        """Sets the canvas rotation in radians"""
+
+        self._angle = angle
+        self._hovered_house = -1
+        self.queue_draw()
 
     def new_default_wallpaper(self):
         """Obtains the default wallpaper image"""
@@ -389,12 +399,6 @@ class OwareBoard(Gtk.DrawingArea):
         # Rotate the board
 
         context.rotate(self._angle)
-
-    def rotate(self, angle):
-        """Rotates the canvas the specified number of radians"""
-
-        self._angle += angle
-        self._hovered_house = -1
 
     def update_hovered(self):
         """Updates the hovered house"""

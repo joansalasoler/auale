@@ -16,41 +16,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from collections import namedtuple
 from enum import Enum
 
 Params = namedtuple('Params', (
-    'nick',     # Unique identifier
-    'factor',   # Strength factor
-    'depth',    # Maximum search depth
-    'timeout',  # Maximum search time
-    'ponder',   # If pondering is allowed
+    'nick',   # Unique identifier
+    'angle',  # Human's view angle in radians
+    'south',  # If south is an engine
+    'north',  # If north is an engine
 ))
 
 
-class Strength(Enum):
-    """Engine playing strength levels"""
+class Side(Enum):
+    """Engine's playing side"""
 
-    EASY = Params('easy', 0.0, 4, 600, False)
-    MEDIUM = Params('medium', 0.3, 8, 1200, False)
-    HARD = Params('hard', 0.5, 16, 2400, True)
-    EXPERT = Params('expert', 1.0, None, 3600, True)
-
-    @property
-    def search_depth(self):
-        return self.value.depth
+    BOTH = Params('both', 0.0, True, True)
+    NEITHER = Params('neither', 0.0, False, False)
+    NORTH = Params('north', 0.0, False, True)
+    SOUTH = Params('south', math.pi, True, False)
 
     @property
-    def search_timeout(self):
-        return self.value.timeout
+    def is_south(self):
+        return self.value.south
 
     @property
-    def allows_pondering(self):
-        return self.value.ponder
+    def is_north(self):
+        return self.value.north
 
     @property
-    def strength_factor(self):
-        return self.value.factor
+    def view_angle(self):
+        return self.value.angle
 
     @property
     def nick(self):
@@ -66,4 +62,4 @@ class Strength(Enum):
 
     @staticmethod
     def value_of(nick: str) -> Enum:
-        return next(e for e in Strength if Strength.is_nick(nick, e))
+        return next(e for e in Side if Side.is_nick(nick, e))

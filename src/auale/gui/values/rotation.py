@@ -16,45 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from collections import namedtuple
 from enum import Enum
 
 Params = namedtuple('Params', (
     'nick',     # Unique identifier
-    'factor',   # Strength factor
-    'depth',    # Maximum search depth
-    'timeout',  # Maximum search time
-    'ponder',   # If pondering is allowed
+    'angle',    # Rotation angle in radians
 ))
 
 
-class Strength(Enum):
-    """Engine playing strength levels"""
+class Rotation(Enum):
+    """Engine's playing side"""
 
-    EASY = Params('easy', 0.0, 4, 600, False)
-    MEDIUM = Params('medium', 0.3, 8, 1200, False)
-    HARD = Params('hard', 0.5, 16, 2400, True)
-    EXPERT = Params('expert', 1.0, None, 3600, True)
+    STRAIGHT = Params('straight', 0.0)
+    ROTATED = Params('rotated', math.pi)
 
     @property
-    def search_depth(self):
-        return self.value.depth
-
-    @property
-    def search_timeout(self):
-        return self.value.timeout
-
-    @property
-    def allows_pondering(self):
-        return self.value.ponder
-
-    @property
-    def strength_factor(self):
-        return self.value.factor
-
-    @property
-    def nick(self):
-        return self.value.nick
+    def angle(self):
+        return self.value.angle
 
     @property
     def ordinal(self) -> int:
@@ -66,4 +46,4 @@ class Strength(Enum):
 
     @staticmethod
     def value_of(nick: str) -> Enum:
-        return next(e for e in Strength if Strength.is_nick(nick, e))
+        return next(e for e in Rotation if Rotation.is_nick(nick, e))

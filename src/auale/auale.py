@@ -114,7 +114,7 @@ class Auale(Gtk.Application):
         self.connect_window_signals(window)
 
         if isinstance(uri, str) and uri:
-            window.open_match_from_uri(uri)
+            window.set_match_from_uri(uri)
 
         return window
 
