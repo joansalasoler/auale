@@ -48,6 +48,7 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     _headerbar = Gtk.Template.Child('main_headerbar')
     _recents_menu_box = Gtk.Template.Child('recents_menu_box')
     _unsaved_indicator = Gtk.Template.Child('unsaved_indicator')
+    _windowed_button = Gtk.Template.Child('windowed_button')
 
     def __init__(self, application):
         super(ApplicationWindow, self).__init__()
@@ -311,9 +312,19 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         pass
 
     def on_immersive_action_change_state(self, action, value):
-        """..."""
+        """Toggles the immersive state of the window"""
 
+        is_immersive = value.get_boolean()
+        self.fullscreen() if is_immersive else self.unfullscreen()
+        self._windowed_button.set_visible(is_immersive)
         action.set_state(value)
+
+    def on_windowed_action_activate(self, action, value):
+        """Toggles off the immersive state of the window"""
+
+        action = self.lookup_action('immersive')
+        value = GLib.Variant.new_boolean(False)
+        action.change_state(value)
 
     def on_rotate_action_change_state(self, action, value):
         """Flips the board canvas"""

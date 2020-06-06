@@ -26,6 +26,33 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   <!-- interface-license-type lgplv2 -->
   <!-- interface-name Aual\303\251 -->
   <!-- interface-copyright 2014-2020 Joan Sala Soler <contact@joansala.com> -->
+  <object class="GThemedIcon" id="go_first_icon">
+    <property name="name">go-first-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="go_last_icon">
+    <property name="name">go-last-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="go_next_icon">
+    <property name="name">go-next-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="go_previous_icon">
+    <property name="name">go-previous-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="new_match_icon">
+    <property name="name">document-new-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="save_match_icon">
+    <property name="name">document-save-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="windowed_icon">
+    <property name="name">immersive-restore-symbolic</property>
+  </object>
   <object class="GtkPopoverMenu" id="documents_menu">
     <property name="width_request">300</property>
     <property name="can_focus">False</property>
@@ -143,6 +170,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </object>
       <packing>
         <property name="submenu">main</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
@@ -189,25 +217,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </object>
       <packing>
         <property name="submenu">recent_files</property>
-        <property name="position">1</property>
+        <property name="position">2</property>
       </packing>
     </child>
-  </object>
-  <object class="GThemedIcon" id="go_first_icon">
-    <property name="name">go-first-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="go_last_icon">
-    <property name="name">go-last-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="go_next_icon">
-    <property name="name">go-next-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="go_previous_icon">
-    <property name="name">go-previous-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
   </object>
   <object class="GtkPopoverMenu" id="actions_menu">
     <property name="width_request">300</property>
@@ -508,6 +520,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </object>
       <packing>
         <property name="submenu">main</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
@@ -626,7 +639,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </object>
       <packing>
         <property name="submenu">strength</property>
-        <property name="position">1</property>
+        <property name="position">2</property>
       </packing>
     </child>
     <child>
@@ -745,17 +758,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </object>
       <packing>
         <property name="submenu">settings</property>
-        <property name="position">2</property>
+        <property name="position">3</property>
       </packing>
     </child>
-  </object>
-  <object class="GThemedIcon" id="new_match_icon">
-    <property name="name">document-new-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="save_match_icon">
-    <property name="name">document-save-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
   </object>
   <template class="ApplicationWindow" parent="GtkApplicationWindow">
     <property name="width_request">500</property>
@@ -781,17 +786,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="can_focus">False</property>
             <child>
               <placeholder/>
-            </child>
-            <child type="overlay">
-              <object class="GtkSpinner" id="spinner">
-                <property name="height_request">40</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">end</property>
-                <property name="valign">start</property>
-                <property name="margin_start">12</property>
-                <property name="margin_end">12</property>
-              </object>
             </child>
             <child type="overlay">
               <object class="GtkBox" id="report_vbox">
@@ -820,9 +814,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                   <class name="report-container"/>
                 </style>
               </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkModelButton" id="windowed_button">
+                <property name="height_request">40</property>
+                <property name="can_focus">False</property>
+                <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">Toggles the fullscreen mode</property>
+                <property name="halign">end</property>
+                <property name="valign">end</property>
+                <property name="margin_start">12</property>
+                <property name="margin_end">12</property>
+                <property name="margin_top">12</property>
+                <property name="margin_bottom">12</property>
+                <property name="action_name">win.windowed</property>
+                <property name="icon">windowed_icon</property>
+                <property name="text" translatable="yes">Windowed mode</property>
+                <property name="centered">True</property>
+                <property name="iconic">True</property>
+                <property name="no_show_all">True</property>
+                <style>
+                  <class name="image-button"/>
+                  <class name="flat"/>
+                </style>
+              </object>
               <packing>
-                <property name="index">2</property>
+                <property name="index">1</property>
               </packing>
+            </child>
+            <child type="overlay">
+              <object class="GtkSpinner" id="spinner">
+                <property name="height_request">40</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="valign">start</property>
+                <property name="margin_start">12</property>
+                <property name="margin_end">12</property>
+              </object>
             </child>
           </object>
           <packing>
