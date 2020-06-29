@@ -50,6 +50,11 @@ ACTION_DESCRIPTORS = (
         ('simple',          ('undo-all',)),
         ('simple',          ('undo',)),
         ('simple',          ('windowed',)),
+        ('simple',          ('choose',)),
+        ('simple',          ('left',)),
+        ('simple',          ('right',)),
+        ('simple',          ('down',)),
+        ('simple',          ('up',)),
         ('setting',         ('engine',)),
         ('setting',         ('mute',)),
         ('setting',         ('prompt-unsaved',)),
@@ -94,6 +99,11 @@ ACCELS_DESCRIPTORS = (
     ('win.move-from::d',    ('D',)),
     ('win.move-from::e',    ('E',)),
     ('win.move-from::f',    ('F',)),
+    ('win.choose',          ('Return', 'KP_Enter')),
+    ('win.left',            ('Left', 'KP_Left')),
+    ('win.right',           ('Right', 'KP_Right')),
+    ('win.down',            ('Down', 'KP_Down')),
+    ('win.up',              ('Up', 'KP_Up')),
 )
 
 # =============================================================================

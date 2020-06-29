@@ -40,6 +40,9 @@ __TEXT_DOMAIN = 'auale'
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Rsvg', '2.0')
+gi.require_version('Clutter', '1.0')
+gi.require_version('GtkClutter', '1.0')
+gi.require_version('Manette', '0.2')
 
 # Reister the application resources on the global namespace so they
 # can be used wiht the @Gtk.Template decorator. Notice though that
@@ -57,11 +60,17 @@ if 'win' in sys.platform:
     sdl_path = os.path.join(__BASE_PATH, 'data/lib/sdl')
     os.environ['PYSDL2_DLL_PATH'] = sdl_path
 
-# Ensure the required environment variables are set, so the locale
-# library can find the correct translations and set the tex domain.
-# Notice that Gtk must be imported before the textdomain is set.
+# Initialize Gtk and Clutter before the text domain is set
 
 from gi.repository import Gtk
+from gi.repository import GtkClutter
+from gi.repository import Manette
+
+GtkClutter.init(sys.argv)
+
+# Ensure the required environment variables are set, so the locale
+# library can find the correct translations and set the text domain.
+# Notice that Gtk must be imported before the textdomain is set.
 
 if os.path.isdir(__LOCALE_PATH):
     os.environ['LOCPATH'] = __LOCALE_PATH

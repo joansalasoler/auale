@@ -28,7 +28,7 @@ class PonderCache(OrderedDict):
     def fetch(self, match):
         """Obtains a value for the given match"""
 
-        move = match.get_previous_move()
+        move = match.get_move()
         index = match.get_current_index()
         positions = match.get_positions()
         hashcode = hash((move, positions[:index]))
