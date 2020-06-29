@@ -22,12 +22,11 @@ import re
 
 
 class Oware(object):
-    """Oware Abapa game logic."""
+    """Oware Abapa game logic"""
 
     SOUTH = 1
     NORTH = -1
     DRAW = 0
-    NULL_MOVE = -1
 
     __base = os.path.dirname(__file__)
     __path = os.path.join(__base, 'oware.pkl')
@@ -44,32 +43,27 @@ class Oware(object):
 
     @staticmethod
     def get_ruleset_name():
-        """Returns the implemented ruleset name"""
+        """Ruleset name for this game"""
 
         return Oware._RULESET
 
     @staticmethod
     def get_initial_board():
-        """
-        Builds the initial board position and returns it.
-        The board is represented by a tuple of integers, the
-        last two being the score of each contrincant.
-        """
+        """Start board of the game as a tuple of integers"""
 
         return (4,) * 12 + (0, 0)
 
     @staticmethod
     def get_final_board(board):
         """
-        Performs the necessari computations on the board after
-        the endgame position and returns the resulting board
-        """
+        Endgame position for the given board
 
-        # If the game ended because a player captured more than 24
-        # seeds or each player captured 24 seeds, the final board
-        # is the current board. Otherwise, if the game ended unexpectedly
-        # (because of a move repetition or a lack of legal moves), each
-        # player gathers the remaining seeds on their side of the board.
+        If the game ended because a player captured more than 24 seeds
+        or each player captured 24 seeds, the final position is equal to
+        the provided position. Otherwise, if the game ended because of a
+        move repetition or a lack of legal moves, each player gathers the
+        remaining seeds on their side of the board.
+        """
 
         if board[12] > 24 or board[13] > 24:
             return board
@@ -77,27 +71,23 @@ class Oware(object):
         if board[12] == board[13] == 24:
             return board
 
-        return (0,) * 12 + (
-            sum(board[0:6], board[12]),
-            sum(board[6:12], board[13])
-        )
+        south = sum(board[0:6], board[12])
+        north = sum(board[6:12], board[13])
+
+        return (0,) * 12 + (south, north)
 
     @staticmethod
     def get_winner(board, turn):
         """
-        Checks if a player has won the match and returns 1, -1 or 0
-        depending on who has won. Returns 1 for south, -1 for north
-        and zero for a draw or None if the match hasn't ended yet.
+        Checks if a player has won the match and returns Oware.SOUTH,
+        Oware.NORTH or Oware.DRAW according to the winner. If the match
+        is ongoing this method returns Oware.DRAW.
         """
-
-        # A player captured more than 24 seeds
 
         if board[12] > 24:
             return Oware.SOUTH
         elif board[13] > 24:
             return Oware.NORTH
-
-        # No legal move can be performed with the current position.
 
         if not Oware.has_legal_moves(board, turn):
             cboard = Oware.get_final_board(board)
@@ -108,11 +98,17 @@ class Oware(object):
             else:
                 return Oware.DRAW
 
-        return None
+        return Oware.DRAW
+
+    @staticmethod
+    def get_sowings(board, move):
+        """Get the sowed houses in their sower order"""
+
+        return Oware._SEED_DRILL[move][:board[move]]
 
     @staticmethod
     def is_capture(board, move):
-        """Returns true if the move performs at least one capture"""
+        """Checks if a move may perform at capture"""
 
         if board[move] in Oware._REAPER[move]:
             (last, positions) = Oware._REAPER[move][board[move]]
@@ -133,15 +129,11 @@ class Oware(object):
         return False
 
     @staticmethod
-    def is_end(board, turn):
+    def is_endgame(board, turn):
         """Checks if the position is an endgame position"""
-
-        # A player captured more than 24 seeds
 
         if board[12] > 24 or board[13] > 24:
             return True
-
-        # No legal move can be performed
 
         if Oware.has_legal_moves(board, turn):
             return False
@@ -150,10 +142,7 @@ class Oware(object):
 
     @staticmethod
     def has_legal_moves(board, turn):
-        """
-        Returns True if the specified player has at least one legal
-        move for the board position
-        """
+        """Checks if a player has at least one legal move"""
 
         if turn == Oware.SOUTH:
             if board[0:6] != Oware._EMPTY_ROW:
@@ -175,67 +164,11 @@ class Oware(object):
         return False
 
     @staticmethod
-    def get_score(board):
-        """Evaluates de position and returns its score"""
-
-        value = 17 * (board[12] - board[13])
-
-        for seeds in board[0:6]:
-            if seeds > 10:
-                value += 12
-            elif seeds == 0:
-                value -= 21
-            elif seeds < 3:
-                value -= 5
-
-        for seeds in board[6:12]:
-            if seeds > 10:
-                value -= 12
-            elif seeds == 0:
-                value += 21
-            elif seeds < 3:
-                value += 5
-
-        return value
-
-    @staticmethod
-    def get_final_score(board):
+    def make_move(board, move):
         """
-        Computes the exact final value for an endgame position.
-        Return the maximum possible value if south wins, the minimum
-        possible value if north wins or zero in case of a draw
+        Makes a move on the board an returns the result. Grand Slam moves
+        are legal but the player to move does not capture any seeds.
         """
-
-        # The game ended because of captured seeds
-
-        if board[12] > 24:
-            return 10000
-
-        if board[13] > 24:
-            return -10000
-
-        # The game ended because of a move repetition or because no
-        # legal moves could be performed. Each player captures all
-        # seeds on his side of the board
-
-        score = sum(board[:6], board[12])
-
-        if score > 24:
-            return 10000
-        elif score < 24:
-            return -10000
-
-        return 0
-
-    @staticmethod
-    def compute_board(board, move):
-        """
-        Executes a move on the board and returns the resulting
-        board
-        """
-
-        # Grand Slam moves are legal moves but the player to move does
-        # not capture any of the oponent's seeds.
 
         new_board = list(board)
         new_board[move] = 0
@@ -270,79 +203,65 @@ class Oware(object):
         return tuple(new_board)
 
     @staticmethod
-    def xlegal_moves(board, turn):
-        """Returns all the legal moves sorted by importance"""
+    def get_legal_moves(board, turn):
+        """
+        Legal moves that a player can perform on a board. Illegal moves are
+        those which don't reach the opponent's side when it's empty."""
 
-        # Illegal moves are those which don't reach the opponent's
-        # side when the opponent has all pits empty.
+        south = Oware.get_legal_moves_south
+        north = Oware.get_legal_moves_north
+        is_south = turn == Oware.SOUTH
 
-        # In order to improve prunning captures are yield first
-        # followed by pits that could be captured.
-
-        if turn == Oware.SOUTH:
-            # Captures
-
-            for move in (5, 4, 3, 2, 1, 0):
-                if 0 < board[move] > 5 - move \
-                and Oware.is_capture(board, move):
-                    yield move
-
-            # Vulnerable pits and other moves
-
-            if board[6:12] != Oware._EMPTY_ROW:
-                for move in (0, 1, 2, 3, 4, 5):
-                    if 0 < board[move] < 3 \
-                    and not Oware.is_capture(board, move):
-                        yield move
-
-                for move in (0, 1, 2, 3, 4, 5):
-                    if board[move] > 2 \
-                    and not Oware.is_capture(board, move):
-                        yield move
-            else:
-                for move in (0, 1, 2, 3, 4, 5):
-                    if 0 < board[move] > 5 - move \
-                    and not Oware.is_capture(board, move):
-                        yield move
-        else:
-            # Captures
-
-            for move in (11, 10, 9, 8, 7, 6):
-                if 0 < board[move] > 11 - move \
-                and Oware.is_capture(board, move):
-                    yield move
-
-            # Vulnerable pits and other moves
-
-            if board[0:6] != Oware._EMPTY_ROW:
-                for move in (6, 7, 8, 9, 10, 11):
-                    if 0 < board[move] < 3 \
-                    and not Oware.is_capture(board, move):
-                        yield move
-
-                for move in (6, 7, 8, 9, 10, 11):
-                    if board[move] > 2 \
-                    and not Oware.is_capture(board, move):
-                        yield move
-            else:
-                for move in (6, 7, 8, 9, 10, 11):
-                    if 0 < board[move] > 11 - move \
-                    and not Oware.is_capture(board, move):
-                        yield move
+        yield from south(board) if is_south else north(board)
 
     @staticmethod
-    def xdisruptive_moves(board, turn):
-        """Returns all the legal moves which perform a capture"""
+    def get_legal_moves_south(board):
+        """Get legal moves for south"""
 
-        if turn == Oware.SOUTH:
-            for move in (5, 4, 3, 2, 1, 0):
-                if 0 < board[move] > 5 - move \
-                and Oware.is_capture(board, move):
+        for move in (5, 4, 3, 2, 1, 0):
+            if 0 < board[move] > 5 - move \
+            and Oware.is_capture(board, move):
+                yield move
+
+        if board[6:12] != Oware._EMPTY_ROW:
+            for move in (0, 1, 2, 3, 4, 5):
+                if 0 < board[move] < 3 \
+                and not Oware.is_capture(board, move):
+                    yield move
+
+            for move in (0, 1, 2, 3, 4, 5):
+                if board[move] > 2 \
+                and not Oware.is_capture(board, move):
                     yield move
         else:
-            for move in (11, 10, 9, 8, 7, 6):
+            for move in (0, 1, 2, 3, 4, 5):
+                if 0 < board[move] > 5 - move \
+                and not Oware.is_capture(board, move):
+                    yield move
+
+    @staticmethod
+    def get_legal_moves_north(board):
+        """Get legal moves for north"""
+
+        for move in (11, 10, 9, 8, 7, 6):
+            if 0 < board[move] > 11 - move \
+            and Oware.is_capture(board, move):
+                yield move
+
+        if board[0:6] != Oware._EMPTY_ROW:
+            for move in (6, 7, 8, 9, 10, 11):
+                if 0 < board[move] < 3 \
+                and not Oware.is_capture(board, move):
+                    yield move
+
+            for move in (6, 7, 8, 9, 10, 11):
+                if board[move] > 2 \
+                and not Oware.is_capture(board, move):
+                    yield move
+        else:
+            for move in (6, 7, 8, 9, 10, 11):
                 if 0 < board[move] > 11 - move \
-                and Oware.is_capture(board, move):
+                and not Oware.is_capture(board, move):
                     yield move
 
     @staticmethod

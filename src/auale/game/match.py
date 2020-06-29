@@ -113,19 +113,6 @@ class Match(object):
 
         return board[13]
 
-    def get_previous_move(self):
-        """Returns the previous move on the match history"""
-
-        if self._current_index <= 0:
-            return self._game.NULL_MOVE
-
-        return self._moves[self._current_index - 1]
-
-    def get_next_move(self):
-        """Returns the next move on the match history"""
-
-        return self._moves[self._current_index + 1]
-
     def get_board(self):
         """Returns a copy of the current board position"""
 
@@ -135,6 +122,14 @@ class Match(object):
         """Returns the current turn"""
 
         return self._turn
+
+    def get_move(self):
+        """Move that lead to the current position or none"""
+
+        index = self._current_index - 1
+        move = self._moves[index] if index >= 0 else None
+
+        return move
 
     def get_winner(self):
         """Returns the winner of the match (1 = South, -1 = North) or
@@ -169,17 +164,47 @@ class Match(object):
 
         return self._has_ended
 
-    def is_legal_move(self, move):
-        """Returns true if the move is legal for the current position"""
+    def get_seeds(self, move):
+        """Current number of seeds on the given house"""
 
-        return move in self._game.xlegal_moves(
-            self.get_board(), self.get_turn())
+        return self._board[move]
+
+    def is_legal_move(self, move):
+        """If the move is legal for the moving player"""
+
+        return move in self.get_legal_moves()
+
+    def is_valid_move(self, move):
+        """If the move would be legal for one of the players"""
+
+        board = self.get_board()
+        south_moves = self._game.get_legal_moves(board, self._game.SOUTH)
+        north_moves = self._game.get_legal_moves(board, self._game.NORTH)
+
+        return move in south_moves or move in north_moves
+
+    def is_capture_move(self, move):
+        """If the move would capture at least one seed"""
+
+        board = self.get_board()
+        is_capture = move < 12 and self._game.is_capture(board, move)
+
+        return is_capture
 
     def has_position(self, board, turn):
         """Returns true if the match contains the specified position
            in the positions prior to the current"""
 
         return (board, turn) in self._positions[:self._current_index + 1]
+
+    def get_legal_moves(self):
+        """Get the legal moves for the current position"""
+
+        turn = self.get_turn()
+        board = self.get_board()
+        moves = self._game.get_legal_moves(board, turn)
+
+        return tuple(moves)
 
     def set_comment(self, comment):
         """Adds a comment to the current move"""
@@ -219,12 +244,12 @@ class Match(object):
 
         # Update the board and switch the turn
 
-        self._board = self._game.compute_board(self._board, move)
+        self._board = self._game.make_move(self._board, move)
         self._turn = -self._turn
 
         # Check if the match ended and compute the final board
 
-        if self._game.is_end(self._board, self._turn) \
+        if self._game.is_endgame(self._board, self._turn) \
         or self.has_position(self._board, self._turn):
             self._board = self._game.get_final_board(self._board)
             self._has_ended = True
@@ -262,7 +287,7 @@ class Match(object):
 
             # Check if the match ended on that position
 
-            if self._game.is_end(self._board, self._turn):
+            if self._game.is_endgame(self._board, self._turn):
                 self._has_ended = True
 
     def undo_all_moves(self):
@@ -284,7 +309,7 @@ class Match(object):
 
             # Check if the match ended on that position
 
-            if self._game.is_end(self._board, self._turn):
+            if self._game.is_endgame(self._board, self._turn):
                 self._has_ended = True
 
     def reset_tags(self):
