@@ -20,7 +20,6 @@ from collections import namedtuple
 from enum import Enum
 
 Params = namedtuple('Params', (
-    'nick',     # Unique identifier
     'factor',   # Strength factor
     'depth',    # Maximum search depth
     'timeout',  # Maximum search time
@@ -31,10 +30,10 @@ Params = namedtuple('Params', (
 class Strength(Enum):
     """Engine playing strength levels"""
 
-    EASY = Params('easy', 0.0, 4, 600, False)
-    MEDIUM = Params('medium', 0.3, 8, 1200, False)
-    HARD = Params('hard', 0.5, 16, 2400, True)
-    EXPERT = Params('expert', 1.0, None, 3600, True)
+    EASY = Params(0.0, 4, 600, False)
+    MEDIUM = Params(0.3, 8, 1200, False)
+    HARD = Params(0.5, 16, 2400, True)
+    EXPERT = Params(1.0, None, 3600, True)
 
     @property
     def search_depth(self):
@@ -53,17 +52,13 @@ class Strength(Enum):
         return self.value.factor
 
     @property
-    def nick(self):
-        return self.value.nick
-
-    @property
     def ordinal(self) -> int:
         return list(self).index(self)
 
-    @staticmethod
-    def is_nick(nick: str, value: Enum) -> bool:
-        return value.nick == nick.lower()
+    @property
+    def nick(self):
+        return self.name.lower()
 
     @staticmethod
     def value_of(nick: str) -> Enum:
-        return next(e for e in Strength if Strength.is_nick(nick, e))
+        return Strength[nick.upper()]

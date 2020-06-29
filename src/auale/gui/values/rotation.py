@@ -16,21 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import math
 from collections import namedtuple
 from enum import Enum
 
 Params = namedtuple('Params', (
-    'nick',     # Unique identifier
-    'angle',    # Rotation angle in radians
+    'angle',    # Rotation angle in degrees
 ))
 
 
 class Rotation(Enum):
     """Engine's playing side"""
 
-    STRAIGHT = Params('straight', 0.0)
-    ROTATED = Params('rotated', math.pi)
+    BASE = Params(0.0)
+    ROTATED = Params(180.0)
 
     @property
     def angle(self):
@@ -40,10 +38,10 @@ class Rotation(Enum):
     def ordinal(self) -> int:
         return list(self).index(self)
 
-    @staticmethod
-    def is_nick(nick: str, value: Enum) -> bool:
-        return value.nick == nick.lower()
+    @property
+    def nick(self):
+        return self.name.lower()
 
     @staticmethod
     def value_of(nick: str) -> Enum:
-        return next(e for e in Rotation if Rotation.is_nick(nick, e))
+        return Rotation[nick.upper()]
