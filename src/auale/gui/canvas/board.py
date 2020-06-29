@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from collections import deque
 from gi.repository import Clutter
 from gi.repository import Gdk
 from gi.repository import GObject
@@ -25,6 +24,7 @@ from gi.repository import GtkClutter
 from .house import House
 from .mosaic import Mosaic
 from ..values import RipeningStage
+from ..values import Rotation
 
 
 class Board(GtkClutter.Embed):
@@ -43,7 +43,8 @@ class Board(GtkClutter.Embed):
         self._script = Clutter.Script()
         self._script.load_from_resource(self.__scene_path)
         self._script.load_from_resource(self.__states_path)
-        self._focus = deque()
+        self._rotation = Rotation.BASE
+        self._activables = []
         self._sowings = [[], ] * 12
         self._moves = []
 
@@ -77,8 +78,6 @@ class Board(GtkClutter.Embed):
     def connect_board_signals(self):
         """Connects the required signals"""
 
-        self.connect('key-press-event', self.on_key_press_event)
-
         stage = self.get_stage()
         stage.connect('allocation-changed', self.on_allocation_changed)
 
@@ -107,6 +106,7 @@ class Board(GtkClutter.Embed):
     def set_rotation(self, rotation):
         """Sets the board rotation angle"""
 
+        self._rotation = rotation
         scene_state = self._script.get_object('scene-rotation')
         house_state = self._script.get_object('house-rotation')
         scene_state.set_state(rotation.nick)
@@ -116,18 +116,9 @@ class Board(GtkClutter.Embed):
         """Sets the match position to display"""
 
         self._moves = match.get_legal_moves()
-
-        # TODO: Refactor
-
-        game = match.get_game()
-        board = match.get_board()
-
-        for move in self._moves:
-            sowings = game.get_sowings(board, move)
-            self._sowings[move] = sowings
-
         self.update_houses(match)
-        self.reset_focus_queue(self._moves)
+        self.update_sowings(match)
+        self.update_focus(self._moves)
 
     def get_seed_canvas(self, number):
         """Canvas for the given number of seeds"""
@@ -167,13 +158,6 @@ class Board(GtkClutter.Embed):
         is_house = isinstance(focus, House)
 
         return focus if is_house else None
-
-    def grab_house_focus(self):
-        """Sets the key focus into an activable house"""
-
-        if len(self._focus) > 0:
-            house = self._focus[0]
-            house.grab_key_focus()
 
     def activate_house(self, house):
         """Activates the given house"""
@@ -225,17 +209,73 @@ class Board(GtkClutter.Embed):
             hint.set_opacity(opacity)
             hint.set_content(canvas)
 
-    def reset_focus_queue(self, moves):
-        """Update the house focus queue from a match"""
-
-        self._focus.clear()
-
-        for house in self.get_house_actors():
-            if house.get_move() in moves:
-                self._focus.append(house)
+    def update_focus(self, moves):
+        """Update the focus queue houses"""
 
         stage = self.get_stage()
         stage.set_key_focus(None)
+
+        self._activables.clear()
+
+        for house in self.get_house_actors():
+            if house.get_move() in moves:
+                self._activables.append(house)
+
+    def update_sowings(self, match):
+        """Update the sowing hints from a match"""
+
+        game = match.get_game()
+        board = match.get_board()
+
+        for move in self._moves:
+            sowings = game.get_sowings(board, move)
+            self._sowings[move] = sowings
+
+    def focus_next_house(self):
+        """Set key focus on the next activable house"""
+
+        current = self.get_focused_house()
+
+        if current not in self._activables:
+            return self.focus_first_house()
+
+        if count := len(self._activables):
+            index = self._activables.index(current)
+            direction = self._rotation.direction
+            next_index = (index + direction) % count
+            house = self._activables[next_index]
+            house.grab_key_focus()
+
+    def focus_previous_house(self):
+        """Set key focus on the previous activable house"""
+
+        current = self.get_focused_house()
+
+        if current not in self._activables:
+            return self.focus_last_house()
+
+        if count := len(self._activables):
+            index = self._activables.index(current)
+            direction = -self._rotation.direction
+            previous_index = (index + direction) % count
+            house = self._activables[previous_index]
+            house.grab_key_focus()
+
+    def focus_first_house(self):
+        """Set key focus on the first activable house"""
+
+        if len(self._activables):
+            index = min(0, self._rotation.direction)
+            house = self._activables[index]
+            house.grab_key_focus()
+
+    def focus_last_house(self):
+        """Set key focus on the last activable house"""
+
+        if len(self._activables):
+            index = min(0, -self._rotation.direction)
+            house = self._activables[index]
+            house.grab_key_focus()
 
     def on_allocation_changed(self, stage, box, flags):
         """Scale the scene when the stage is resized"""

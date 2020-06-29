@@ -20,19 +20,24 @@ from collections import namedtuple
 from enum import Enum
 
 Params = namedtuple('Params', (
-    'angle',    # Rotation angle in degrees
+    'angle',     # Rotation angle in degrees
+    'direction'  # Direction of the rotation (-1, 1)
 ))
 
 
 class Rotation(Enum):
     """Engine's playing side"""
 
-    BASE = Params(0.0)
-    ROTATED = Params(180.0)
+    BASE = Params(0.0, 1)
+    ROTATED = Params(180.0, -1)
 
     @property
     def angle(self):
         return self.value.angle
+
+    @property
+    def direction(self):
+        return self.value.direction
 
     @property
     def ordinal(self) -> int:
