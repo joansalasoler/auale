@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0
+<!-- Generated with glade 3.36.0 
 
 Aualé -
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
@@ -26,33 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   <!-- interface-license-type lgplv2 -->
   <!-- interface-name Aual\303\251 -->
   <!-- interface-copyright 2014-2020 Joan Sala Soler <contact@joansala.com> -->
-  <object class="GThemedIcon" id="go_first_icon">
-    <property name="name">go-first-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="go_last_icon">
-    <property name="name">go-last-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="go_next_icon">
-    <property name="name">go-next-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="go_previous_icon">
-    <property name="name">go-previous-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="new_match_icon">
-    <property name="name">document-new-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="save_match_icon">
-    <property name="name">document-save-symbolic</property>
-    <property name="use_default_fallbacks">True</property>
-  </object>
-  <object class="GThemedIcon" id="windowed_icon">
-    <property name="name">immersive-restore-symbolic</property>
-  </object>
   <object class="GtkPopoverMenu" id="documents_menu">
     <property name="width_request">300</property>
     <property name="can_focus">False</property>
@@ -221,6 +194,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </packing>
     </child>
   </object>
+  <object class="GThemedIcon" id="go_first_icon">
+    <property name="name">go-first-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="go_last_icon">
+    <property name="name">go-last-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="go_next_icon">
+    <property name="name">go-next-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="go_previous_icon">
+    <property name="name">go-previous-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
   <object class="GtkPopoverMenu" id="actions_menu">
     <property name="width_request">300</property>
     <property name="can_focus">False</property>
@@ -352,6 +341,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="receives_default">True</property>
             <property name="tooltip_text" translatable="yes">Asks the engine to make a move</property>
             <property name="action_name">win.move</property>
+            <property name="action_target">''</property>
             <property name="text" translatable="yes">_Move now</property>
           </object>
           <packing>
@@ -762,6 +752,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </packing>
     </child>
   </object>
+  <object class="GThemedIcon" id="new_match_icon">
+    <property name="name">document-new-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
+  <object class="GThemedIcon" id="save_match_icon">
+    <property name="name">document-save-symbolic</property>
+    <property name="use_default_fallbacks">True</property>
+  </object>
   <template class="ApplicationWindow" parent="GtkApplicationWindow">
     <property name="width_request">500</property>
     <property name="height_request">350</property>
@@ -774,93 +772,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="icon_name">auale</property>
     <signal name="key-press-event" handler="on_main_window_key_press_event" swapped="no"/>
     <child>
-      <object class="GtkBox" id="window_vbox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="has_focus">True</property>
-        <property name="is_focus">True</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkOverlay" id="board_overlay">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child type="overlay">
-              <object class="GtkBox" id="report_vbox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="valign">end</property>
-                <property name="margin_start">15</property>
-                <property name="margin_end">15</property>
-                <property name="margin_top">15</property>
-                <property name="margin_bottom">15</property>
-                <property name="orientation">vertical</property>
-                <property name="homogeneous">True</property>
-                <property name="baseline_position">bottom</property>
-                <child>
-                  <object class="GtkLabel" id="report_label">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <style>
-                  <class name="report-container"/>
-                </style>
-              </object>
-            </child>
-            <child type="overlay">
-              <object class="GtkModelButton" id="windowed_button">
-                <property name="height_request">40</property>
-                <property name="can_focus">False</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Toggles the fullscreen mode</property>
-                <property name="halign">end</property>
-                <property name="valign">end</property>
-                <property name="margin_start">12</property>
-                <property name="margin_end">12</property>
-                <property name="margin_top">12</property>
-                <property name="margin_bottom">12</property>
-                <property name="action_name">win.windowed</property>
-                <property name="icon">windowed_icon</property>
-                <property name="text" translatable="yes">Windowed mode</property>
-                <property name="centered">True</property>
-                <property name="iconic">True</property>
-                <property name="no_show_all">True</property>
-                <style>
-                  <class name="image-button"/>
-                  <class name="flat"/>
-                </style>
-              </object>
-              <packing>
-                <property name="index">1</property>
-              </packing>
-            </child>
-            <child type="overlay">
-              <object class="GtkSpinner" id="spinner">
-                <property name="height_request">40</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">end</property>
-                <property name="valign">start</property>
-                <property name="margin_start">12</property>
-                <property name="margin_end">12</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
+      <placeholder/>
     </child>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="main_headerbar">
@@ -1030,4 +942,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </object>
     </child>
   </template>
+  <object class="GThemedIcon" id="windowed_icon">
+    <property name="name">immersive-restore-symbolic</property>
+  </object>
 </interface>

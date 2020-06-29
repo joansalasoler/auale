@@ -30,12 +30,13 @@ ACTION_DESCRIPTORS = (
         ('simple',          ('new',)),
         ('simple',          ('open', 's',)),
         ('simple',          ('quit',)),
+        ('simple',          ('fullscreen', 'b')),
         ('state',           ('engine', '"[default]"', 's')),
     )),
     ('win', (
         ('simple',          ('about',)),
         ('simple',          ('close',)),
-        ('simple',          ('move',)),
+        ('simple',          ('move', 's')),
         ('simple',          ('move-from', 's')),
         ('simple',          ('new',)),
         ('simple',          ('open', 's')),
@@ -67,6 +68,7 @@ OPTION_DESCRIPTORS = (
     ('debug',               ('Enable the debug mode',)),
     ('version',             ('Show program\'s version number and exit',)),
     ('engine',              ('Set the engine to use', 'command', '&s')),
+    ('fullscreen',          ('Start in fullscreen mode',)),
 )
 
 # =============================================================================

@@ -47,6 +47,7 @@ class Auale(Gtk.Application):
         super(Auale, self).__init__(application_id=self.__ID, flags=self.__FLAGS)
 
         self._settings = None
+        self._immersive = False
 
         signal.signal(signal.SIGINT, self.on_application_termination)
         signal.signal(signal.SIGTERM, self.on_application_termination)
@@ -76,6 +77,11 @@ class Auale(Gtk.Application):
 
         return state.get_string()
 
+    def get_immersive_mode(self):
+        """Get if the immersive mode was requested"""
+
+        return self._immersive
+
     def reset_engine_command(self):
         """Resets the current engine command state"""
 
@@ -83,6 +89,11 @@ class Auale(Gtk.Application):
         state = settings.get_user_value('engine')
         action = self.lookup_action('engine')
         action.set_state(state)
+
+    def reset_immersive_mode(self):
+        """Resets the fullscreen mode state"""
+
+        self._immersive = False
 
     def setup_application_theme(self):
         """Registers this application's CSS provider"""
@@ -103,15 +114,18 @@ class Auale(Gtk.Application):
         window = ApplicationWindow(self)
 
         command = self.get_engine_command()
+        immersive = self.get_immersive_mode()
         settings = Gio.Settings(self.__ID)
         settings.delay()
 
         window.set_application(self)
-        window.set_engine_command(command)
         window.set_local_settings(settings)
 
         self.connect_window_actions(window)
         self.connect_window_signals(window)
+
+        window.set_engine_command(command)
+        window.set_immersive_mode(immersive)
 
         if isinstance(uri, str) and uri:
             window.set_match_from_uri(uri)
@@ -190,6 +204,7 @@ class Auale(Gtk.Application):
 
         self.activate_action('new')
         self.reset_engine_command()
+        self.reset_immersive_mode()
 
     def on_application_open(self, application, files, length, hint):
         """Opens the given files"""
@@ -199,6 +214,7 @@ class Auale(Gtk.Application):
             self.activate_action('open', uri)
 
         self.reset_engine_command()
+        self.reset_immersive_mode()
 
     def on_application_shutdown(self, application):
         """Handles the application shutdown"""
@@ -263,6 +279,11 @@ class Auale(Gtk.Application):
         uri = value.get_string()
         window = self.add_application_window(uri)
         window.show_all()
+
+    def on_fullscreen_action_activate(self, action, value):
+        """Sets the immersive mode for new windows"""
+
+        self._immersive = True
 
     def on_engine_action_change_state(self, action, value):
         """Sets the engine command for the current session"""
