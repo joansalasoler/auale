@@ -30,6 +30,7 @@ from gi.repository import Gtk
 from gui.windows import ApplicationWindow
 from config import accelerators
 from config import actions
+from config import controls
 from config import options
 
 
@@ -142,6 +143,7 @@ class Auale(Gtk.Application):
 
         actions.connect(self, 'app')
         accelerators.connect(self)
+        controls.connect(self)
 
     def connect_window_actions(self, window):
         """Setups the actions for a window"""

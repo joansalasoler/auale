@@ -18,6 +18,7 @@
 
 from gui.factories import AccelsFactory
 from gui.factories import ActionFactory
+from gui.factories import ControlsFactory
 from gui.factories import OptionFactory
 
 # =============================================================================
@@ -107,9 +108,25 @@ ACCELS_DESCRIPTORS = (
 )
 
 # =============================================================================
+# Gamepad controller configuration
+# =============================================================================
+
+GAMEPAD_DESCRIPTORS = (
+    ('win.rotate',          ('East',)),
+    ('win.choose',          ('South',)),
+    ('win.left',            ('DPAD_Left', 'ABS_Left', 'HAT_Left')),
+    ('win.right',           ('DPAD_Right', 'ABS_Right', 'HAT_Right')),
+    ('win.down',            ('DPAD_Down', 'ABS_Down', 'HAT_Down')),
+    ('win.up',              ('DPAD_Up', 'ABS_Up', 'HAT_Up')),
+    ('win.undo',            ('Trigger_Left',)),
+    ('win.redo',            ('Trigger_Right',)),
+)
+
+# =============================================================================
 # Configuration factory instances
 # =============================================================================
 
 options = OptionFactory(OPTION_DESCRIPTORS)
 actions = ActionFactory(ACTION_DESCRIPTORS)
 accelerators = AccelsFactory(ACCELS_DESCRIPTORS)
+controls = ControlsFactory(GAMEPAD_DESCRIPTORS)
