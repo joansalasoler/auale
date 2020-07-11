@@ -55,6 +55,8 @@ class Board(GtkClutter.Embed):
     def house_activated(self, house: object):
         """Emitted when a house is activated"""
 
+        self.activate_house(house)
+
     @GObject.Signal
     def house_focused(self, house: object):
         """Emitted when a house is focused"""
@@ -171,8 +173,10 @@ class Board(GtkClutter.Embed):
     def activate_house(self, house):
         """Activates the given house"""
 
-        house.activate()
         houses = self.get_house_actors()
+
+        if not house.get_activated():
+            house.activate()
 
         for actor in (h for h in houses if h != house):
             actor.set_property('activated', False)
