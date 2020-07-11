@@ -21,9 +21,9 @@ from collections import namedtuple
 from .rotation import Rotation
 
 Params = namedtuple('Params', (
-    'angle',  # Board rotation
-    'south',  # If south is an engine
-    'north',  # If north is an engine
+    'rotation',  # Board rotation
+    'south',     # If south is an engine
+    'north',     # If north is an engine
 ))
 
 
@@ -44,8 +44,8 @@ class Side(Enum):
         return self.value.north
 
     @property
-    def view_angle(self):
-        return self.value.angle
+    def rotation(self):
+        return self.value.rotation
 
     @property
     def ordinal(self) -> int:
