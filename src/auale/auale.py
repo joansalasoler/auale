@@ -33,7 +33,7 @@ from config import controls
 from config import options
 
 from gui.mixer import SoundMixer
-from gui.windows import ApplicationWindow
+from gui.windows import AualeWindow
 
 
 class Auale(Gtk.Application):
@@ -120,7 +120,7 @@ class Auale(Gtk.Application):
         """Adds a new application window"""
 
         SoundMixer.init()
-        window = ApplicationWindow(self)
+        window = AualeWindow(self)
 
         command = self.get_engine_command()
         immersive = self.get_immersive_mode()

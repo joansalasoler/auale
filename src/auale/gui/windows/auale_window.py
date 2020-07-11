@@ -38,11 +38,11 @@ from ..widgets import RecentChooserPopoverMenu
 from ..mixer import SoundContext
 
 
-@Gtk.Template(resource_path='/com/joansala/auale/gtk/windows/application_window.ui')
-class ApplicationWindow(Gtk.ApplicationWindow):
+@Gtk.Template(resource_path='/com/joansala/auale/gtk/windows/auale_window.ui')
+class AualeWindow(Gtk.ApplicationWindow):
     """Main application window"""
 
-    __gtype_name__ = 'ApplicationWindow'
+    __gtype_name__ = 'AualeWindow'
 
     _headerbar = Gtk.Template.Child('main_headerbar')
     _recents_menu_box = Gtk.Template.Child('recents_menu_box')
@@ -51,7 +51,7 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     __sounds_path = '/com/joansala/auale/sounds/theme.json'
 
     def __init__(self, application):
-        super(ApplicationWindow, self).__init__()
+        super(AualeWindow, self).__init__()
 
         self._settings = None
         self._canvas = Board()

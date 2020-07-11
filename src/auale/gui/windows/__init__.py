@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .application_window import ApplicationWindow
+from .auale_window import AualeWindow
 
 __all__ = [
-    'ApplicationWindow',
+    'AualeWindow',
 ]
