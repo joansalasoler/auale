@@ -55,6 +55,14 @@ class Board(GtkClutter.Embed):
     def house_activated(self, house: object):
         """Emitted when a house is activated"""
 
+    @GObject.Signal
+    def house_focused(self, house: object):
+        """Emitted when a house is focused"""
+
+    @GObject.Signal
+    def board_rotated(self, rotation: object):
+        """Emitted when the board is rotated"""
+
     def setup_board_stage(self):
         """Configures this board's stage"""
 
@@ -111,6 +119,7 @@ class Board(GtkClutter.Embed):
         house_state = self._script.get_object('house-rotation')
         scene_state.set_state(rotation.nick)
         house_state.set_state(rotation.nick)
+        self.board_rotated.emit(rotation)
 
     def set_current_match(self, match):
         """Sets the match position to display"""
@@ -295,6 +304,7 @@ class Board(GtkClutter.Embed):
     def on_house_key_focus_in(self, house):
         """Show hints when a house receives the focus"""
 
+        self.house_focused.emit(house)
         self.update_hints(house.get_move())
         state = self._script.get_object('hint-visibility')
         state.set_state('visible')

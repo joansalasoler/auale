@@ -27,11 +27,13 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from gui.windows import ApplicationWindow
 from config import accelerators
 from config import actions
 from config import controls
 from config import options
+
+from gui.mixer import SoundMixer
+from gui.windows import ApplicationWindow
 
 
 class Auale(Gtk.Application):
@@ -49,6 +51,11 @@ class Auale(Gtk.Application):
 
         self._settings = None
         self._immersive = False
+
+        GLib.set_application_name(self.__DISPLAY_NAME)
+        GLib.setenv('PULSE_PROP_application.name', self.__DISPLAY_NAME, True)
+        GLib.setenv('PULSE_PROP_application.icon_name', 'auale', True)
+        GLib.setenv('PULSE_PROP_media.role', 'game', True)
 
         signal.signal(signal.SIGINT, self.on_application_termination)
         signal.signal(signal.SIGTERM, self.on_application_termination)
@@ -112,6 +119,7 @@ class Auale(Gtk.Application):
     def add_application_window(self, uri=None):
         """Adds a new application window"""
 
+        SoundMixer.init()
         window = ApplicationWindow(self)
 
         command = self.get_engine_command()
@@ -201,6 +209,13 @@ class Auale(Gtk.Application):
         self.setup_application_theme()
         self.connect_application_actions()
 
+    def on_application_shutdown(self, application):
+        """Handles the application shutdown"""
+
+        SoundMixer.quit()
+        settings = self.get_local_settings()
+        settings.sync()
+
     def on_application_activate(self, application):
         """Activates the application"""
 
@@ -217,12 +232,6 @@ class Auale(Gtk.Application):
 
         self.reset_engine_command()
         self.reset_immersive_mode()
-
-    def on_application_shutdown(self, application):
-        """Handles the application shutdown"""
-
-        settings = self.get_local_settings()
-        settings.sync()
 
     def on_application_termination(self, sinal, frame):
         """Handles system interruption signals"""

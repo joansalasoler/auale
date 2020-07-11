@@ -22,10 +22,9 @@
     <file>icons/48x48/apps/auale.svg</file>
     <file>icons/scalable/apps/auale.svg</file>
     <file>icons/scalable/mimetypes/text-x-oware-ogn-symbolic.svg</file>
+    <file>icons/symbolic/apps/com.joansala.auale-symbolic.svg</file>
     <file>images/auale.ico</file>
-    <file>sounds/drop.wav</file>
-    <file>sounds/gather.wav</file>
-    <file>sounds/rotate.wav</file>
-    <file>sounds/start.wav</file>
+    <file>sounds/theme.json</file>
+    <file>sounds/generic.oga</file>
   </gresource>
 </gresources>
