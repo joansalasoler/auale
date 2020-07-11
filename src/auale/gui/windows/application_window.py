@@ -21,8 +21,8 @@ from game import Oware
 from gi.repository import GLib
 from gi.repository import Gtk
 from i18n import gettext as _
-from uci import Strength
 
+from ..canvas import Board
 from ..dialogs import AboutDialog
 from ..dialogs import NewMatchDialog
 from ..dialogs import OpenMatchDialog
@@ -34,8 +34,8 @@ from ..services import MatchManager
 from ..values import Rotation
 from ..values import Side
 from ..widgets import MatchInfobar
-from ..widgets import OwareBoard
 from ..widgets import RecentChooserPopoverMenu
+from ..mixer import SoundContext
 
 
 @Gtk.Template(resource_path='/com/joansala/auale/gtk/windows/application_window.ui')
@@ -44,20 +44,21 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
     __gtype_name__ = 'ApplicationWindow'
 
-    _board_overlay = Gtk.Template.Child('board_overlay')
     _headerbar = Gtk.Template.Child('main_headerbar')
     _recents_menu_box = Gtk.Template.Child('recents_menu_box')
     _unsaved_indicator = Gtk.Template.Child('unsaved_indicator')
-    _windowed_button = Gtk.Template.Child('windowed_button')
+
+    __sounds_path = '/com/joansala/auale/sounds/theme.json'
 
     def __init__(self, application):
         super(ApplicationWindow, self).__init__()
 
         self._settings = None
+        self._canvas = Board()
         self._match = Match(Oware)
-        self._canvas = OwareBoard()
         self._infobar = MatchInfobar()
         self._match_manager = MatchManager()
+        self._sound_context = SoundContext()
 
         self._about_dialog = AboutDialog(self)
         self._new_match_dialog = NewMatchDialog(self)
@@ -79,24 +80,37 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         recents_menu.set_action_name('win.open')
 
         self._recents_menu_box.add(recents_menu)
-        self._board_overlay.add_overlay(self._infobar)
-        self._board_overlay.add(self._canvas)
-
         self._infobar.show_match_information(match)
-        self._canvas.set_board(match.get_board())
+        self._canvas.set_current_match(match)
         self._canvas.grab_focus()
+        self.add(self._canvas)
 
     def connect_window_signals(self):
         """Connects the required signals to this window"""
 
-        self.connect('destroy', self.on_window_destroy)
         self.connect('delete-event', self.on_window_delete_event)
-        self._canvas.connect('house-pressed', self.on_canvas_house_pressed)
+        self.connect('destroy', self.on_window_destroy)
+        self.connect('realize', self.on_window_realize)
+        self._canvas.connect('house-activated', self.on_canvas_house_activated)
         self._match_manager.connect('file_overwrite', self.on_match_file_overwrite)
         self._match_manager.connect('file-changed', self.on_match_file_changed)
         self._match_manager.connect('file-load-error', self.on_match_file_load_error)
         self._match_manager.connect('file-save-error', self.on_match_file_save_error)
         self._match_manager.connect('file-unload', self.on_match_file_unload)
+
+    def connect_sound_signals(self):
+        """Connects this window to the sound mixer"""
+
+        self._sound_context.load_script(self.__sounds_path)
+        self._sound_context.connect_signals(self._canvas)
+        self._sound_context.connect_signals(self)
+
+    def apply_sound_settings(self):
+        """Applies the sound setting to the context"""
+
+        context = self._sound_context
+        is_muted = self._settings.get_value('mute')
+        context.mute_context() if is_muted else context.unmute_context()
 
     def get_local_settings(self):
         """Gets this window's local settings instance"""
@@ -113,6 +127,13 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
         value = GLib.Variant.new_string(command)
         self.activate_action('engine', value)
+
+    def set_immersive_mode(self, value):
+        """Sets the immersive used by this window"""
+
+        action = self.lookup_action('immersive')
+        value = GLib.Variant.new_boolean(value)
+        action.change_state(value)
 
     def set_engine_side(self, side):
         """Sets the engine site to move"""
@@ -131,12 +152,11 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
         file = manager.get_file()
         name = file and file.get_parse_name()
-        board = match.get_board()
 
         self._unsaved_indicator.hide()
-        self._infobar.show_match_information(match)
         self._headerbar.set_subtitle(name)
-        self._canvas.set_board(board)
+        self._infobar.show_match_information(match)
+        self._canvas.set_current_match(match)
         self.set_engine_side(Side.NEITHER)
 
     def on_match_file_unload(self, manager, match):
@@ -191,25 +211,45 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         self._about_dialog.run()
 
     def on_close_action_activate(self, action, value):
-        """..."""
+        """Close this application window"""
 
-        pass
+        self.destroy()
 
     def on_move_action_activate(self, action, value):
         """..."""
 
-        pass
-
-    def on_move_from_action_activate(self, action, move):
+    def on_move_from_action_activate(self, action, value):
         """..."""
 
-        match = self._match_manager.get_match()
-        match.add_move(0)
-        pass
+    def on_choose_action_activate(self, action, value):
+        """Activates the board house that has the focus"""
 
-    def on_canvas_house_pressed(self, canvas, house):
+        house = self._canvas.get_focused_house()
+        self._canvas.activate_house(house) if house else None
+        self._canvas.focus_first_house()
 
-        pass
+    def on_left_action_activate(self, action, value):
+        """Focus the previous house on the board"""
+
+        self._canvas.focus_previous_house()
+
+    def on_right_action_activate(self, action, value):
+        """Focus the next house on the board"""
+
+        self._canvas.focus_next_house()
+
+    def on_up_action_activate(self, action, value):
+        """Focus the first house on the board"""
+
+        self._canvas.focus_first_house()
+
+    def on_down_action_activate(self, action, value):
+        """Focus the last house on the board"""
+
+        self._canvas.focus_last_house()
+
+    def on_canvas_house_activated(self, canvas, house):
+        """..."""
 
     def on_new_action_activate(self, action, value):
         """Starts a new match on user request"""
@@ -234,16 +274,6 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
         if uri and isinstance(uri, str):
             self._match_manager.load_from_uri(uri)
-
-    def on_redo_all_action_activate(self, action, value):
-        """..."""
-
-        pass
-
-    def on_redo_action_activate(self, action, value):
-        """..."""
-
-        pass
 
     def on_rules_action_activate(self, action, value):
         """..."""
@@ -289,12 +319,14 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     def on_undo_all_action_activate(self, action, value):
         """..."""
 
-        pass
-
     def on_undo_action_activate(self, action, value):
         """..."""
 
-        pass
+    def on_redo_all_action_activate(self, action, value):
+        """..."""
+
+    def on_redo_action_activate(self, action, value):
+        """..."""
 
     def on_engine_setting_changed(self, action, value):
         """..."""
@@ -302,9 +334,9 @@ class ApplicationWindow(Gtk.ApplicationWindow):
         pass
 
     def on_mute_setting_changed(self, action, value):
-        """..."""
+        """Toggles the mute on the sound context"""
 
-        pass
+        self.apply_sound_settings()
 
     def on_strength_setting_changed(self, action, value):
         """..."""
@@ -316,30 +348,33 @@ class ApplicationWindow(Gtk.ApplicationWindow):
 
         is_immersive = value.get_boolean()
         self.fullscreen() if is_immersive else self.unfullscreen()
-        self._windowed_button.set_visible(is_immersive)
         action.set_state(value)
 
     def on_windowed_action_activate(self, action, value):
         """Toggles off the immersive state of the window"""
 
-        action = self.lookup_action('immersive')
-        value = GLib.Variant.new_boolean(False)
-        action.change_state(value)
+        self.set_immersive_mode(False)
 
     def on_rotate_action_change_state(self, action, value):
         """Flips the board canvas"""
 
         is_rotated = value.get_boolean()
-        rotation = is_rotated and Rotation.ROTATED or Rotation.STRAIGHT
-        self._canvas.set_rotation(rotation.angle)
+        rotation = is_rotated and Rotation.ROTATED or Rotation.BASE
+        self._canvas.set_rotation(rotation)
         action.set_state(value)
 
     def on_side_action_change_state(self, action, value):
         """Emitted on engine playing side changes"""
 
         engine_side = Side.value_of(value.get_string())
-        self._canvas.set_rotation(engine_side.view_angle)
+        self._canvas.set_rotation(engine_side.rotation)
         action.set_state(value)
+
+    def on_window_realize(self, window):
+        """Emitted when the window is realized"""
+
+        self.apply_sound_settings()
+        self.connect_sound_signals()
 
     def on_window_delete_event(self, window, event):
         """Emitted when the user asks to close the window"""
@@ -349,4 +384,4 @@ class ApplicationWindow(Gtk.ApplicationWindow):
     def on_window_destroy(self, window):
         """Emitted to finalize the window"""
 
-        pass
+        self._sound_context.mute_context()
