@@ -323,21 +323,20 @@ class Match(object):
         self._tags['Variant'] = self._game.get_ruleset_name()
         self._tags['Result'] = '*'
 
-    def set_tag(self, name, value):
-        """Tags this match with a value"""
-
-        if not isinstance(name, str):
-            raise ValueError("Tag name must be a string")
-
-        if not isinstance(value, str):
-            raise ValueError("Tag value must be a string")
-
-        self._tags[name.strip()] = value.strip()
-
     def get_tag_roster(self):
         """Obtains the mandatory tag identifiers"""
 
         return self.__TAG_ROSTER
+
+    def get_tag(self, tag):
+        """Returns a match tag value or none"""
+
+        value = None
+
+        if tag in self._tags and self._tags[tag] != '?':
+            value = self._tags[tag]
+
+        return value
 
     def get_tags(self):
         """Returns a tuple view of this match tags"""
@@ -353,15 +352,24 @@ class Match(object):
 
         return tuple(tags)
 
-    def get_tag(self, tag):
-        """Returns a match tag value or none"""
+    def set_tag(self, name, value):
+        """Tags this match with a value"""
 
-        value = None
+        if not isinstance(name, str):
+            raise ValueError("Tag name must be a string")
 
-        if tag in self._tags and self._tags[tag] != '?':
-            value = self._tags[tag]
+        if not isinstance(value, str):
+            raise ValueError("Tag value must be a string")
 
-        return value
+        self._tags[name.strip()] = value.strip()
+
+    def set_tags(self, tags):
+        """Sets the tags from the given tuple"""
+
+        self.reset_tags()
+
+        for name, value in tags:
+            self.set_tag(name, value)
 
     def get_notation(self):
         """Converts this match to a valid notation tuple"""

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 
+<!-- Generated with glade 3.36.0
 
-Aualé - 
+Aualé -
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 
 This library is free software; you can redistribute it and/or
@@ -29,6 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
+      <!-- column-name text -->
+      <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gchararray"/>
     </columns>
@@ -44,53 +46,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <signal name="response" handler="on_scoresheet_dialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="propertiesdialog-vbox">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="propertiesdialog-action_area">
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="cancel_button">
-                <property name="label">Cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="has_default">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="ok_button">
-                <property name="label">Save</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow1">
             <property name="visible">True</property>
@@ -109,23 +69,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <property name="fixed_height_mode">True</property>
                 <property name="enable_grid_lines">both</property>
                 <property name="activate_on_single_click">True</property>
-                <signal name="row-activated" handler="on_properties_treeview_row_activated" swapped="no"/>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection" id="treeview-selection"/>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="name_treeviewcolumn">
+                  <object class="GtkTreeViewColumn" id="text_treeviewcolumn">
                     <property name="sizing">fixed</property>
                     <property name="min_width">176</property>
                     <property name="title" translatable="yes">Tag</property>
                     <child>
-                      <object class="GtkCellRendererText" id="name_cellrenderertext">
+                      <object class="GtkCellRendererText" id="text_cellrenderertext">
                         <property name="ellipsize">end</property>
                         <property name="weight">600</property>
                         <property name="width_chars">25</property>
                       </object>
                       <attributes>
-                        <attribute name="text">0</attribute>
+                        <attribute name="text">1</attribute>
                       </attributes>
                     </child>
                   </object>
@@ -140,10 +99,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                         <property name="editable">True</property>
                         <property name="ellipsize">end</property>
                         <property name="width_chars">50</property>
-                        <signal name="edited" handler="on_property_edited" swapped="no"/>
                       </object>
                       <attributes>
-                        <attribute name="text">1</attribute>
+                        <attribute name="text">2</attribute>
                       </attributes>
                     </child>
                     <child>
@@ -166,10 +124,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
         </child>
       </object>
     </child>
-    <action-widgets>
-      <action-widget response="-6">cancel_button</action-widget>
-      <action-widget response="-3">ok_button</action-widget>
-    </action-widgets>
     <child type="titlebar">
       <placeholder/>
     </child>

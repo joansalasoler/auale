@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 
+<!-- Generated with glade 3.36.0
 
-Aualé - 
+Aualé -
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
 
 This library is free software; you can redistribute it and/or
@@ -34,7 +34,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <signal name="response" handler="on_newmatch_dialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="newmatchdialog-vbox">
         <property name="can_focus">False</property>

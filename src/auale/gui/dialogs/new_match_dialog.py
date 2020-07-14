@@ -36,16 +36,16 @@ class NewMatchDialog(Gtk.Dialog):
 
         self._side = Side.SOUTH
         self.set_transient_for(window)
-        self.connect('delete-event', self.on_delete_event)
+        self.connect('response', self.on_response)
         self.connect_button(self._edit_button, Side.NEITHER)
         self.connect_button(self._north_button, Side.SOUTH)
         self.connect_button(self._south_button, Side.NORTH)
         self.connect_button(self._watch_button, Side.BOTH)
 
-    def on_delete_event(self, dialog, event):
-        """Hide the dialog when delete is emitted"""
+    def on_response(self, dialog, response):
+        """Hide the dialog when a response is emitted"""
 
-        return self.hide_on_delete()
+        self.hide()
 
     def get_engine_side(self):
         """Obtains the selected computer side"""
@@ -62,11 +62,3 @@ class NewMatchDialog(Gtk.Dialog):
         """Connects a button to the selection handler"""
 
         button.connect('clicked', self.on_option_selected, side)
-
-    def inquire(self):
-        """Runs the dialog and then hides it"""
-
-        response = self.run()
-        self.hide()
-
-        return response

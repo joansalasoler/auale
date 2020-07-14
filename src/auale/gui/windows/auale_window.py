@@ -307,9 +307,15 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._match_manager.save_to_uri(uri)
 
     def on_scoresheet_action_activate(self, action, value):
-        """..."""
+        """Shows the scoresheet dialog for the current match"""
 
+        match = self._match_manager.get_match()
+        self._scoresheet_dialog.set_from_match(match)
         self._scoresheet_dialog.run()
+
+        tags = self._scoresheet_dialog.get_match_tags()
+        match.set_tags(tags)
+        self.refresh_view()
 
     def on_stop_action_activate(self, action, value):
         """..."""
