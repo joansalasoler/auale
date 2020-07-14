@@ -433,7 +433,7 @@ class Match(object):
         if other._comments != self._comments:
             return False
 
-        if other._tags != self.__tags:
+        if other._tags != self._tags:
             return False
 
         return True
