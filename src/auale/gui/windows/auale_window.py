@@ -72,15 +72,11 @@ class AualeWindow(Gtk.ApplicationWindow):
     def setup_window_widgets(self):
         """Attach an initialize this window's widgets"""
 
-        match = self._match_manager.load_new_match()
-
         recents_menu = RecentChooserPopoverMenu()
         recents_menu.set_action_name('win.open')
 
+        self._match_manager.load_new_match()
         self._recents_menu_box.add(recents_menu)
-        self._infobar.show_match_information(match)
-        self._canvas.set_current_match(match)
-        self._canvas.grab_focus()
         self.add(self._canvas)
 
     def connect_window_signals(self):
@@ -151,11 +147,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         file = manager.get_file()
         name = file and file.get_parse_name()
 
-        self._unsaved_indicator.hide()
         self._headerbar.set_subtitle(name)
-        self._infobar.show_match_information(match)
-        self._canvas.set_current_match(match)
         self.set_engine_side(Side.NEITHER)
+        self.refresh_view()
 
     def on_match_file_unload(self, manager, match):
         """Emitted before the match file is unloaded"""
@@ -214,10 +208,29 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.destroy()
 
     def on_move_action_activate(self, action, value):
-        """..."""
+        """A house was activated given its notation"""
+
+        game = self._match_manager.get_game()
+        notation = value.get_string()
+        move = game.to_move(notation)
+        self.make_legal_move(move)
 
     def on_move_from_action_activate(self, action, value):
-        """..."""
+        """A house was activated with a keyboard shortcut"""
+
+        key = value.get_string()
+        game = self._match_manager.get_game()
+        match = self._match_manager.get_match()
+        is_south_turn = match.get_turn() == game.SOUTH
+        notation = key.upper() if is_south_turn else key
+        move = game.to_move(notation)
+        self.make_legal_move(move)
+
+    def on_canvas_house_activated(self, canvas, house):
+        """A house was activated on the canvas"""
+
+        move = house.get_move()
+        self.make_legal_move(move)
 
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""
@@ -246,13 +259,10 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._canvas.focus_last_house()
 
-    def on_canvas_house_activated(self, canvas, house):
-        """..."""
-
     def on_new_action_activate(self, action, value):
         """Starts a new match on user request"""
 
-        response = self._new_match_dialog.inquire()
+        response = self._new_match_dialog.run()
 
         if response == Gtk.ResponseType.ACCEPT:
             self._match_manager.load_new_match()
@@ -260,6 +270,7 @@ class AualeWindow(Gtk.ApplicationWindow):
             if not self._match_manager.has_unsaved_changes():
                 side = self._new_match_dialog.get_engine_side()
                 self.set_engine_side(side)
+                self.refresh_view()
 
     def on_open_action_activate(self, action, value):
         """Opens a match from a file"""
@@ -322,16 +333,32 @@ class AualeWindow(Gtk.ApplicationWindow):
         pass
 
     def on_undo_all_action_activate(self, action, value):
-        """..."""
+        """Undoes the all the performed match move"""
+
+        match = self._match_manager.get_match()
+        match.undo_all_moves()
+        self.refresh_view()
 
     def on_undo_action_activate(self, action, value):
-        """..."""
+        """Undoes the last performed match move"""
+
+        match = self._match_manager.get_match()
+        match.undo_last_move()
+        self.refresh_view()
 
     def on_redo_all_action_activate(self, action, value):
-        """..."""
+        """Redoes all the performed match moves"""
+
+        match = self._match_manager.get_match()
+        match.redo_all_moves()
+        self.refresh_view()
 
     def on_redo_action_activate(self, action, value):
-        """..."""
+        """Redoes the last performed match move"""
+
+        match = self._match_manager.get_match()
+        match.redo_last_move()
+        self.refresh_view()
 
     def on_engine_setting_changed(self, action, value):
         """..."""
@@ -380,6 +407,7 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self.apply_sound_settings()
         self.connect_sound_signals()
+        self.refresh_view()
 
     def on_window_delete_event(self, window, event):
         """Emitted when the user asks to close the window"""
@@ -390,3 +418,29 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Emitted to finalize the window"""
 
         self._sound_context.mute_context()
+
+    def make_legal_move(self, move):
+        """Makes a move if it is legal on the current match state"""
+
+        match = self._match_manager.get_match()
+
+        if match.is_legal_move(move):
+            match.add_move(move)
+            self.refresh_view()
+
+    def refresh_view(self):
+        """Updates the state of the window"""
+
+        match = self._match_manager.get_match()
+        is_unsaved = self._match_manager.has_unsaved_changes()
+        can_undo = match.can_undo()
+        can_redo = match.can_redo()
+
+        self._unsaved_indicator.set_visible(is_unsaved)
+        self._infobar.show_match_information(match)
+        self._canvas.set_current_match(match)
+
+        self.lookup_action('undo').set_enabled(can_undo)
+        self.lookup_action('redo').set_enabled(can_redo)
+        self.lookup_action('undo-all').set_enabled(can_undo)
+        self.lookup_action('redo-all').set_enabled(can_redo)

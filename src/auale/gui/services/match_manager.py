@@ -70,6 +70,11 @@ class MatchManager(GObject.GObject):
 
         return self._file
 
+    def get_game(self):
+        """Game of the current match"""
+
+        return self._match.get_game()
+
     def get_match(self):
         """Current match object"""
 
