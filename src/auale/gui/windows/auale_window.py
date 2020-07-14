@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from game import Match
-from game import Oware
+from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 from i18n import gettext as _
@@ -55,7 +54,6 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._settings = None
         self._canvas = Board()
-        self._match = Match(Oware)
         self._infobar = MatchInfobar()
         self._match_manager = MatchManager()
         self._sound_context = SoundContext()
@@ -276,9 +274,10 @@ class AualeWindow(Gtk.ApplicationWindow):
             self._match_manager.load_from_uri(uri)
 
     def on_rules_action_activate(self, action, value):
-        """..."""
+        """Show the game rules web site on the default browser"""
 
-        pass
+        uri = 'https://auale.joansala.com/rules/'
+        Gtk.show_uri_on_window(None, uri, Gdk.CURRENT_TIME)
 
     def on_save_as_action_activate(self, action, value):
         """Saves the current match to a new file"""
