@@ -20,6 +20,7 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 from i18n import gettext as _
+from uci import Strength
 
 from ..canvas import Board
 from ..dialogs import AboutDialog
@@ -29,7 +30,9 @@ from ..dialogs import RequestOverwriteDialog
 from ..dialogs import RequestSaveDialog
 from ..dialogs import SaveMatchDialog
 from ..dialogs import ScoresheetDialog
+from ..services import GameLoop
 from ..services import MatchManager
+from ..services import PlayerManager
 from ..values import Rotation
 from ..values import Side
 from ..widgets import MatchInfobar
@@ -55,7 +58,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._settings = None
         self._canvas = Board()
         self._infobar = MatchInfobar()
+        self._game_loop = GameLoop()
         self._match_manager = MatchManager()
+        self._player_manager = PlayerManager()
         self._sound_context = SoundContext()
 
         self._about_dialog = AboutDialog(self)
@@ -91,6 +96,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._match_manager.connect('file-load-error', self.on_match_file_load_error)
         self._match_manager.connect('file-save-error', self.on_match_file_save_error)
         self._match_manager.connect('file-unload', self.on_match_file_unload)
+        self._game_loop.connect('move-received', self.on_player_move_received)
 
     def connect_sound_signals(self):
         """Connects this window to the sound mixer"""
@@ -99,12 +105,25 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._sound_context.connect_signals(self._canvas)
         self._sound_context.connect_signals(self)
 
+    def apply_engine_settings(self):
+        """Applies the strength setting to the engines"""
+
+        value = self._settings.get_value('engine')
+        self._player_manager.set_engine_command(value.get_string())
+
     def apply_sound_settings(self):
         """Applies the sound setting to the context"""
 
         context = self._sound_context
         is_muted = self._settings.get_value('mute')
         context.mute_context() if is_muted else context.unmute_context()
+
+    def apply_strength_settings(self):
+        """Applies the strength setting to the engines"""
+
+        value = self._settings.get_value('strength')
+        strength = Strength.value_of(value.get_string())
+        self._player_manager.set_engine_strength(strength)
 
     def get_local_settings(self):
         """Gets this window's local settings instance"""
@@ -198,7 +217,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._infobar.show_error_message(message)
 
     def on_about_action_activate(self, action, value):
-        """..."""
+        """Shows the about dialog"""
 
         self._about_dialog.run()
 
@@ -208,12 +227,11 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.destroy()
 
     def on_move_action_activate(self, action, value):
-        """A house was activated given its notation"""
+        """A move from the engine was requested by the user"""
 
-        game = self._match_manager.get_game()
-        notation = value.get_string()
-        move = game.to_move(notation)
-        self.make_legal_move(move)
+        match = self._match_manager.get_match()
+        player = self._player_manager.get_engine()
+        self._game_loop.request_move(player, match)
 
     def on_move_from_action_activate(self, action, value):
         """A house was activated with a keyboard shortcut"""
@@ -230,6 +248,11 @@ class AualeWindow(Gtk.ApplicationWindow):
         """A house was activated on the canvas"""
 
         move = house.get_move()
+        self.make_legal_move(move)
+
+    def on_player_move_received(self, game_loop, move):
+        """A move was received from an engine player"""
+
         self.make_legal_move(move)
 
     def on_choose_action_activate(self, action, value):
@@ -328,9 +351,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.refresh_view()
 
     def on_stop_action_activate(self, action, value):
-        """..."""
+        """Stops the current engine computations if any"""
 
-        pass
+        self._game_loop.abort_move()
 
     def on_undo_all_action_activate(self, action, value):
         """Undoes the all the performed match move"""
@@ -361,9 +384,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.refresh_view()
 
     def on_engine_setting_changed(self, action, value):
-        """..."""
+        """Emitted when the engine command changes"""
 
-        pass
+        self.apply_engine_settings()
 
     def on_mute_setting_changed(self, action, value):
         """Toggles the mute on the sound context"""
@@ -371,9 +394,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.apply_sound_settings()
 
     def on_strength_setting_changed(self, action, value):
-        """..."""
+        """Emitted when the engine strength changed"""
 
-        pass
+        self.apply_strength_settings()
 
     def on_immersive_action_change_state(self, action, value):
         """Toggles the immersive state of the window"""
@@ -400,12 +423,14 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         engine_side = Side.value_of(value.get_string())
         self._canvas.set_rotation(engine_side.rotation)
+        self._player_manager.set_engine_side(engine_side)
         action.set_state(value)
 
     def on_window_realize(self, window):
         """Emitted when the window is realized"""
 
         self.apply_sound_settings()
+        self.apply_strength_settings()
         self.connect_sound_signals()
         self.refresh_view()
 
@@ -417,6 +442,7 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_window_destroy(self, window):
         """Emitted to finalize the window"""
 
+        self._player_manager.quit_engines()
         self._sound_context.mute_context()
 
     def make_legal_move(self, move):
