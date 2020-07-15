@@ -62,7 +62,7 @@ ACTION_DESCRIPTORS = (
         ('setting',         ('strength',)),
         ('state',           ('immersive', 'false',)),
         ('state',           ('rotate', 'false',)),
-        ('state',           ('side', '"south"', 's')),
+        ('state',           ('side', '"north"', 's')),
     ))
 )
 

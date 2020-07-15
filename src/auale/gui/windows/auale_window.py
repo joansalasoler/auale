@@ -422,9 +422,13 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Emitted on engine playing side changes"""
 
         engine_side = Side.value_of(value.get_string())
-        self._canvas.set_rotation(engine_side.rotation)
         self._player_manager.set_engine_side(engine_side)
         action.set_state(value)
+
+        is_rotated = engine_side.rotation == Rotation.ROTATED
+        value = GLib.Variant.new_boolean(is_rotated)
+        rotate_action = self.lookup_action('rotate')
+        rotate_action.change_state(value)
 
     def on_window_realize(self, window):
         """Emitted when the window is realized"""
