@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import logging
 import shutil
 from gi.repository import GObject
 
@@ -30,103 +31,116 @@ class PlayerManager(GObject.GObject):
     """Service to manage match players"""
 
     __gtype_name__ = 'PlayerManager'
+
     __DEFAULT_ENGINE_PATH = '../data/engine/Aalina.jar'
+    __DEFAULT_COMMAND = '[default]'
 
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self._command = None
-        self._human = Human()
-        self._engine = self._create_engine()
-        self._south = self._human
-        self._north = self._engine
+        self._logger = logging.getLogger('uci')
+        self._engine_command = self.__DEFAULT_COMMAND
         self._engine_strength = Strength.EASY
         self._engine_side = Side.NORTH
+        self._human_player = None
+        self._south_engine = None
+        self._north_engine = None
 
-    def get_engine(self):
-        """Gets an engine player"""
+    def get_human_player(self):
+        """Gets the human player"""
 
-        return self._engine
+        return self._human_player
 
-    def get_south(self):
-        """Gets the south player"""
+    def get_engine_player(self):
+        """Gets the main engine player"""
 
-        return self._south
-
-    def get_north(self):
-        """Gets the north player"""
-
-        return self._north
-
-    def set_south(self, player):
-        """Sets the south player"""
-
-        self._south = player
-
-    def set_north(self, player):
-        """Sets the north player"""
-
-        self._north = player
+        return self._south_engine
 
     def get_engine_strength(self):
         """Gets the engine strength"""
 
         return self._engine_strength
 
-    def set_engine_strength(self, strength):
-        """Sets the engine strength"""
-
-        self._engine_strength = strength
-        self._engine.set_playing_strength(strength)
-
-    def get_engine_side(self, side):
+    def get_engine_side(self):
         """Gets the side on which the engine is playing"""
 
         return self._engine_side
+
+    def get_north_player(self):
+        """Gets the north player"""
+
+        human = self._human_player
+        engine = self._south_engine
+        is_engine = self._engine_side.is_north
+        north_player = engine if is_engine else human
+
+        return north_player
+
+    def get_south_player(self):
+        """Gets the south player"""
+
+        human = self._human_player
+        engine = self._north_engine
+        is_engine = self._engine_side.is_south
+        south_player = engine if is_engine else human
+
+        return south_player
+
+    def get_player_for_match(self, match):
+        """Gets the player to move for the given match"""
+
+        game = match.get_game()
+        north_player = self.get_north_player()
+        south_player = self.get_south_player()
+        is_south_turn = match.get_turn() == game.SOUTH
+        player = south_player if is_south_turn else north_player
+
+        return player
+
+    def set_engine_strength(self, strength):
+        """Sets the engine strength"""
+
+        try:
+            self._engine_strength = strength
+            self._south_engine.set_playing_strength(strength)
+            self._north_engine.set_playing_strength(strength)
+        except BaseException:
+            self._logger.warning('Could not set engine strength')
 
     def set_engine_side(self, side):
         """Sets the side on which the engine is playing"""
 
         self._engine_side = side
 
-    def get_engine_command(self):
-        """Gets the custom engine command if any"""
-
-        return self._command
-
     def set_engine_command(self, command):
         """Sets a custom engine command to use"""
 
-        self._command = command
-
-    def has_custom_command(self):
-        """Checks if a custom engine command was set"""
-
-        return self._command is not None
-
-    def engine_is_enabled(self):
-        """Checks if the engine player is enabled"""
-
-        return isinstance(self._engine, Engine)
+        value = command or self.__DEFAULT_COMMAND
+        self._engine_command = value.strip()
+        self._logger.debug(f'Engine command: { self._engine_command }')
 
     def on_engine_failure(self, engine, reason):
         """Handle engine termination errors"""
 
-        if engine == self._engine:
-            self._engine = Human()
+        self._south_engine.quit()
+        self._north_engine.quit()
+        self._south_engine = Human()
+        self._north_engine = Human()
+        self._logger.warning(reason)
 
-        if engine == self._south:
-            self._south = self._human
+    def start_players(self):
+        """Starts the player processes"""
 
-        if engine == self._north:
-            self._north = self._human
+        self._south_engine = self._create_engine()
+        self._north_engine = self._create_engine()
+        self._human_player = Human()
 
-    def quit_engines(self):
-        """Quits any running engine players"""
+    def quit_players(self):
+        """Quits all the running players"""
 
-        self._engine.quit()
-        self._north.quit()
-        self._south.quit()
+        self._south_engine.quit()
+        self._north_engine.quit()
+        self._human_player.quit()
 
     def _create_engine(self):
         """Creates a new engine player"""
@@ -134,9 +148,10 @@ class PlayerManager(GObject.GObject):
         try:
             custom = self._get_custom_command()
             default = self._get_default_command()
-            command = custom if self.has_custom_command() else default
+            command = custom if self._has_custom_command() else default
             engine = self._create_engine_for_command(command)
         except BaseException:
+            self._logger.warning(f'Could not start engine')
             engine = Human()
 
         return engine
@@ -149,11 +164,19 @@ class PlayerManager(GObject.GObject):
 
         return engine
 
+    def _has_custom_command(self):
+        """Checks if a custom engine command was set"""
+
+        command = self._engine_command
+        is_custom = command != self.__DEFAULT_COMMAND
+
+        return is_custom
+
     def _get_custom_command(self):
         """Get a command to run a custom engine"""
 
-        command = self._command.split() if self._command else ['']
-        command = (shutil.which(command[0]),)
+        command = self._engine_command.split()
+        command = (shutil.which(command[0]), *command[1:])
 
         return command
 

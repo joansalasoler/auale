@@ -20,6 +20,8 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 from i18n import gettext as _
+from uci import Engine
+from uci import Human
 from uci import Strength
 
 from ..canvas import Board
@@ -160,6 +162,18 @@ class AualeWindow(Gtk.ApplicationWindow):
         value = GLib.Variant.new_string(uri)
         self.activate_action('open', value)
 
+    def set_active_player(self, player, match):
+        """Requests a move to a player unless the match finished"""
+
+        self._game_loop.request_move(player, match)
+        self.refresh_view()
+
+    def toggle_active_player(self, match):
+        """Requests a move to the current player of a match"""
+
+        player = self._player_manager.get_player_for_match(match)
+        self.set_active_player(player, match)
+
     def on_match_file_changed(self, manager, match):
         """Emitted when the match file changed"""
 
@@ -229,31 +243,42 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_move_action_activate(self, action, value):
         """A move from the engine was requested by the user"""
 
-        match = self._match_manager.get_match()
-        player = self._player_manager.get_engine()
-        self._game_loop.request_move(player, match)
+        if self._canvas.is_sensitive():
+            match = self._match_manager.get_match()
+            player = self._player_manager.get_engine_player()
+            self.set_active_player(player, match)
 
     def on_move_from_action_activate(self, action, value):
         """A house was activated with a keyboard shortcut"""
 
-        key = value.get_string()
-        game = self._match_manager.get_game()
-        match = self._match_manager.get_match()
-        is_south_turn = match.get_turn() == game.SOUTH
-        notation = key.upper() if is_south_turn else key
-        move = game.to_move(notation)
-        self.make_legal_move(move)
+        if self._canvas.is_sensitive():
+            key = value.get_string()
+            game = self._match_manager.get_game()
+            match = self._match_manager.get_match()
+            is_south_turn = match.get_turn() == game.SOUTH
+            notation = key.upper() if is_south_turn else key
+            move = game.to_move(notation)
+
+            self.make_legal_move(move)
+            self.toggle_active_player(match)
 
     def on_canvas_house_activated(self, canvas, house):
         """A house was activated on the canvas"""
 
-        move = house.get_move()
-        self.make_legal_move(move)
+        if self._canvas.is_sensitive():
+            match = self._match_manager.get_match()
+            move = house.get_move()
+
+            self.make_legal_move(move)
+            self.toggle_active_player(match)
 
     def on_player_move_received(self, game_loop, move):
         """A move was received from an engine player"""
 
+        match = self._match_manager.get_match()
+
         self.make_legal_move(move)
+        self.toggle_active_player(match)
 
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""
@@ -288,12 +313,13 @@ class AualeWindow(Gtk.ApplicationWindow):
         response = self._new_match_dialog.run()
 
         if response == Gtk.ResponseType.ACCEPT:
-            self._match_manager.load_new_match()
+            match = self._match_manager.load_new_match()
 
             if not self._match_manager.has_unsaved_changes():
+                self._game_loop.abort_move()
                 side = self._new_match_dialog.get_engine_side()
                 self.set_engine_side(side)
-                self.refresh_view()
+                self.toggle_active_player(match)
 
     def on_open_action_activate(self, action, value):
         """Opens a match from a file"""
@@ -305,6 +331,7 @@ class AualeWindow(Gtk.ApplicationWindow):
             uri = self._open_match_dialog.get_uri()
 
         if uri and isinstance(uri, str):
+            self._game_loop.abort_move()
             self._match_manager.load_from_uri(uri)
 
     def on_rules_action_activate(self, action, value):
@@ -354,34 +381,45 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Stops the current engine computations if any"""
 
         self._game_loop.abort_move()
+        player = self._player_manager.get_human_player()
+        match = self._match_manager.get_match()
+        self.set_active_player(player, match)
 
     def on_undo_all_action_activate(self, action, value):
         """Undoes the all the performed match move"""
 
+        self._game_loop.abort_move()
+        player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.undo_all_moves()
-        self.refresh_view()
+        self.set_active_player(player, match)
 
     def on_undo_action_activate(self, action, value):
         """Undoes the last performed match move"""
 
+        self._game_loop.abort_move()
+        player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.undo_last_move()
-        self.refresh_view()
+        self.set_active_player(player, match)
 
     def on_redo_all_action_activate(self, action, value):
         """Redoes all the performed match moves"""
 
+        self._game_loop.abort_move()
+        player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.redo_all_moves()
-        self.refresh_view()
+        self.set_active_player(player, match)
 
     def on_redo_action_activate(self, action, value):
         """Redoes the last performed match move"""
 
+        self._game_loop.abort_move()
+        player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.redo_last_move()
-        self.refresh_view()
+        self.set_active_player(player, match)
 
     def on_engine_setting_changed(self, action, value):
         """Emitted when the engine command changes"""
@@ -433,6 +471,7 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_window_realize(self, window):
         """Emitted when the window is realized"""
 
+        self._player_manager.start_players()
         self.apply_sound_settings()
         self.apply_strength_settings()
         self.connect_sound_signals()
@@ -446,23 +485,26 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_window_destroy(self, window):
         """Emitted to finalize the window"""
 
-        self._player_manager.quit_engines()
+        self._player_manager.quit_players()
         self._sound_context.mute_context()
 
     def make_legal_move(self, move):
-        """Makes a move if it is legal on the current match state"""
+        """Makes a move if it is legal for the current match"""
 
         match = self._match_manager.get_match()
 
         if match.is_legal_move(move):
             match.add_move(move)
-            self.refresh_view()
 
     def refresh_view(self):
         """Updates the state of the window"""
 
         match = self._match_manager.get_match()
+        player = self._player_manager.get_player_for_match(match)
         is_unsaved = self._match_manager.has_unsaved_changes()
+        is_engine = isinstance(player, Engine)
+        is_human = isinstance(player, Human)
+        has_ended = match.has_ended()
         can_undo = match.can_undo()
         can_redo = match.can_redo()
 
@@ -474,3 +516,5 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.lookup_action('redo').set_enabled(can_redo)
         self.lookup_action('undo-all').set_enabled(can_undo)
         self.lookup_action('redo-all').set_enabled(can_redo)
+        self.lookup_action('move').set_enabled(is_human)
+        self.lookup_action('stop').set_enabled(is_engine)
