@@ -123,8 +123,8 @@ class Board(GtkClutter.Embed):
         house_state.set_state(rotation.nick)
         self.board_rotated.emit(rotation)
 
-    def set_current_match(self, match):
-        """Sets the match position to display"""
+    def show_match(self, match):
+        """Displays a match position on the board"""
 
         self._moves = match.get_legal_moves()
         self.update_houses(match)

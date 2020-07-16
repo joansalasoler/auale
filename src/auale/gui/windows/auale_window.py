@@ -58,6 +58,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         super(AualeWindow, self).__init__()
 
         self._settings = None
+        self._active_player = None
         self._canvas = Board()
         self._infobar = MatchInfobar()
         self._game_loop = GameLoop()
@@ -165,8 +166,9 @@ class AualeWindow(Gtk.ApplicationWindow):
     def set_active_player(self, player, match):
         """Requests a move to a player unless the match finished"""
 
+        self._active_player = player
         self._game_loop.request_move(player, match)
-        self.refresh_view()
+        GLib.idle_add(self.refresh_view)
 
     def toggle_active_player(self, match):
         """Requests a move to the current player of a match"""
@@ -182,7 +184,7 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._headerbar.set_subtitle(name)
         self.set_engine_side(Side.NEITHER)
-        self.refresh_view()
+        GLib.idle_add(self.refresh_view)
 
     def on_match_file_unload(self, manager, match):
         """Emitted before the match file is unloaded"""
@@ -472,6 +474,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Emitted when the window is realized"""
 
         self._player_manager.start_players()
+        self._active_player = self._player_manager.get_human_player()
+
         self.apply_sound_settings()
         self.apply_strength_settings()
         self.connect_sound_signals()
@@ -500,17 +504,16 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Updates the state of the window"""
 
         match = self._match_manager.get_match()
-        player = self._player_manager.get_player_for_match(match)
         is_unsaved = self._match_manager.has_unsaved_changes()
-        is_engine = isinstance(player, Engine)
-        is_human = isinstance(player, Human)
-        has_ended = match.has_ended()
+        is_engine = isinstance(self._active_player, Engine)
+        is_human = isinstance(self._active_player, Human)
+        is_sensitive = is_human and not match.has_ended()
         can_undo = match.can_undo()
         can_redo = match.can_redo()
 
         self._unsaved_indicator.set_visible(is_unsaved)
         self._infobar.show_match_information(match)
-        self._canvas.set_current_match(match)
+        self._canvas.show_match(match)
 
         self.lookup_action('undo').set_enabled(can_undo)
         self.lookup_action('redo').set_enabled(can_redo)
@@ -518,3 +521,5 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.lookup_action('redo-all').set_enabled(can_redo)
         self.lookup_action('move').set_enabled(is_human)
         self.lookup_action('stop').set_enabled(is_engine)
+
+        self._canvas.set_sensitive(is_sensitive)

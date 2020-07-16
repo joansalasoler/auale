@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+
 from threading import Lock
 from gi.repository import GLib
 from gi.repository import GObject
@@ -37,6 +39,7 @@ class GameLoop(GObject.GObject):
         self._previous_player = None
         self._request_lock = Lock()
         self._ponder_cache = PonderCache(256)
+        self._logger = logging.getLogger('game-loop')
 
     @GObject.Signal
     def move_received(self, move: int):
@@ -48,6 +51,8 @@ class GameLoop(GObject.GObject):
 
     def request_move(self, player, match):
         """Requests a player to make a move"""
+
+        self._logger.debug('Received a move request')
 
         with self._request_lock:
             self._active_player = None
@@ -69,13 +74,19 @@ class GameLoop(GObject.GObject):
             self._switch_to_waiting(self._current_player)
             self._switch_to_thinking(self._current_player, match)
 
+        self._logger.debug('Move requested for player')
+
     def abort_move(self):
         """Aborts any ongoing move requests"""
+
+        self._logger.debug('Received a move abortion request')
 
         with self._request_lock:
             self._active_player = None
             self._switch_to_waiting(self._current_player)
             self._switch_to_waiting(self._previous_player)
+
+        self._logger.debug('Current move request was aborted')
 
     def _is_entering_player(self, player):
         """Checks if its a new player entering the match"""
@@ -146,7 +157,10 @@ class GameLoop(GObject.GObject):
 
                     GLib.idle_add(self.move_received.emit, move)
 
+            self._logger.debug('Move received from engine')
+
     def _on_info_received(self, player, values):
         """Handles the reception of an engine report"""
 
         GLib.idle_add(self.info_received.emit, '')
+        self._logger.debug('Information received from engine')
