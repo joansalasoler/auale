@@ -277,10 +277,9 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_player_move_received(self, game_loop, move):
         """A move was received from an engine player"""
 
-        match = self._match_manager.get_match()
-
-        self.make_legal_move(move)
-        self.toggle_active_player(match)
+        if match := self._match_manager.get_match():
+            self.make_legal_move(move)
+            self.toggle_active_player(match)
 
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""
@@ -503,17 +502,18 @@ class AualeWindow(Gtk.ApplicationWindow):
     def refresh_view(self):
         """Updates the state of the window"""
 
-        match = self._match_manager.get_match()
+        if match := self._match_manager.get_match():
+            self._infobar.show_match_information(match)
+            self._canvas.show_match(match)
+
         is_unsaved = self._match_manager.has_unsaved_changes()
+        self._unsaved_indicator.set_visible(is_unsaved)
+
         is_engine = isinstance(self._active_player, Engine)
         is_human = isinstance(self._active_player, Human)
-        is_sensitive = is_human and not match.has_ended()
-        can_undo = match.can_undo()
-        can_redo = match.can_redo()
-
-        self._unsaved_indicator.set_visible(is_unsaved)
-        self._infobar.show_match_information(match)
-        self._canvas.show_match(match)
+        is_sensitive = is_human and match and not match.has_ended()
+        can_undo = match and match.can_undo()
+        can_redo = match and match.can_redo()
 
         self.lookup_action('undo').set_enabled(can_undo)
         self.lookup_action('redo').set_enabled(can_redo)
