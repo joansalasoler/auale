@@ -2,9 +2,9 @@
 <gresources>
   <gresource prefix="/com/joansala/auale">
     <file>canvas/mosaic.png</file>
-    <file>canvas/scene.json</file>
-    <file>canvas/scene.svg</file>
+    <file>canvas/board.json</file>
     <file>canvas/states.json</file>
+    <file>canvas/scene.svg</file>
     <file>gtk/application.css</file>
     <file>gtk/dialogs/about_dialog.ui</file>
     <file>gtk/dialogs/new_match_dialog.ui</file>

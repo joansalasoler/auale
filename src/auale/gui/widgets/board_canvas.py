@@ -21,24 +21,24 @@ from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import GtkClutter
 
-from .house import House
-from .mosaic import Mosaic
+from ..actors import House
+from ..actors import Mosaic
 from ..values import RipeningStage
 from ..values import Rotation
 
 
-class Board(GtkClutter.Embed):
+class BoardCanvas(GtkClutter.Embed):
     """A widget that displays an oware board"""
 
-    __gtype_name__ = 'Board'
-    __scene_path = '/com/joansala/auale/canvas/scene.json'
+    __gtype_name__ = 'BoardCanvas'
+    __scene_path = '/com/joansala/auale/canvas/board.json'
     __states_path = '/com/joansala/auale/canvas/states.json'
 
     _display = Gdk.Display.get_default()
     _pointer = Gdk.Cursor.new_from_name(_display, 'pointer')
 
     def __init__(self):
-        super(Board, self).__init__()
+        super(BoardCanvas, self).__init__()
 
         self._script = Clutter.Script()
         self._script.load_from_resource(self.__scene_path)
@@ -48,8 +48,8 @@ class Board(GtkClutter.Embed):
         self._sowings = [[], ] * 12
         self._moves = []
 
-        self.setup_board_stage()
-        self.connect_board_signals()
+        self.setup_canvas_stage()
+        self.connect_canvas_signals()
 
     @GObject.Signal
     def house_activated(self, house: object):
@@ -65,8 +65,8 @@ class Board(GtkClutter.Embed):
     def board_rotated(self, rotation: object):
         """Emitted when the board is rotated"""
 
-    def setup_board_stage(self):
-        """Configures this board's stage"""
+    def setup_canvas_stage(self):
+        """Configures this canvas's stage"""
 
         stage = self.get_stage()
         scene = self._script.get_object('scene')
@@ -85,7 +85,7 @@ class Board(GtkClutter.Embed):
         stage.set_no_clear_hint(True)
         stage.add_child(scene)
 
-    def connect_board_signals(self):
+    def connect_canvas_signals(self):
         """Connects the required signals"""
 
         stage = self.get_stage()

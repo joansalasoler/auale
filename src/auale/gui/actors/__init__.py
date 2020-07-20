@@ -2,7 +2,6 @@
 
 from .active import Active
 from .actor import Actor
-from .board import Board
 from .focus import Focus
 from .glyph import Glyph
 from .house import House
@@ -13,7 +12,6 @@ from .state import State
 __all__ = [
     'Active',
     'Actor',
-    'Board',
     'Focus',
     'Glyph',
     'House',
