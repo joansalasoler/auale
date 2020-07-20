@@ -42,11 +42,11 @@ class GameLoop(GObject.GObject):
         self._logger = logging.getLogger('game-loop')
 
     @GObject.Signal
-    def move_received(self, move: int):
+    def move_received(self, player: object, move: int):
         """Emitted when the active player makes a move"""
 
     @GObject.Signal
-    def info_received(self, report: str):
+    def info_received(self, player: object, values: object):
         """Emitted when a player wants to send a search report"""
 
     def request_move(self, player, match):
@@ -91,14 +91,18 @@ class GameLoop(GObject.GObject):
     def _is_entering_player(self, player):
         """Checks if its a new player entering the match"""
 
-        return player != self._current_player and \
-               player != self._previous_player
+        is_current = (player == self._current_player)
+        is_previous = (player == self._previous_player)
+
+        return not is_current and not is_previous
 
     def _is_substitute_player(self, player):
         """Checks if the player substitutes a previous one"""
 
-        return player != self._previous_player and \
-               self._previous_player != self._current_player
+        is_previous = (player == self._previous_player)
+        is_same = (self._previous_player == self._current_player)
+
+        return not is_previous and not is_same
 
     def _connect_player(self, player):
         """Connects a player to the signal handlers"""
@@ -146,21 +150,30 @@ class GameLoop(GObject.GObject):
             with self._request_lock:
                 if player == self._active_player:
                     self._active_player = None
-
-                    match = player.get_current_match()
-                    game = match.get_game()
-                    move = game.to_move(values['move'])
-
-                    if values['ponder'] is not None:
-                        value = game.to_move(values['ponder'])
-                        self._ponder_cache.store(match, move, value)
-
-                    GLib.idle_add(self.move_received.emit, move)
+                    self._emit_player_move(player, values)
 
             self._logger.debug('Move received from engine')
 
     def _on_info_received(self, player, values):
         """Handles the reception of an engine report"""
 
-        GLib.idle_add(self.info_received.emit, '')
+        self._emit_player_report(player, values)
         self._logger.debug('Information received from engine')
+
+    def _emit_player_move(self, player, values):
+        """Emits a move received from the given player"""
+
+        match = player.get_current_match()
+        game = match.get_game()
+        move = game.to_move(values['move'])
+
+        if values['ponder'] is not None:
+            value = game.to_move(values['ponder'])
+            self._ponder_cache.store(match, move, value)
+
+        GLib.idle_add(self.move_received.emit, player, move)
+
+    def _emit_player_report(self, player, values):
+        """Emits a report received from the given player"""
+
+        GLib.idle_add(self.info_received.emit, player, values)
