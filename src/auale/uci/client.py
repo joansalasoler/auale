@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import math
 import re
 import sys
 
@@ -49,6 +50,7 @@ class Client(GObject.GObject, Thread):
         self._match = None
         self._search_depth = 10
         self._search_timeout = 1000
+        self._ponder_move = None
 
     @GObject.Signal
     def id_received(self, params: object):
@@ -91,6 +93,23 @@ class Client(GObject.GObject, Thread):
 
         return self._match
 
+    def get_move_number(self):
+        """Move number of the match we are searching on"""
+
+        index = self._match.get_current_index()
+        number = math.ceil(index / 2)
+
+        return number
+
+    def get_ponder_move(self):
+        """Notation of the move the player was pondering on"""
+
+        move = self._ponder_move
+        game = self._match.get_game()
+        notation = move and game.to_move_notation(move)
+
+        return notation
+
     def set_search_depth(self, depth):
         """Sets how many plies the player may search"""
 
@@ -128,6 +147,7 @@ class Client(GObject.GObject, Thread):
         if self._is_waiting.is_set():
             self._match = match
             self._is_waiting.clear()
+            self._ponder_move = None
             search_args = self._get_search_arguments()
             position_args = self._get_position_arguments(match)
             self._send_command(f'position { position_args }')
@@ -139,6 +159,7 @@ class Client(GObject.GObject, Thread):
         if self._is_waiting.is_set():
             self._match = match
             self._is_waiting.clear()
+            self._ponder_move = move
             position_args = self._get_position_arguments(match, move)
             self._send_command(f'position { position_args }')
             self._send_command('go ponder')
@@ -174,6 +195,8 @@ class Client(GObject.GObject, Thread):
         """Evaluates a info response"""
 
         if self._is_running.is_set():
+            params['number'] = self.get_move_number()
+            params['ponder'] = self.get_ponder_move()
             self.info_received.emit(params)
 
     def _eval_id(self, params):
