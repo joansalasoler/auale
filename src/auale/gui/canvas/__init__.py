@@ -6,6 +6,7 @@ from .board import Board
 from .focus import Focus
 from .glyph import Glyph
 from .house import House
+from .label import Label
 from .mosaic import Mosaic
 from .state import State
 
@@ -16,6 +17,7 @@ __all__ = [
     'Focus',
     'Glyph',
     'House',
+    'Label',
     'Mosaic',
     'State',
 ]
