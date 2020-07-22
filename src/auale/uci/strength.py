@@ -30,8 +30,8 @@ Params = namedtuple('Params', (
 class Strength(Enum):
     """Engine playing strength levels"""
 
-    EASY = Params(0.0, 4, 600, False)
-    MEDIUM = Params(0.3, 8, 1200, False)
+    EASY = Params(0.0, 2, 600, False)
+    MEDIUM = Params(0.3, 6, 1200, False)
     HARD = Params(0.5, 16, 2400, True)
     EXPERT = Params(1.0, None, 3600, True)
 
