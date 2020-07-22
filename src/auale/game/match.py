@@ -144,9 +144,6 @@ class Match(object):
     def get_comment(self):
         """Returns the comment for the current move"""
 
-        if self._current_index == 0:
-            return None
-
         return self._comments[self._current_index]
 
     def can_undo(self):

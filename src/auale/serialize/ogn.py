@@ -111,15 +111,13 @@ class OGNSerializer(object):
     def _read_moves(self, game, string, index):
         """Reads all the moves from the string"""
 
-        comments = [None]
+        comments = []
         moves = []
 
         while index < len(string):
             if string[index] == '{':
                 comment, index = self._read_comment(string, index)
-
-                if len(comments) > 0:
-                    comments[-1] = comment
+                comments[-1] = comment
             elif string[index] == '(':
                 variation, index = self._read_variation(string, index)
             else:
