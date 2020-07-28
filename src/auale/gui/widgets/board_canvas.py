@@ -113,6 +113,11 @@ class BoardCanvas(GtkClutter.Embed):
 
         return actors
 
+    def get_infobar_actor(self):
+        """Obtains the infobar actor of the stage"""
+
+        return self._script.get_object('infobar')
+
     def set_rotation(self, rotation):
         """Sets the board rotation angle"""
 

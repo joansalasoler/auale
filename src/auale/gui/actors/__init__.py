@@ -9,6 +9,8 @@ from .label import Label
 from .mosaic import Mosaic
 from .state import State
 
+from .infobar import Infobar
+
 __all__ = [
     'Active',
     'Actor',
@@ -18,4 +20,5 @@ __all__ = [
     'Label',
     'Mosaic',
     'State',
+    'Infobar',
 ]

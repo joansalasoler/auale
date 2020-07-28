@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Clutter
 from gi.repository import cairo as Cairo
-from gi.repository import PangoCairo
+from gi.repository import Clutter
+from gi.repository import GObject
 from gi.repository import Pango
+from gi.repository import PangoCairo
 
 
 class Label(Clutter.Canvas):
@@ -30,9 +31,9 @@ class Label(Clutter.Canvas):
     def __init__(self):
         super(Label, self).__init__()
 
-        self._text = ''
+        self._markup = ''
         self._font = Pango.font_description_from_string('Ubuntu Bold 14')
-        self._stroke_color = (0.30, 0.30, 0.30, 1.0)
+        self._stroke_color = (0.25, 0.25, 0.25, 1.0)
         self._shadow_color = (0.20, 0.20, 0.20, 1.0)
         self._text_color = (0.96, 0.96, 0.96, 1.0)
         self.connect('draw', self.on_draw_request)
@@ -40,19 +41,19 @@ class Label(Clutter.Canvas):
     def set_color(self, red, green, blue, alpha=1.0):
         """Color for the label's text"""
 
-        self.text_color = (red, green, blue, alpha)
+        self._text_color = (red, green, blue, alpha)
         self.invalidate()
 
-    def set_text(self, text):
+    def set_markup(self, markup):
         """Text to display"""
 
-        self._text = text
+        self._markup = markup
         self.invalidate()
 
-    def set_size(self, size):
+    def set_text_size(self, size):
         """Font size in fractional points"""
 
-        self._font.set_absolute_size(size)
+        self._font.set_size(size * Pango.SCALE)
         self.invalidate()
 
     def on_draw_request(self, canvas, context, width, height):
@@ -60,11 +61,12 @@ class Label(Clutter.Canvas):
 
         line_width = 0.125 * self._font.get_size() / Pango.SCALE
         layout = PangoCairo.create_layout(context)
+        layout.set_alignment(Pango.Alignment.CENTER)
         layout.set_ellipsize(Pango.EllipsizeMode.END)
         layout.set_font_description(self._font)
         layout.set_height(height * Pango.SCALE)
         layout.set_width(width * Pango.SCALE)
-        layout.set_text(self._text, -1)
+        layout.set_markup(self._markup, -1)
 
         self._setup_context(context)
         self._clear_context(context)
@@ -80,8 +82,9 @@ class Label(Clutter.Canvas):
         context.set_source_rgba(*self._stroke_color)
         context.set_line_width(line_width)
         context.stroke_preserve()
+
         context.set_source_rgba(*self._text_color)
-        context.fill()
+        PangoCairo.show_layout(context, layout)
 
     def _clear_context(self, context):
         """Clears a drawing context"""
@@ -95,3 +98,6 @@ class Label(Clutter.Canvas):
         """Configure the drawing context"""
 
         context.set_antialias(Cairo.Antialias.BEST)
+
+    markup = GObject.Property(setter=set_markup, type=str)
+    text_size = GObject.Property(setter=set_text_size, type=int)

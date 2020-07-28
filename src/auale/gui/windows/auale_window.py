@@ -37,7 +37,6 @@ from ..services import PlayerManager
 from ..values import Rotation
 from ..values import Side
 from ..widgets import BoardCanvas
-from ..widgets import MatchInfobar
 from ..widgets import RecentChooserPopoverMenu
 from ..mixer import SoundContext
 
@@ -60,7 +59,6 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._settings = None
         self._active_player = None
         self._board_canvas = BoardCanvas()
-        self._infobar = MatchInfobar()
         self._game_loop = GameLoop()
         self._match_manager = MatchManager()
         self._player_manager = PlayerManager()
@@ -73,6 +71,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._request_overwrite_dialog = RequestOverwriteDialog(self)
         self._save_match_dialog = SaveMatchDialog(self)
         self._scoresheet_dialog = ScoresheetDialog(self)
+        self._infobar = self._board_canvas.get_infobar_actor()
 
         self.setup_window_widgets()
         self.connect_window_signals()

@@ -1,5 +1,8 @@
 [
-{ "type": "Actor", "id": "scene", "height": 1080, "width": 1920, "children": [ "houses", "focuses", "actives", "board", "shadow", "states", "labels", "hints" ] },
+{ "type": "Actor", "id": "scene", "height": 1080, "width": 1920, "children": [ "infobar", "houses", "focuses", "actives", "board", "shadow", "states", "labels", "hints" ] },
+
+{ "type": "Infobar", "id": "infobar", "x-expand": true, "x-align": "center", "y-center": 1000.0, "height": 48, "width": 1900, "content-gravity": "resize-aspect", "content": { "id": "infobar-label", "type": "Label" } },
+{ "type": "Label", "id": "infobar-label", "text-size": 25, "height": 48, "width": 1920 },
 
 { "type": "Actor", "id": "board", "height": 1080, "width": 1920, "content": { "id": "board-canvas", "type": "Glyph" } },
 { "type": "Actor", "id": "shadow", "height": 1080, "width": 1920, "translation-y": 1, "content": { "id": "shadow-canvas", "type": "Glyph" } },
