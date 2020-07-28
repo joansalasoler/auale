@@ -43,6 +43,7 @@ class Match(object):
         self._positions = [(None, None)]
         self._comments = [None]
         self._has_ended = False
+        self._has_repetition = False
         self._current_index = 0
         self._tags = {}
         self._new_match()
@@ -135,7 +136,7 @@ class Match(object):
         """Returns the winner of the match (1 = South, -1 = North) or
            zero if the match ended in a draw or it hasn't ended yet"""
 
-        if self._has_ended:
+        if self._has_ended or self._has_repetition:
             return self._game.get_winner(
                 self._board, self._turn)
 
@@ -159,7 +160,12 @@ class Match(object):
     def has_ended(self):
         """Returns if the match ended on the current position"""
 
-        return self._has_ended
+        return self._has_ended or self._has_repetition
+
+    def has_repetition(self):
+        """Checks if the match ended because of a position repetition"""
+
+        return self._has_repetition
 
     def get_seeds(self, move):
         """Current number of seeds on the given house"""
@@ -219,6 +225,7 @@ class Match(object):
         self._positions = [(self._board[:], self._turn)]
         self._comments = [None]
         self._has_ended = False
+        self._has_repetition = False
         self._current_index = 0
 
         # Fill default tags
@@ -246,12 +253,12 @@ class Match(object):
 
         # Check if the match ended and compute the final board
 
-        if self._game.is_endgame(self._board, self._turn) \
-        or self.has_position(self._board, self._turn):
+        self._has_ended = self._game.is_endgame(self._board, self._turn)
+        self._has_repetition = self.has_position(self._board, self._turn)
+
+        if self._has_ended or self._has_repetition:
             self._board = self._game.get_final_board(self._board)
-            self._has_ended = True
-            self._tags['Result'] = '%d-%d' % (
-                self._board[12], self._board[13])
+            self._tags['Result'] = '%d-%d' % (self._board[12], self._board[13])
         elif self._tags['Result'] != '*':
             self._tags['Result'] = '*'
 
