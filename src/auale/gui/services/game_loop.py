@@ -21,6 +21,7 @@ import logging
 from threading import Lock
 from gi.repository import GLib
 from gi.repository import GObject
+from game import Match
 from uci import Engine
 from .ponder_cache import PonderCache
 
@@ -51,6 +52,9 @@ class GameLoop(GObject.GObject):
 
     def request_move(self, player, match):
         """Requests a player to make a move"""
+
+        if not isinstance(match, Match):
+            return self.abort_move()
 
         self._logger.debug('Received a move request')
 
