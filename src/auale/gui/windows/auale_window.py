@@ -174,7 +174,7 @@ class AualeWindow(Gtk.ApplicationWindow):
     def toggle_active_player(self, match):
         """Requests a move to the current player of a match"""
 
-        player = self._player_manager.get_player_for_match(match)
+        player = self._player_manager.get_player_for_turn(match)
         self.set_active_player(player, match)
 
     def on_match_file_changed(self, manager, match):
@@ -282,7 +282,7 @@ class AualeWindow(Gtk.ApplicationWindow):
             self.make_legal_move(move)
             self.toggle_active_player(match)
 
-    def on_player_info_received(self, game_loop, player,values):
+    def on_player_info_received(self, game_loop, player, values):
         """A report was received from an engine player"""
 
     def on_choose_action_activate(self, action, value):
@@ -507,12 +507,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Updates the state of the window"""
 
         if match := self._match_manager.get_match():
-            self._infobar.show_match_information(match)
             self._board_canvas.show_match(match)
 
         is_unsaved = self._match_manager.has_unsaved_changes()
-        self._unsaved_indicator.set_visible(is_unsaved)
-
         is_engine = isinstance(self._active_player, Engine)
         is_human = isinstance(self._active_player, Human)
         is_ongoing_match = match and not match.has_ended()
@@ -528,4 +525,6 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.lookup_action('move').set_enabled(can_move)
         self.lookup_action('stop').set_enabled(can_stop)
 
+        self._unsaved_indicator.set_visible(is_unsaved)
+        self._infobar.show_match_information(match)
         self._board_canvas.set_sensitive(can_move)

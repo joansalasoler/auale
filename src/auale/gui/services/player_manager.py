@@ -86,7 +86,7 @@ class PlayerManager(GObject.GObject):
 
         return south_player
 
-    def get_player_for_match(self, match):
+    def get_player_for_turn(self, match):
         """Gets the player to move for the given match"""
 
         game = match.get_game()
