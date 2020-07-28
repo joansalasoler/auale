@@ -181,6 +181,7 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         file = manager.get_file()
         name = file and file.get_parse_name()
+        match.undo_all_moves()
 
         self._headerbar.set_subtitle(name)
         self.set_engine_side(Side.NEITHER)
