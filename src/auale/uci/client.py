@@ -96,7 +96,7 @@ class Client(GObject.GObject, Thread):
     def get_move_number(self):
         """Move number of the match we are searching on"""
 
-        index = self._match.get_current_index()
+        index = 1 + self._match.get_current_index()
         number = math.ceil(index / 2)
 
         return number
