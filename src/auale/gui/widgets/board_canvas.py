@@ -18,6 +18,7 @@
 
 from gi.repository import Clutter
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import GtkClutter
 
@@ -50,6 +51,7 @@ class BoardCanvas(GtkClutter.Embed):
 
         self.setup_canvas_stage()
         self.connect_canvas_signals()
+        self.set_support_multidevice(True)
 
     @GObject.Signal
     def house_activated(self, house: object):
@@ -60,6 +62,8 @@ class BoardCanvas(GtkClutter.Embed):
     @GObject.Signal
     def house_focused(self, house: object):
         """Emitted when a house is focused"""
+
+        GLib.idle_add(self._refresh_house_focus, house)
 
     @GObject.Signal
     def board_rotated(self, rotation: object):
@@ -89,7 +93,7 @@ class BoardCanvas(GtkClutter.Embed):
         """Connects the required signals"""
 
         stage = self.get_stage()
-        stage.connect('allocation-changed', self.on_allocation_changed)
+        stage.connect_after('allocation-changed', self.on_allocation_changed)
 
         for house in self.get_house_actors():
             house.connect('house-activated', self.house_activated.emit)
@@ -323,3 +327,10 @@ class BoardCanvas(GtkClutter.Embed):
 
         state = self._script.get_object('hint-visibility')
         state.set_state('hidden')
+
+    def _refresh_house_focus(self, house):
+        """Ensures this widget is focused"""
+
+        if stage := self.get_stage():
+            stage.set_key_focus(house)
+            self.grab_focus()
