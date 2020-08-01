@@ -41,10 +41,14 @@ class Infobar(Actor):
             return self.show_match_comment(match)
 
         if self._is_first_position(match):
-            pass
+            markup = self._get_match_start_message(match)
+            return self.show_info_message(markup)
 
         if self._is_endgame_position(match):
-            pass
+            markup = self._get_match_end_message(match)
+            return self.show_info_message(markup)
+
+        self.clear_message()
 
     def show_match_comment(self, match):
         """Show the comment for the current match position"""
@@ -52,7 +56,7 @@ class Infobar(Actor):
         comment = match.get_comment() or ''
         text = GLib.markup_escape_text(comment)
 
-        self.show_comment_message(text)
+        self.show_info_message(text)
 
     def show_error_message(self, message):
         """Shows an error message"""
@@ -90,3 +94,48 @@ class Infobar(Actor):
         value = tag and GLib.markup_escape_text(tag)
 
         return value
+
+    def _get_match_start_message(self, match):
+        """Message to show when a match starts"""
+
+        event = self._escape_match_tag(match, 'Event')
+        south = self._escape_match_tag(match, 'South')
+        north = self._escape_match_tag(match, 'North')
+        result = self._escape_match_tag(match, 'Result')
+
+        has_result = result != '*'
+        has_players = south and north
+        has_event = event is not None
+
+        style = 'foreground="#ffdf9c"'
+        title = f'<span { style }>{ event }:</span> ' if has_event else ''
+        players = f'{ south } vs. { north }' if has_players else ''
+        scores = f' ({ result })' if has_players and has_result else ''
+        markup = f'{ title }{ players }{ scores }'
+
+        return markup
+
+    def _get_match_end_message(self, match):
+        """Message to show when a match ends"""
+
+        game = match.get_game()
+        winner = match.get_winner()
+        is_repetition = match.has_repetition()
+
+        title = _('This match was drawn')
+        description = _('Players gathered an equal number of seeds')
+
+        if winner == game.SOUTH:
+            title = _('South has won')
+        elif winner == game.NORTH:
+            title = _('North has won')
+
+        if is_repetition is True:
+            description = _('Same position was repeated twice')
+        elif winner != game.DRAW:
+            description = _('The player gathered more than 24 seeds')
+
+        style = 'foreground="#ffdf9c"'
+        markup = f'<span {style}>{ title }:</span> { description }'
+
+        return markup

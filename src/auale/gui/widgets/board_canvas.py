@@ -93,7 +93,7 @@ class BoardCanvas(GtkClutter.Embed):
         """Connects the required signals"""
 
         stage = self.get_stage()
-        stage.connect_after('allocation-changed', self.on_allocation_changed)
+        stage.connect('allocation-changed', self.on_allocation_changed)
 
         for house in self.get_house_actors():
             house.connect('house-activated', self.house_activated.emit)
