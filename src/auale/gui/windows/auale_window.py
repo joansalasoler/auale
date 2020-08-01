@@ -98,6 +98,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._match_manager.connect('file-load-error', self.on_match_file_load_error)
         self._match_manager.connect('file-save-error', self.on_match_file_save_error)
         self._match_manager.connect('file-unload', self.on_match_file_unload)
+        self._player_manager.connect('engine-start-error', self.on_engine_start_error)
+        self._player_manager.connect('engine-failure-error', self.on_engine_failure_error)
         self._game_loop.connect('move-received', self.on_player_move_received)
         self._game_loop.connect('info-received', self.on_player_info_received)
 
@@ -227,11 +229,32 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_match_file_save_error(self, manager, error):
         """Handle  match load errors"""
 
-        title = _("Error saving match")
+        title = _('Error saving match')
         summary = _('Cannot save current match')
         message = f'<b>{ title }</b>: { summary }'
 
         self._infobar.show_error_message(message)
+
+    def on_engine_start_error(self, manager, error):
+        """Handle engine initialization errors"""
+
+        title = _('Computer player is disabled')
+        summary = _('Could not start the engine')
+        message = f'<b>{ title }</b>: { summary }'
+
+        self.set_engine_side(Side.NEITHER)
+        self._infobar.show_error_message(message)
+        GLib.idle_add(self.refresh_view)
+
+    def on_engine_failure_error(self, manager, reason):
+        """Handle engine failure errors"""
+
+        title = _('Computer player is disabled')
+        message = f'<b>{ title }</b>: { _(reason) }'
+
+        self.set_engine_side(Side.NEITHER)
+        self._infobar.show_error_message(message)
+        GLib.idle_add(self.refresh_view)
 
     def on_about_action_activate(self, action, value):
         """Shows the about dialog"""

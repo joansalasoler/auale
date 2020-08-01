@@ -46,6 +46,14 @@ class PlayerManager(GObject.GObject):
         self._south_engine = None
         self._north_engine = None
 
+    @GObject.Signal
+    def engine_start_error(self, error: object):
+        """Emitted if the engine could not be started"""
+
+    @GObject.Signal
+    def engine_failure_error(self, reason: str):
+        """Emitted on engine malfunctions"""
+
     def get_human_player(self):
         """Gets the human player"""
 
@@ -127,6 +135,7 @@ class PlayerManager(GObject.GObject):
         self._south_engine = Human()
         self._north_engine = Human()
         self._logger.warning(reason)
+        self.engine_failure_error.emit(reason)
 
     def start_players(self):
         """Starts the player processes"""
@@ -150,8 +159,9 @@ class PlayerManager(GObject.GObject):
             default = self._get_default_command()
             command = custom if self._has_custom_command() else default
             engine = self._create_engine_for_command(command)
-        except BaseException:
+        except BaseException as error:
             self._logger.warning(f'Could not start engine')
+            self.engine_start_error.emit(error)
             engine = Human()
 
         return engine

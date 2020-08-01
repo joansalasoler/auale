@@ -54,8 +54,15 @@ class Infobar(Actor):
 
         self.show_comment_message(text)
 
-    def show_message(self, markup):
-        """Show an message with a custom icon"""
+    def show_error_message(self, message):
+        """Shows an error message"""
+
+        markup = f'<span foreground="#ffdf9c">{ message }</span>'
+        canvas = self.get_content()
+        canvas.set_markup(markup)
+
+    def show_info_message(self, markup):
+        """Shows an informative message"""
 
         canvas = self.get_content()
         canvas.set_markup(markup)
