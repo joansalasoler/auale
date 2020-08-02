@@ -53,7 +53,7 @@ class GameLoop(GObject.GObject):
     def request_move(self, player, match):
         """Requests a player to make a move"""
 
-        if not isinstance(match, Match):
+        if not isinstance(match, Match) or match.has_ended():
             return self.abort_move()
 
         self._logger.debug('Received a move request')

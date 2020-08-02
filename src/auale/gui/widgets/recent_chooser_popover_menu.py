@@ -84,7 +84,10 @@ class RecentChooserPopoverMenu(Gtk.Bin):
     def get_filtered_items(self, manager):
         """Filters the items of a recent file manager"""
 
-        for item in manager.get_items():
+        recent_items = list(manager.get_items())
+        recent_items.sort(key=lambda i: i.get_visited())
+
+        for item in recent_items:
             info = self.create_recent_filter_info(item)
 
             if self._filter.filter(info):
