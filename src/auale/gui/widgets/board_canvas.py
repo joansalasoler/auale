@@ -122,6 +122,11 @@ class BoardCanvas(GtkClutter.Embed):
 
         return self._script.get_object('infobar')
 
+    def get_report_actor(self):
+        """Obtains the engine report actor of the stage"""
+
+        return self._script.get_object('report')
+
     def set_rotation(self, rotation):
         """Sets the board rotation angle"""
 

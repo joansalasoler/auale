@@ -58,24 +58,35 @@ class Infobar(Actor):
 
         self.show_info_message(text)
 
+    def show_principal_variation(self, report):
+        """Show a principal variation given a player report"""
+
+        style = 'foreground="#ffdf9c"'
+        score = self._get_variation_score(report)
+        variation = self._get_principal_variation(report)
+        text = ' '.join((variation, f'<span { style }>{ score }</span>'))
+
+        self.show_info_message(text)
+
     def show_error_message(self, message):
         """Shows an error message"""
 
-        markup = f'<span foreground="#ffdf9c">{ message }</span>'
-        canvas = self.get_content()
-        canvas.set_markup(markup)
+        if canvas := self.get_content():
+            style = 'foreground="#ffdf9c"'
+            markup = f'<span { style }>{ message }</span>'
+            canvas.set_markup(markup)
 
     def show_info_message(self, markup):
         """Shows an informative message"""
 
-        canvas = self.get_content()
-        canvas.set_markup(markup)
+        if canvas := self.get_content():
+            canvas.set_markup(markup)
 
     def clear_message(self):
         """Clears the current message"""
 
-        canvas = self.get_content()
-        canvas.set_markup('')
+        if canvas := self.get_content():
+            canvas.set_markup('')
 
     def _is_first_position(self, match):
         """Checks if the match position is the first of the game"""
@@ -139,3 +150,26 @@ class Infobar(Actor):
         markup = f'<span {style}>{ title }:</span> { description }'
 
         return markup
+
+    def _get_principal_variation(self, report):
+        """Extracts the principal variation from an engine report"""
+
+        move = report.get('ponder') or ''
+        variation = report.get('pv') or ''
+        n = int(report.get('number'))
+
+        moves = '{:s}{:s}'.format(move, variation)
+        moves = '…{:s}'.format(moves) if moves[0:1].islower() else moves
+        groups = [moves[i:i + 2] for i in range(0, len(moves), 2)]
+        result = ' '.join([f'{ n + i }. { m }' for i, m in enumerate(groups)])
+
+        return result
+
+    def _get_variation_score(self, report):
+        """Extracts the score from an engine report"""
+
+        score = report.get('cp') or '0'
+        value = int(score) / 100
+        result = '{:+.2f} {:s}'.format(value, _('seeds'))
+
+        return result

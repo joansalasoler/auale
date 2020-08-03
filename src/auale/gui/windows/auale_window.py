@@ -72,6 +72,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._save_match_dialog = SaveMatchDialog(self)
         self._scoresheet_dialog = ScoresheetDialog(self)
         self._infobar = self._board_canvas.get_infobar_actor()
+        self._engine_report = self._board_canvas.get_report_actor()
 
         self.setup_window_widgets()
         self.connect_window_signals()
@@ -170,6 +171,7 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._active_player = player
         self._game_loop.request_move(player, match)
+        self._engine_report.clear_message()
         GLib.idle_add(self.refresh_view)
 
     def toggle_active_player(self, match):
@@ -243,7 +245,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         message = f'<b>{ title }</b>: { summary }'
 
         self.set_engine_side(Side.NEITHER)
-        self._infobar.show_error_message(message)
+        self._engine_report.show_error_message(message)
         GLib.idle_add(self.refresh_view)
 
     def on_engine_failure_error(self, manager, reason):
@@ -253,7 +255,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         message = f'<b>{ title }</b>: { _(reason) }'
 
         self.set_engine_side(Side.NEITHER)
-        self._infobar.show_error_message(message)
+        self._engine_report.show_error_message(message)
         GLib.idle_add(self.refresh_view)
 
     def on_about_action_activate(self, action, value):
@@ -305,8 +307,10 @@ class AualeWindow(Gtk.ApplicationWindow):
             self.make_legal_move(move)
             self.toggle_active_player(match)
 
-    def on_player_info_received(self, game_loop, player, values):
+    def on_player_info_received(self, game_loop, player, report):
         """A report was received from an engine player"""
+
+        self._engine_report.show_principal_variation(report)
 
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""
