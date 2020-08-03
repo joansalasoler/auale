@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 
+<!-- Generated with glade 3.36.0
 
 Aualé -
 Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
@@ -39,7 +39,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
         <property name="margin_bottom">10</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkModelButton" id="open_button">
+          <object class="GtkModelButton" id="new_match_menu_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="action_name">win.new</property>
+            <property name="text" translatable="yes">_New match</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="open_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -51,11 +65,39 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="saveas_button">
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="save_match_menu_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="action_name">win.save</property>
+            <property name="action_target">''</property>
+            <property name="text" translatable="yes">Save _match</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="saveas_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -66,11 +108,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="properties_button">
+          <object class="GtkModelButton" id="properties_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -81,7 +123,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">5</property>
           </packing>
         </child>
         <child>
@@ -94,11 +136,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">6</property>
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="recent_button">
+          <object class="GtkModelButton" id="recent_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -109,7 +151,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">7</property>
           </packing>
         </child>
         <child>
@@ -122,11 +164,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">5</property>
+            <property name="position">8</property>
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="prompt_unsaved_button">
+          <object class="GtkModelButton" id="prompt_unsaved_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -137,7 +179,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">6</property>
+            <property name="position">9</property>
           </packing>
         </child>
       </object>
@@ -335,7 +377,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="move_now_button">
+          <object class="GtkModelButton" id="move_now_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -351,7 +393,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="stop_button">
+          <object class="GtkModelButton" id="stop_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -420,7 +462,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="immersive_button">
+          <object class="GtkModelButton" id="immersive_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -435,7 +477,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="rotate_button">
+          <object class="GtkModelButton" id="rotate_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -450,7 +492,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="mute_button">
+          <object class="GtkModelButton" id="mute_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -478,7 +520,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="rules_button">
+          <object class="GtkModelButton" id="rules_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -493,7 +535,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="about_button">
+          <object class="GtkModelButton" id="about_menu_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -560,7 +602,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkModelButton" id="easy_strength_button">
+              <object class="GtkModelButton" id="easy_strength_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -575,7 +617,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               </packing>
             </child>
             <child>
-              <object class="GtkModelButton" id="medium_strength_button">
+              <object class="GtkModelButton" id="medium_strength_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -590,7 +632,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               </packing>
             </child>
             <child>
-              <object class="GtkModelButton" id="hard_strength_button">
+              <object class="GtkModelButton" id="hard_strength_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -605,7 +647,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               </packing>
             </child>
             <child>
-              <object class="GtkModelButton" id="expert_strength_button">
+              <object class="GtkModelButton" id="expert_strength_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -679,7 +721,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkModelButton" id="south_player_button">
+              <object class="GtkModelButton" id="south_player_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -694,7 +736,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               </packing>
             </child>
             <child>
-              <object class="GtkModelButton" id="north_player_button">
+              <object class="GtkModelButton" id="north_player_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -709,7 +751,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               </packing>
             </child>
             <child>
-              <object class="GtkModelButton" id="both_player_button">
+              <object class="GtkModelButton" id="both_player_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -724,7 +766,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
               </packing>
             </child>
             <child>
-              <object class="GtkModelButton" id="neither_player_button">
+              <object class="GtkModelButton" id="neither_player_menu_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -824,7 +866,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <property name="tooltip_text" translatable="yes">Starts a new match</property>
                 <property name="action_name">win.new</property>
                 <property name="icon">new_match_icon</property>
-                <property name="text" translatable="yes">Previous move</property>
+                <property name="text" translatable="yes">New match</property>
                 <property name="centered">True</property>
                 <property name="iconic">True</property>
                 <style>
@@ -846,7 +888,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <property name="action_name">win.save</property>
                 <property name="action_target">''</property>
                 <property name="icon">save_match_icon</property>
-                <property name="text" translatable="yes">Previous move</property>
+                <property name="text" translatable="yes">Save match</property>
                 <property name="centered">True</property>
                 <property name="iconic">True</property>
                 <style>
