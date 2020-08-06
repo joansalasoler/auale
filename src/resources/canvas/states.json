@@ -187,5 +187,28 @@
                 ]
             }
         ]
+    },
+    {
+        "id": "message-visibility",
+        "type": "ClutterState",
+        "state": "hidden",
+        "transitions": [
+            {
+                "source": "visible",
+                "target": "hidden",
+                "duration": 50,
+                "keys" : [
+                    ["message",  "y", "linear", -72.0]
+                ]
+            },
+            {
+                "source": "hidden",
+                "target": "visible",
+                "duration": 200,
+                "keys" : [
+                    ["message",  "y", "easeOutQuart", -2.0]
+                ]
+            }
+        ]
     }
 ]

@@ -71,7 +71,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._request_overwrite_dialog = RequestOverwriteDialog(self)
         self._save_match_dialog = SaveMatchDialog(self)
         self._scoresheet_dialog = ScoresheetDialog(self)
-        self._infobar = self._board_canvas.get_infobar_actor()
+        self._message = self._board_canvas.get_message_actor()
         self._engine_report = self._board_canvas.get_report_actor()
 
         self.setup_window_widgets()
@@ -226,7 +226,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         summary = _('Match file cannot be opened')
         message = f'<b>{ title }</b>: { summary }'
 
-        self._infobar.show_error_message(message)
+        self._message.show_error_message(message)
 
     def on_match_file_save_error(self, manager, error):
         """Handle  match load errors"""
@@ -235,7 +235,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         summary = _('Cannot save current match')
         message = f'<b>{ title }</b>: { summary }'
 
-        self._infobar.show_error_message(message)
+        self._message.show_error_message(message)
 
     def on_engine_start_error(self, manager, error):
         """Handle engine initialization errors"""
@@ -553,5 +553,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.lookup_action('stop').set_enabled(can_stop)
 
         self._unsaved_indicator.set_visible(is_unsaved)
-        self._infobar.show_match_information(match)
+        self._message.show_match_information(match)
         self._board_canvas.set_sensitive(can_move)
+
+        has_message = self._message.has_message()
+        self._board_canvas.set_message_visible(has_message)

@@ -74,6 +74,7 @@ class BoardCanvas(GtkClutter.Embed):
 
         stage = self.get_stage()
         scene = self._script.get_object('scene')
+        overlay = self._script.get_object('overlay')
 
         mosaic = Mosaic()
         mosaic.allocate_image()
@@ -84,10 +85,17 @@ class BoardCanvas(GtkClutter.Embed):
         align_scene.set_factor(0.5)
         scene.add_constraint(align_scene)
 
+        align_overlay = Clutter.AlignConstraint()
+        align_overlay.set_align_axis(Clutter.AlignAxis.X_AXIS)
+        align_overlay.set_source(stage)
+        align_overlay.set_factor(0.5)
+        overlay.add_constraint(align_overlay)
+
         stage.set_content(mosaic)
         stage.set_content_repeat(Clutter.ContentRepeat.BOTH)
         stage.set_no_clear_hint(True)
         stage.add_child(scene)
+        stage.add_child(overlay)
 
     def connect_canvas_signals(self):
         """Connects the required signals"""
@@ -117,7 +125,7 @@ class BoardCanvas(GtkClutter.Embed):
 
         return actors
 
-    def get_infobar_actor(self):
+    def get_message_actor(self):
         """Obtains the infobar actor of the stage"""
 
         return self._script.get_object('infobar')
@@ -308,9 +316,11 @@ class BoardCanvas(GtkClutter.Embed):
         """Scale the scene when the stage is resized"""
 
         scene = self._script.get_object('scene')
+        overlay = self._script.get_object('overlay')
         width, height = scene.get_size()
         scale = min(box.get_width() / width, box.get_height() / height)
         scene.set_scale(scale, scale)
+        overlay.set_scale(scale, scale)
 
     def on_house_hover_changed(self, house, params):
         """Show a hand cursor whenever a house is hovered"""
@@ -332,6 +342,23 @@ class BoardCanvas(GtkClutter.Embed):
 
         state = self._script.get_object('hint-visibility')
         state.set_state('hidden')
+
+    def show_message(self):
+        """Shows the message of the board"""
+
+        state = self._script.get_object('message-visibility')
+        state.set_state('visible')
+
+    def hide_message(self):
+        """Hides the message of the board"""
+
+        state = self._script.get_object('message-visibility')
+        state.set_state('hidden')
+
+    def set_message_visible(self, visible):
+        """Toggles the visibility of the board's message"""
+
+        self.show_message() if visible else self.hide_message()
 
     def _refresh_house_focus(self, house):
         """Ensures this widget is focused"""
