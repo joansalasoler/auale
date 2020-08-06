@@ -42,8 +42,8 @@ class Match(object):
         self._moves = []
         self._positions = [(None, None)]
         self._comments = [None]
-        self._has_ended = False
-        self._has_repetition = False
+        self._endgame_flag = [False]
+        self._repetition_flag = [False]
         self._current_index = 0
         self._tags = {}
         self._new_match()
@@ -136,11 +136,8 @@ class Match(object):
         """Returns the winner of the match (1 = South, -1 = North) or
            zero if the match ended in a draw or it hasn't ended yet"""
 
-        if self._has_ended or self._has_repetition:
-            return self._game.get_winner(
-                self._board, self._turn)
-
-        return 0
+        winner = self._game.get_winner(self._board, self._turn)
+        return winner if self.has_ended() else self._game.DRAW
 
     def get_comment(self):
         """Returns the comment for the current move"""
@@ -160,12 +157,17 @@ class Match(object):
     def has_ended(self):
         """Returns if the match ended on the current position"""
 
-        return self._has_ended or self._has_repetition
+        return self.is_endgame() or self.is_repetition()
 
-    def has_repetition(self):
-        """Checks if the match ended because of a position repetition"""
+    def is_endgame(self):
+        """If the current position is an endgame position"""
 
-        return self._has_repetition
+        return self._endgame_flag[self._current_index]
+
+    def is_repetition(self):
+        """If the match ended because of a position repetition"""
+
+        return self._repetition_flag[self._current_index]
 
     def get_seeds(self, move):
         """Current number of seeds on the given house"""
@@ -196,9 +198,9 @@ class Match(object):
 
     def has_position(self, board, turn):
         """Returns true if the match contains the specified position
-           in the positions prior to the current"""
+           in the positions prior to the current one"""
 
-        return (board, turn) in self._positions[:self._current_index + 1]
+        return (board, turn) in self._positions[:self._current_index]
 
     def get_legal_moves(self):
         """Get the legal moves for the current position"""
@@ -224,8 +226,8 @@ class Match(object):
         self._moves = []
         self._positions = [(self._board[:], self._turn)]
         self._comments = [None]
-        self._has_ended = False
-        self._has_repetition = False
+        self._endgame_flag = [False]
+        self._repetition_flag = [False]
         self._current_index = 0
 
         # Fill default tags
@@ -248,27 +250,31 @@ class Match(object):
 
         # Update the board and switch the turn
 
-        self._board = self._game.make_move(self._board, move)
-        self._turn = -self._turn
+        board = self._game.make_move(self._board, move)
+        turn = -self._turn
 
         # Check if the match ended and compute the final board
 
-        self._has_ended = self._game.is_endgame(self._board, self._turn)
-        self._has_repetition = self.has_position(self._board, self._turn)
+        is_endgame = self._game.is_endgame(board, turn)
+        is_repetition = self.has_position(board, turn)
 
-        if self._has_ended or self._has_repetition:
-            self._board = self._game.get_final_board(self._board)
-            self._tags['Result'] = '%d-%d' % (self._board[12], self._board[13])
+        if is_endgame or is_repetition:
+            board = self._game.get_final_board(board)
+            self._tags['Result'] = '%d-%d' % (board[12], board[13])
         elif self._tags['Result'] != '*':
             self._tags['Result'] = '*'
 
         # Record the move and position
 
+        self._turn = turn
+        self._board = board
         self._moves = self._moves[:self._current_index]
         self._comments = self._comments[:self._current_index + 1]
         self._positions = self._positions[:self._current_index + 1]
         self._moves.append(move)
         self._comments.append(None)
+        self._endgame_flag.append(is_endgame)
+        self._repetition_flag.append(is_repetition)
         self._positions.append((self._board[:], self._turn))
         self._current_index += 1
 
@@ -279,7 +285,6 @@ class Match(object):
             self._current_index -= 1
             self._turn = self._positions[self._current_index][1]
             self._board = self._positions[self._current_index][0]
-            self._has_ended = False
 
     def redo_last_move(self):
         """Redoes the last move"""
@@ -289,11 +294,6 @@ class Match(object):
             self._turn = self._positions[self._current_index][1]
             self._board = self._positions[self._current_index][0]
 
-            # Check if the match ended on that position
-
-            if self._game.is_endgame(self._board, self._turn):
-                self._has_ended = True
-
     def undo_all_moves(self):
         """Undoes all the moves"""
 
@@ -301,7 +301,6 @@ class Match(object):
             self._current_index = 0
             self._turn = self._positions[0][1]
             self._board = self._positions[0][0]
-            self._has_ended = False
 
     def redo_all_moves(self):
         """Redoes all the moves"""
@@ -310,11 +309,6 @@ class Match(object):
             self._current_index = len(self._positions) - 1
             self._turn = self._positions[self._current_index][1]
             self._board = self._positions[self._current_index][0]
-
-            # Check if the match ended on that position
-
-            if self._game.is_endgame(self._board, self._turn):
-                self._has_ended = True
 
     def reset_tags(self):
         """Clears all the match tags"""
