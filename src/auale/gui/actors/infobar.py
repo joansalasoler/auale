@@ -31,6 +31,14 @@ class Infobar(Actor):
     def __init__(self):
         super(Infobar, self).__init__()
 
+    def has_message(self):
+        """Checks if a message is shown"""
+
+        if canvas := self.get_content():
+            return bool(canvas.get_markup())
+
+        return False
+
     def show_match_information(self, match):
         """Show information about a match file"""
 
@@ -61,7 +69,7 @@ class Infobar(Actor):
     def show_principal_variation(self, report):
         """Show a principal variation given a player report"""
 
-        style = 'foreground="#ffdf9c"'
+        style = 'foreground="#feebc4"'
         score = self._get_variation_score(report)
         variation = self._get_principal_variation(report)
         text = ' '.join((variation, f'<span { style }>{ score }</span>'))
@@ -72,7 +80,7 @@ class Infobar(Actor):
         """Shows an error message"""
 
         if canvas := self.get_content():
-            style = 'foreground="#ffdf9c"'
+            style = 'foreground="#feebc4"'
             markup = f'<span { style }>{ message }</span>'
             canvas.set_markup(markup)
 
@@ -118,7 +126,7 @@ class Infobar(Actor):
         has_players = south and north
         has_event = event is not None
 
-        style = 'foreground="#ffdf9c"'
+        style = 'foreground="#feebc4"'
         title = f'<span { style }>{ event }:</span> ' if has_event else ''
         players = f'{ south } vs. { north }' if has_players else ''
         scores = f' ({ result })' if has_players and has_result else ''
@@ -131,7 +139,7 @@ class Infobar(Actor):
 
         game = match.get_game()
         winner = match.get_winner()
-        is_repetition = match.has_repetition()
+        is_repetition = match.is_repetition()
 
         title = _('This match was drawn')
         description = _('Players gathered an equal number of seeds')
@@ -146,7 +154,7 @@ class Infobar(Actor):
         elif winner != game.DRAW:
             description = _('The player gathered more than 24 seeds')
 
-        style = 'foreground="#ffdf9c"'
+        style = 'foreground="#feebc4"'
         markup = f'<span {style}>{ title }:</span> { description }'
 
         return markup

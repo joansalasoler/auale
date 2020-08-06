@@ -33,10 +33,15 @@ class Label(Clutter.Canvas):
 
         self._markup = ''
         self._font = Pango.font_description_from_string('Ubuntu Bold 14')
-        self._stroke_color = (0.25, 0.25, 0.25, 1.0)
-        self._shadow_color = (0.20, 0.20, 0.20, 1.0)
-        self._text_color = (0.96, 0.96, 0.96, 1.0)
+        self._stroke_color = (0.20, 0.20, 0.20, 1.0)
+        self._shadow_color = (0.10, 0.10, 0.10, 1.0)
+        self._text_color = (1.00, 1.00, 1.00, 1.0)
         self.connect('draw', self.on_draw_request)
+
+    def get_markup(self):
+        """Current text to display"""
+
+        return self._markup
 
     def set_color(self, red, green, blue, alpha=1.0):
         """Color for the label's text"""
