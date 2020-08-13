@@ -40,7 +40,7 @@ class MatchManager(GObject.GObject):
         self._recent_manager = Gtk.RecentManager.get_default()
 
     @GObject.Signal
-    def file_changed(self, match: object):
+    def file_changed(self, match: object, is_new: bool):
         """Emitted on file changes"""
 
     @GObject.Signal
@@ -110,7 +110,7 @@ class MatchManager(GObject.GObject):
             self._file = None
             self._match = Match(Oware)
             self._hash = hash(self._match)
-            self.file_changed.emit(self._match)
+            self.file_changed.emit(self._match, True)
 
         return self._match
 
@@ -164,12 +164,14 @@ class MatchManager(GObject.GObject):
     def _update_match_file(self, file, match, etag):
         """Updates the current file information"""
 
+        is_new = match != self._match
+
         self._etag = etag
         self._file = file
         self._match = match
         self._hash = hash(match)
         self._recent_manager.add_item(file.get_uri())
-        self.file_changed.emit(match)
+        self.file_changed.emit(match, is_new)
 
     def _unload_is_not_aborted(self):
         """Emits an unload event if match is not none"""

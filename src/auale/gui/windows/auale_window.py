@@ -180,13 +180,14 @@ class AualeWindow(Gtk.ApplicationWindow):
         player = self._player_manager.get_player_for_turn(match)
         self.set_active_player(player, match)
 
-    def on_match_file_changed(self, manager, match):
+    def on_match_file_changed(self, manager, match, is_new):
         """Emitted when the match file changed"""
 
         file = manager.get_file()
         name = file and file.get_parse_name()
-        match.undo_all_moves()
+        match.undo_all_moves() if is_new else None
 
+        self._board_canvas.show_match(match)
         self._headerbar.set_subtitle(name)
         self.set_engine_side(Side.NEITHER)
         GLib.idle_add(self.refresh_view)
