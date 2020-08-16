@@ -311,7 +311,8 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_player_info_received(self, game_loop, player, report):
         """A report was received from an engine player"""
 
-        self._engine_report.show_principal_variation(report)
+        if report.get('cp') or report.get('pv'):
+            self._engine_report.show_principal_variation(report)
 
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""
