@@ -271,6 +271,7 @@ class Match(object):
         self._moves = self._moves[:self._current_index]
         self._comments = self._comments[:self._current_index + 1]
         self._positions = self._positions[:self._current_index + 1]
+        self._repetition_flag = self._repetition_flag[:self._current_index + 1]
         self._moves.append(move)
         self._comments.append(None)
         self._endgame_flag.append(is_endgame)
