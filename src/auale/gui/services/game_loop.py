@@ -18,7 +18,7 @@
 
 import logging
 
-from threading import Lock
+from threading import RLock
 from gi.repository import GLib
 from gi.repository import GObject
 from game import Match
@@ -38,7 +38,7 @@ class GameLoop(GObject.GObject):
         self._active_player = None
         self._current_player = None
         self._previous_player = None
-        self._request_lock = Lock()
+        self._request_lock = RLock()
         self._ponder_cache = PonderCache(256)
         self._logger = logging.getLogger('game-loop')
 
@@ -150,13 +150,12 @@ class GameLoop(GObject.GObject):
     def _on_move_received(self, player, values):
         """Handles the reception of an engine move"""
 
-        if not self._request_lock.locked():
+        if player == self._active_player:
             with self._request_lock:
-                if player == self._active_player:
-                    self._active_player = None
-                    self._emit_player_move(player, values)
+                self._active_player = None
+                self._emit_player_move(player, values)
 
-            self._logger.debug('Move received from engine')
+        self._logger.debug('Move received from engine')
 
     def _on_info_received(self, player, values):
         """Handles the reception of an engine report"""
