@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Clutter
 from .actor import Actor
 from ..values import RipeningStage
 
@@ -27,6 +28,9 @@ class State(Actor):
 
     def __init__(self):
         super(State, self).__init__()
+
+        self.set_easing_duration(150)
+        self.set_easing_mode(Clutter.AnimationMode.LINEAR)
         self.connect('notify::house', self.on_house_changed)
 
     def on_house_changed(self, actor, param):
@@ -39,4 +43,5 @@ class State(Actor):
         """Emitted when the related house ripe stage changes"""
 
         state = house.get_state()
-        self.set_property('visible', state == RipeningStage.RIPE)
+        opacity = 255 if state == RipeningStage.RIPE else 0
+        self.set_property('opacity', opacity)
