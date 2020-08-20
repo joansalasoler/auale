@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Clutter
 from .actor import Actor
 
 
@@ -26,10 +27,20 @@ class Active(Actor):
 
     def __init__(self):
         super(Active, self).__init__()
+
+        self.set_easing_duration(150)
+        self.set_easing_mode(Clutter.AnimationMode.LINEAR)
         self.connect('notify::house', self.on_house_changed)
 
     def on_house_changed(self, actor, param):
         """Emitted when the related house changes"""
 
         house = self.get_house()
-        house.bind_property('activated', self, 'visible')
+        house.connect('notify::activated', self.on_house_activated_changed)
+
+    def on_house_activated_changed(self, house, param):
+        """Emitted when the related house is activated"""
+
+        is_activated = house.get_activated()
+        opacity = 255 if is_activated else 0
+        self.set_property('opacity', opacity)
