@@ -39,6 +39,9 @@ class House(Actor):
         self._state = RipeningStage.GREEN
 
         self.set_reactive(False)
+        self.set_easing_duration(150)
+        self.set_easing_mode(Clutter.AnimationMode.LINEAR)
+
         self.connect('button-press-event', self.on_button_press_event)
         self.connect('button-release-event', self.on_button_release_event)
         self.connect('motion-event', self.on_motion_event)
