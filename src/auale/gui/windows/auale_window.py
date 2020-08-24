@@ -95,6 +95,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.connect('realize', self.on_window_realize)
         self._board_canvas.connect('house-activated', self.on_board_canvas_house_activated)
         self._board_canvas.connect('animation-completed', self.on_move_animation_completed)
+        self._board_canvas.connect('canvas_updated', self.on_canvas_updated)
         self._match_manager.connect('file_overwrite', self.on_match_file_overwrite)
         self._match_manager.connect('file-changed', self.on_match_file_changed)
         self._match_manager.connect('file-load-error', self.on_match_file_load_error)
@@ -277,6 +278,13 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         if match := self._match_manager.get_match():
             self.toggle_active_player(match)
+
+    def on_canvas_updated(self, canvas, match):
+        """Emitted after a match is show on the canvas"""
+
+        self._message.show_match_information(match)
+        has_message = self._message.has_message()
+        self._board_canvas.set_message_visible(has_message)
 
     def on_move_action_activate(self, action, value):
         """A move from the engine was requested by the user"""
@@ -573,8 +581,4 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.lookup_action('stop').set_enabled(can_stop)
 
         self._unsaved_indicator.set_visible(is_unsaved)
-        self._message.show_match_information(match)
         self._board_canvas.set_sensitive(can_move)
-
-        has_message = self._message.has_message()
-        self._board_canvas.set_message_visible(has_message)

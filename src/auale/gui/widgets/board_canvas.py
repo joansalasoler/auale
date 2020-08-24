@@ -61,6 +61,10 @@ class BoardCanvas(GtkClutter.Embed):
         """Emitted when a move animation is completed"""
 
     @GObject.Signal
+    def canvas_updated(self, match: object):
+        """Emitted after the match is updated"""
+
+    @GObject.Signal
     def house_activated(self, house: object):
         """Emitted when a house is activated"""
 
@@ -159,6 +163,7 @@ class BoardCanvas(GtkClutter.Embed):
         self.update_houses(match)
         self.update_sowings(match)
         self.update_focus(self._moves)
+        self.canvas_updated.emit(match)
 
     def animate_move(self, match):
         """Animates the last move from a match"""
