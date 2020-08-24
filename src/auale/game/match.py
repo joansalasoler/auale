@@ -114,23 +114,35 @@ class Match(object):
 
         return board[13]
 
-    def get_board(self):
-        """Returns a copy of the current board position"""
+    def get_board(self, index=None):
+        """Returns a copy of a position's board"""
 
-        return self._board[:]
+        i = self._current_index if index is None else index
+        position = self._positions[i]
+
+        return position[0][:]
 
     def get_turn(self):
         """Returns the current turn"""
 
         return self._turn
 
-    def get_move(self):
-        """Move that lead to the current position or none"""
+    def get_move(self, index=None):
+        """Move that lead to a position or none"""
 
-        index = self._current_index - 1
-        move = self._moves[index] if index >= 0 else None
+        i = self._current_index - 1 if index is None else index - 1
+        move = self._moves[i] if i >= 0 else None
 
         return move
+
+    def get_sowings(self, index=None):
+        """Sowings that lead to a positions"""
+
+        i = self._current_index if index is None else index
+        board = self.get_board(i - 1)
+        move = self.get_move(i)
+
+        return self._game.get_sowings(board, move)
 
     def get_winner(self):
         """Returns the winner of the match (1 = South, -1 = North) or
