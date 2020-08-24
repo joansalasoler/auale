@@ -172,7 +172,6 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._active_player = player
         self._game_loop.request_move(player, match)
-        self._engine_report.clear_message()
         GLib.idle_add(self.refresh_view)
 
     def toggle_active_player(self, match):
@@ -186,7 +185,10 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         file = manager.get_file()
         name = file and file.get_parse_name()
-        match.undo_all_moves() if is_new else None
+
+        if is_new is True:
+            match.undo_all_moves()
+            self._engine_report.clear_message()
 
         self._board_canvas.show_match(match)
         self._headerbar.set_subtitle(name)
