@@ -38,7 +38,7 @@ class Focus(Actor):
     def on_house_key_focus_in(self, house):
         """Emitted when the linked house is focused"""
 
-        self.show()
+        self.show() if house.get_reactive() else self.hide()
 
     def on_house_key_focus_out(self, house):
         """Emitted when the linked house loses focus"""
