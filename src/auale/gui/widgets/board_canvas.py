@@ -26,6 +26,7 @@ from ..actors import House
 from ..actors import Mosaic
 from ..values import RipeningStage
 from ..values import Rotation
+from .board_animator import BoardAnimator
 
 
 class BoardCanvas(GtkClutter.Embed):
@@ -44,7 +45,9 @@ class BoardCanvas(GtkClutter.Embed):
         self._script = Clutter.Script()
         self._script.load_from_resource(self.__scene_path)
         self._script.load_from_resource(self.__states_path)
+        self._animator = BoardAnimator(self)
         self._rotation = Rotation.BASE
+        self._is_reactive = True
         self._activables = []
         self._sowings = [[], ] * 12
         self._moves = []
@@ -52,6 +55,10 @@ class BoardCanvas(GtkClutter.Embed):
         self.setup_canvas_stage()
         self.connect_canvas_signals()
         self.set_support_multidevice(True)
+
+    @GObject.Signal
+    def animation_completed(self):
+        """Emitted when a move animation is completed"""
 
     @GObject.Signal
     def house_activated(self, house: object):
@@ -73,8 +80,8 @@ class BoardCanvas(GtkClutter.Embed):
         """Configures this canvas's stage"""
 
         stage = self.get_stage()
-        scene = self._script.get_object('scene')
-        overlay = self._script.get_object('overlay')
+        scene = self.get_object('scene')
+        overlay = self.get_object('overlay')
 
         mosaic = Mosaic()
         mosaic.allocate_image()
@@ -103,44 +110,41 @@ class BoardCanvas(GtkClutter.Embed):
         stage = self.get_stage()
         stage.connect('allocation-changed', self.on_allocation_changed)
 
-        for house in self.get_house_actors():
+        for house in self.get_children('houses'):
             house.connect('house-activated', self.house_activated.emit)
             house.connect('key-focus-in', self.on_house_key_focus_in)
             house.connect('key-focus-out', self.on_house_key_focus_out)
             house.connect('notify::hovered', self.on_house_hover_changed)
 
-    def get_house_actors(self):
-        """Obtains the house actors on the stage"""
+    def get_object(self, name):
+        """Obtains a board object given its name"""
 
-        houses = self._script.get_object('houses')
-        actors = houses.get_children()
+        return self._script.get_object(name)
 
-        return actors
+    def get_children(self, name):
+        """Obtains the children of a board actor"""
 
-    def get_hint_actors(self):
-        """Obtains the hint actors on the stage"""
+        return self.get_object(name).get_children()
 
-        hints = self._script.get_object('hints')
-        actors = hints.get_children()
+    def get_reactive(self):
+        """Checks if this canvas can respond to events"""
 
-        return actors
+        return self._is_reactive and self.is_sensitive()
 
-    def get_message_actor(self):
-        """Obtains the infobar actor of the stage"""
+    def set_reactive(self, is_reactive):
+        """If the canvas actors will receive events"""
 
-        return self._script.get_object('infobar')
+        self._is_reactive = is_reactive
 
-    def get_report_actor(self):
-        """Obtains the engine report actor of the stage"""
-
-        return self._script.get_object('report')
+        for house in self.get_children('houses'):
+            house.set_property('reactive', is_reactive)
 
     def set_rotation(self, rotation):
         """Sets the board rotation angle"""
 
         self._rotation = rotation
-        scene_state = self._script.get_object('scene-rotation')
-        house_state = self._script.get_object('house-rotation')
+        scene_state = self.get_object('scene-rotation')
+        house_state = self.get_object('house-rotation')
         scene_state.set_state(rotation.nick)
         house_state.set_state(rotation.nick)
         self.board_rotated.emit(rotation)
@@ -149,30 +153,33 @@ class BoardCanvas(GtkClutter.Embed):
         """Displays a match position on the board"""
 
         self._moves = match.get_legal_moves()
+        self._animator.stop_animation()
+
+        self.set_reactive(True)
         self.update_houses(match)
         self.update_sowings(match)
         self.update_focus(self._moves)
 
+    def animate_move(self, match):
+        """Animates the last move from a match"""
+
+        self._animator.stop_animation()
+        self._animator.animate_move(match)
+        self.set_reactive(False)
+
     def get_seed_canvas(self, number):
         """Canvas for the given number of seeds"""
 
-        name = f'seed-canvas-{ number }'
-        canvas = self._script.get_object(name)
-
-        return canvas
+        return self.get_object(f'seed-canvas-{ number }')
 
     def get_sow_canvas(self, number):
         """Hint for the given number of seeds"""
 
-        name = f'sow-canvas-{ number }'
-        canvas = self._script.get_object(name)
+        return self.get_object(f'sow-canvas-{ number }')
 
-        return canvas
+    def get_ripening_stage(self, move, seeds, match):
+        """Rippening state of a move if it contains the given seeds"""
 
-    def get_ripening_stage(self, house, match):
-
-        move = house.get_move()
-        seeds = match.get_seeds(move)
         is_capture = match.is_capture_move(move)
         house_state = RipeningStage.GREEN
 
@@ -195,7 +202,7 @@ class BoardCanvas(GtkClutter.Embed):
     def activate_house(self, house):
         """Activates the given house"""
 
-        houses = self.get_house_actors()
+        houses = self.get_children('houses')
 
         if not house.get_activated():
             house.activate()
@@ -206,7 +213,7 @@ class BoardCanvas(GtkClutter.Embed):
     def update_houses(self, match):
         """Updates the houses from the given match"""
 
-        for house in self.get_house_actors():
+        for house in self.get_children('houses'):
             self.update_house(house, match)
 
     def update_house(self, house, match):
@@ -217,7 +224,7 @@ class BoardCanvas(GtkClutter.Embed):
         is_valid = match.is_valid_move(move)
         is_legal = match.is_legal_move(move)
         is_active = house.is_move(match.get_move())
-        state = self.get_ripening_stage(house, match)
+        state = self.get_ripening_stage(move, seeds, match)
         canvas = self.get_seed_canvas(seeds)
 
         house.set_content(canvas)
@@ -233,7 +240,7 @@ class BoardCanvas(GtkClutter.Embed):
         counts = [sowings.count(i) for i in range(12)]
         last_move = sowings[-1]
 
-        for hint in self.get_hint_actors():
+        for hint in self.get_children('hints'):
             house_move = hint.get_house().get_move()
             seeds = counts[house_move]
             is_last = house_move == last_move
@@ -252,7 +259,7 @@ class BoardCanvas(GtkClutter.Embed):
 
         self._activables.clear()
 
-        for house in self.get_house_actors():
+        for house in self.get_children('houses'):
             if house.get_move() in moves:
                 self._activables.append(house)
 
@@ -315,8 +322,8 @@ class BoardCanvas(GtkClutter.Embed):
     def on_allocation_changed(self, stage, box, flags):
         """Scale the scene when the stage is resized"""
 
-        scene = self._script.get_object('scene')
-        overlay = self._script.get_object('overlay')
+        scene = self.get_object('scene')
+        overlay = self.get_object('overlay')
         width, height = scene.get_size()
         scale = min(box.get_width() / width, box.get_height() / height)
         scene.set_scale(scale, scale)
@@ -332,27 +339,28 @@ class BoardCanvas(GtkClutter.Embed):
     def on_house_key_focus_in(self, house):
         """Show hints when a house receives the focus"""
 
-        self.house_focused.emit(house)
-        self.update_hints(house.get_move())
-        state = self._script.get_object('hint-visibility')
-        state.set_state('visible')
+        if house.get_reactive() is True:
+            self.house_focused.emit(house)
+            self.update_hints(house.get_move())
+            state = self.get_object('hint-visibility')
+            state.set_state('visible')
 
     def on_house_key_focus_out(self, house):
         """Hide hints when a house loses the focus"""
 
-        state = self._script.get_object('hint-visibility')
+        state = self.get_object('hint-visibility')
         state.set_state('hidden')
 
     def show_message(self):
         """Shows the message of the board"""
 
-        state = self._script.get_object('message-visibility')
+        state = self.get_object('message-visibility')
         state.set_state('visible')
 
     def hide_message(self):
         """Hides the message of the board"""
 
-        state = self._script.get_object('message-visibility')
+        state = self.get_object('message-visibility')
         state.set_state('hidden')
 
     def set_message_visible(self, visible):

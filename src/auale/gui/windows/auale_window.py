@@ -71,8 +71,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._request_overwrite_dialog = RequestOverwriteDialog(self)
         self._save_match_dialog = SaveMatchDialog(self)
         self._scoresheet_dialog = ScoresheetDialog(self)
-        self._message = self._board_canvas.get_message_actor()
-        self._engine_report = self._board_canvas.get_report_actor()
+        self._message = self._board_canvas.get_object('infobar')
+        self._engine_report = self._board_canvas.get_object('report')
 
         self.setup_window_widgets()
         self.connect_window_signals()
@@ -94,6 +94,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.connect('destroy', self.on_window_destroy)
         self.connect('realize', self.on_window_realize)
         self._board_canvas.connect('house-activated', self.on_board_canvas_house_activated)
+        self._board_canvas.connect('animation-completed', self.on_move_animation_completed)
         self._match_manager.connect('file_overwrite', self.on_match_file_overwrite)
         self._match_manager.connect('file-changed', self.on_match_file_changed)
         self._match_manager.connect('file-load-error', self.on_match_file_load_error)
@@ -269,10 +270,16 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self.destroy()
 
+    def on_move_animation_completed(self, canvas):
+        """Emitted when a move animation finishes"""
+
+        if match := self._match_manager.get_match():
+            self.toggle_active_player(match)
+
     def on_move_action_activate(self, action, value):
         """A move from the engine was requested by the user"""
 
-        if self._board_canvas.is_sensitive():
+        if self._board_canvas.get_reactive():
             match = self._match_manager.get_match()
             player = self._player_manager.get_engine_player()
             self.set_active_player(player, match)
@@ -280,7 +287,7 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_move_from_action_activate(self, action, value):
         """A house was activated with a keyboard shortcut"""
 
-        if self._board_canvas.is_sensitive():
+        if self._board_canvas.get_reactive():
             key = value.get_string()
             game = self._match_manager.get_game()
             match = self._match_manager.get_match()
@@ -288,25 +295,19 @@ class AualeWindow(Gtk.ApplicationWindow):
             notation = key.upper() if is_south_turn else key
             move = game.to_move(notation)
 
-            self.make_legal_move(move)
-            self.toggle_active_player(match)
+            self.make_legal_move(match, move)
 
     def on_board_canvas_house_activated(self, canvas, house):
         """A house was activated on the canvas"""
 
-        if self._board_canvas.is_sensitive():
-            match = self._match_manager.get_match()
-            move = house.get_move()
-
-            self.make_legal_move(move)
-            self.toggle_active_player(match)
+        match = self._match_manager.get_match()
+        self.make_legal_move(match, house.get_move())
 
     def on_player_move_received(self, game_loop, player, move):
         """A move was received from an engine player"""
 
         if match := self._match_manager.get_match():
-            self.make_legal_move(move)
-            self.toggle_active_player(match)
+            self.make_legal_move(match, move)
 
     def on_player_info_received(self, game_loop, player, report):
         """A report was received from an engine player"""
@@ -317,29 +318,34 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""
 
-        house = self._board_canvas.get_focused_house()
-        self._board_canvas.activate_house(house) if house else None
-        self._board_canvas.focus_first_house()
+        if self._board_canvas.get_reactive():
+            house = self._board_canvas.get_focused_house()
+            self._board_canvas.activate_house(house) if house else None
+            self._board_canvas.focus_first_house()
 
     def on_left_action_activate(self, action, value):
         """Focus the previous house on the board"""
 
-        self._board_canvas.focus_previous_house()
+        if self._board_canvas.get_reactive():
+            self._board_canvas.focus_previous_house()
 
     def on_right_action_activate(self, action, value):
         """Focus the next house on the board"""
 
-        self._board_canvas.focus_next_house()
+        if self._board_canvas.get_reactive():
+            self._board_canvas.focus_next_house()
 
     def on_up_action_activate(self, action, value):
         """Focus the first house on the board"""
 
-        self._board_canvas.focus_first_house()
+        if self._board_canvas.get_reactive():
+            self._board_canvas.focus_first_house()
 
     def on_down_action_activate(self, action, value):
         """Focus the last house on the board"""
 
-        self._board_canvas.focus_last_house()
+        if self._board_canvas.get_reactive():
+            self._board_canvas.focus_last_house()
 
     def on_new_action_activate(self, action, value):
         """Starts a new match on user request"""
@@ -409,6 +415,8 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         tags = self._scoresheet_dialog.get_match_tags()
         match.set_tags(tags)
+
+        self._board_canvas.show_match(match)
         self.refresh_view()
 
     def on_stop_action_activate(self, action, value):
@@ -417,6 +425,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._game_loop.abort_move()
         player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
+        self._board_canvas.show_match(match)
         self.set_active_player(player, match)
 
     def on_undo_all_action_activate(self, action, value):
@@ -426,6 +435,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.undo_all_moves()
+        self._board_canvas.show_match(match)
         self.set_active_player(player, match)
 
     def on_undo_action_activate(self, action, value):
@@ -435,6 +445,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.undo_last_move()
+        self._board_canvas.show_match(match)
         self.set_active_player(player, match)
 
     def on_redo_all_action_activate(self, action, value):
@@ -444,6 +455,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.redo_all_moves()
+        self._board_canvas.show_match(match)
         self.set_active_player(player, match)
 
     def on_redo_action_activate(self, action, value):
@@ -453,6 +465,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         player = self._player_manager.get_human_player()
         match = self._match_manager.get_match()
         match.redo_last_move()
+        self._board_canvas.show_match(match)
         self.set_active_player(player, match)
 
     def on_engine_setting_changed(self, action, value):
@@ -505,8 +518,11 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_window_realize(self, window):
         """Emitted when the window is realized"""
 
+        match = self._match_manager.get_match()
+
         self._player_manager.start_players()
         self._active_player = self._player_manager.get_human_player()
+        self._board_canvas.show_match(match)
 
         self.apply_sound_settings()
         self.apply_strength_settings()
@@ -524,20 +540,20 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._player_manager.quit_players()
         self._sound_context.mute_context()
 
-    def make_legal_move(self, move):
+    def make_legal_move(self, match, move):
         """Makes a move if it is legal for the current match"""
 
-        match = self._match_manager.get_match()
+        canvas = self._board_canvas
 
         if match.is_legal_move(move):
             match.add_move(move)
+            canvas.animate_move(match)
+            GLib.idle_add(self.refresh_view)
 
     def refresh_view(self):
         """Updates the state of the window"""
 
-        if match := self._match_manager.get_match():
-            self._board_canvas.show_match(match)
-
+        match = self._match_manager.get_match()
         is_unsaved = self._match_manager.has_unsaved_changes()
         is_engine = isinstance(self._active_player, Engine)
         is_human = isinstance(self._active_player, Human)
