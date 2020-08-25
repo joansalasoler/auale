@@ -1,6 +1,19 @@
 # List of source files containing translatable strings.
 
-src/auale/res/glade/auale.ui
-src/auale/gui/view.py
-src/auale/gui/application.py
 po/auale.inc.po
+src/auale/gui/actors/infobar.py
+src/auale/gui/dialogs/open_match_dialog.py
+src/auale/gui/dialogs/request_overwrite_dialog.py
+src/auale/gui/dialogs/request_save_dialog.py
+src/auale/gui/dialogs/save_match_dialog.py
+src/auale/gui/dialogs/scoresheet_dialog.py
+src/auale/gui/filters/any_file_filter.py
+src/auale/gui/filters/ogn_file_filter.py
+src/auale/gui/filters/ogn_recent_filter.py
+src/auale/gui/windows/auale_window.py
+src/resources/gtk/dialogs/about_dialog.ui
+src/resources/gtk/dialogs/new_match_dialog.ui
+src/resources/gtk/dialogs/scoresheet_dialog.ui
+src/resources/gtk/widgets/recent_chooser_menuitem.ui
+src/resources/gtk/widgets/recent_chooser_popover_menu.ui
+src/resources/gtk/windows/auale_window.ui

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Aualé 1.1.0\n"
 "Report-Msgid-Bugs-To: contact@joansala.com\n"
-"POT-Creation-Date: 2015-11-07 15:24+0100\n"
-"PO-Revision-Date: 2015-09-03 13:03+0000\n"
+"POT-Creation-Date: 2020-08-25 10:35+0200\n"
+"PO-Revision-Date: 2020-08-25 10:54+0200\n"
 "Last-Translator: Joan Sala Soler <contact@joansala.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -16,56 +16,62 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-11-01 10:20+0000\n"
-"X-Generator: Launchpad (build 17838)\n"
+"X-Generator: Poedit 2.4.1\n"
 
-#: src/auale/res/glade/auale.ui:886
+#: src/resources/gtk/dialogs/about_dialog.ui:39
 msgid "A graphical user interface for oware"
 msgstr "Una interfaz gráfica para el oware"
 
-#: src/auale/res/glade/auale.ui:1304
+#: src/resources/gtk/dialogs/new_match_dialog.ui:396
 msgid ""
 "A new match will be created where you will be able to move as either player."
 msgstr "Se creará una nueva partida en la cuál podrá mover ambos jugadores."
 
-#: src/auale/res/glade/auale.ui:878
+#: src/resources/gtk/dialogs/about_dialog.ui:32
 msgid "About Aualé"
 msgstr "Acerca de Aualé"
 
-#: src/auale/gui/view.py:1268
+#: src/resources/gtk/windows/auale_window.ui:175
+msgid "Always ask to save modified matches"
+msgstr "Pregunta siempre si se deben guardar las partidas"
+
+#: src/auale/gui/filters/any_file_filter.py:31
 msgid "Any files"
 msgstr "Todos los archivos"
 
-#: src/auale/res/glade/auale.ui:125 src/auale/res/glade/auale.ui:422
-#: src/auale/res/glade/auale.ui:712
+#: src/resources/gtk/windows/auale_window.ui:384
 msgid "Asks the engine to make a move"
 msgstr "Pide al ordenador que haga un movimiento"
 
-#: src/auale/res/glade/auale.ui:134 src/auale/res/glade/auale.ui:430
-#: src/auale/res/glade/auale.ui:721
+#: src/resources/gtk/windows/auale_window.ui:400
 msgid "Asks the engine to stop thinking"
 msgstr "Pide al ordenador que deje de pensar"
 
-#: src/auale/res/glade/auale.ui:86
-msgid "Aualé home page"
-msgstr "Página principal de Aualé"
+#: src/resources/gtk/windows/auale_window.ui:823
+msgid "Aualé"
+msgstr "Aualé"
 
-#: src/auale/gui/view.py:1365
+#: src/auale/gui/dialogs/open_match_dialog.py:34
+#: src/auale/gui/dialogs/request_save_dialog.py:35
+#: src/auale/gui/dialogs/save_match_dialog.py:33
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/auale/gui/windows/auale_window.py:243
 msgid "Cannot save current match"
 msgstr "No se pudo guardar la partida"
 
-#: src/auale/gui/view.py:284
-msgid "Close without saving"
-msgstr "Cerrar sin guardar"
-
-#: src/auale/res/glade/auale.ui:467
+#: src/resources/gtk/windows/auale_window.ui:442
+#: src/resources/gtk/windows/auale_window.ui:691
 msgid "Computer _player"
 msgstr "_Jugador del ordenador"
 
-#: src/auale/gui/view.py:196
+#: src/auale/gui/windows/auale_window.py:251
+#: src/auale/gui/windows/auale_window.py:262
 msgid "Computer player is disabled"
 msgstr "El jugador del ordenador se ha inhabilitado"
 
-#: src/auale/gui/view.py:195 src/auale/gui/view.py:198
+#: src/auale/gui/windows/auale_window.py:252
 msgid "Could not start the engine"
 msgstr "No se pudo iniciar el motor"
 
@@ -77,53 +83,43 @@ msgstr "Fecha"
 msgid "Description"
 msgstr "Descripción"
 
-#: src/auale/res/glade/auale.ui:151
-msgid "Disable sound"
-msgstr "Desactiva el sonido"
-
-#: src/auale/res/glade/auale.ui:152 src/auale/res/glade/auale.ui:606
+#: src/resources/gtk/windows/auale_window.ui:499
 msgid "Disables sound effects"
 msgstr "Desactiva los efectos de sonido"
 
-#: src/auale/gui/view.py:434 src/auale/gui/view.py:503
-#: src/auale/gui/view.py:597
+#: src/auale/gui/dialogs/request_save_dialog.py:34
 msgid "Discard unsaved changes"
 msgstr "Descartar los cambios"
 
-#: src/auale/gui/view.py:431 src/auale/gui/view.py:500
-#: src/auale/gui/view.py:594
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:39
+msgid "Do you really want to overwrite it?"
+msgstr "¿De verdad quieres sobrescribirlo?"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:39
 msgid "Do you want to save the current match?"
 msgstr "¿Desea guardar la partida actual?"
 
-#: src/auale/gui/view.py:281
-msgid "Do you want to save the match before closing?"
-msgstr "¿Desea guardar la partida antes de salir?"
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:35
+msgid "Don't save"
+msgstr "No lo guardes"
 
-#: src/auale/res/glade/auale.ui:576
+#: src/resources/gtk/windows/auale_window.ui:656
 msgid "E_xpert"
 msgstr "E_xperto"
 
-#: src/auale/res/glade/auale.ui:1286
+#: src/resources/gtk/dialogs/new_match_dialog.ui:378
 msgid "Edit a match"
 msgstr "Editar una partida"
 
-#: src/auale/res/glade/auale.ui:160 src/auale/res/glade/auale.ui:744
+#: src/resources/gtk/windows/auale_window.ui:119
 msgid "Edit current match tags"
 msgstr "Edita las etiquetas de la partida actual"
 
-#: src/auale/uci/client.py:545
-msgid "Engine is not responding"
-msgstr "El motor no está respondiendo"
-
-#: src/auale/gui/view.py:951
-msgid "Error"
-msgstr "Error"
-
-#: src/auale/gui/view.py:1342
+#: src/auale/gui/windows/auale_window.py:233
 msgid "Error opening match"
 msgstr "Error al abrir la partida"
 
-#: src/auale/gui/view.py:1364
+#: src/auale/gui/windows/auale_window.py:242
 msgid "Error saving match"
 msgstr "Error al guardar la partida"
 
@@ -131,135 +127,104 @@ msgstr "Error al guardar la partida"
 msgid "Event"
 msgstr "Evento"
 
-#: src/auale/res/glade/auale.ui:218 src/auale/res/glade/auale.ui:790
-msgid "First"
-msgstr "Primera"
-
-#: src/auale/res/glade/auale.ui:94
-msgid "Get answers to your questions"
-msgstr "Obtenga respuesta a sus preguntas"
-
-#: src/auale/res/glade/auale.ui:219 src/auale/res/glade/auale.ui:789
+#: src/resources/gtk/windows/auale_window.ui:277
 msgid "Goes to the first position"
 msgstr "Va a la primera posición"
 
-#: src/auale/res/glade/auale.ui:172 src/auale/res/glade/auale.ui:831
+#: src/resources/gtk/windows/auale_window.ui:340
 msgid "Goes to the last position"
 msgstr "Va a la última posición"
 
-#: src/auale/res/glade/auale.ui:182 src/auale/res/glade/auale.ui:817
+#: src/resources/gtk/windows/auale_window.ui:319
+#: src/resources/gtk/windows/auale_window.ui:960
 msgid "Goes to the next position"
 msgstr "Va a la posición siguiente"
 
-#: src/auale/res/glade/auale.ui:229 src/auale/res/glade/auale.ui:803
+#: src/resources/gtk/windows/auale_window.ui:298
+#: src/resources/gtk/windows/auale_window.ui:939
 msgid "Goes to the previous position"
 msgstr "Va a la posición anterior"
 
-#: src/auale/res/glade/auale.ui:93
-msgid "Help"
-msgstr "Ayuda"
+#: src/resources/gtk/windows/auale_window.ui:471
+msgid "Immersive mode"
+msgstr "Modo inmersivo"
 
-#: src/auale/res/glade/auale.ui:85
-msgid "Home"
-msgstr "Inicio"
-
-#: src/auale/gui/view.py:257
-msgid "How to play oware"
-msgstr "Como jugar al oware"
-
-#: src/auale/res/glade/auale.ui:171 src/auale/res/glade/auale.ui:832
-msgid "Last"
-msgstr "Última"
-
-#: src/auale/res/glade/auale.ui:102 src/auale/res/glade/auale.ui:758
+#: src/resources/gtk/windows/auale_window.ui:527
 msgid "Learn how to play oware"
 msgstr "Aprenda a jugar al oware"
 
-#: src/auale/gui/view.py:1057
-msgid "Match"
-msgstr "Partida"
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:32
+msgid "Match changed on disk"
+msgstr "La partida cambió en el disco"
 
-#: src/auale/gui/view.py:1343
+#: src/auale/gui/windows/auale_window.py:234
 msgid "Match file cannot be opened"
 msgstr "No se pudo abrir la partida"
 
-#: src/auale/res/glade/auale.ui:1363
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:43
 msgid "Match tags"
 msgstr "Etiquetas de la partida"
 
-#: src/auale/gui/view.py:1240
+#: src/auale/gui/dialogs/request_save_dialog.py:32
+#: src/resources/gtk/windows/auale_window.ui:850
 msgid "Match with unsaved changes"
 msgstr "Partida con cambios sin guardar"
 
-#: src/auale/res/glade/auale.ui:124
-msgid "Move now"
-msgstr "Mover ahora"
-
-#: src/auale/res/glade/auale.ui:514
+#: src/resources/gtk/windows/auale_window.ui:775
 msgid "N_either player"
 msgstr "_Ningún jugador"
 
-#: src/auale/res/glade/auale.ui:114 src/auale/res/glade/auale.ui:687
+#: src/resources/gtk/windows/auale_window.ui:869
 msgid "New match"
 msgstr "Nueva partida"
-
-#: src/auale/res/glade/auale.ui:181 src/auale/res/glade/auale.ui:818
-msgid "Next"
-msgstr "Siguiente"
 
 #: src/auale/game/match.py:31
 msgid "North"
 msgstr "Norte"
 
-#: src/auale/gui/view.py:1071
+#: src/auale/gui/actors/infobar.py:150
 msgid "North has won"
 msgstr "El norte ha ganado"
 
-#: src/auale/game/match.py:366
-msgid "Not a valid match file"
-msgstr "El archivo de partida no es válido"
-
-#: src/auale/gui/view.py:1251
+#: src/auale/gui/dialogs/open_match_dialog.py:33
 msgid "Open an oware match"
 msgstr "Abrir una partida de oware"
 
-#: src/auale/res/glade/auale.ui:249 src/auale/res/glade/auale.ui:701
+#: src/auale/gui/dialogs/open_match_dialog.py:35
 msgid "Open match"
 msgstr "Abrir partida"
 
-#: src/auale/res/glade/auale.ui:258 src/auale/res/glade/auale.ui:259
-msgid "Open recent"
-msgstr "Abrir reciente"
-
-#: src/auale/res/glade/auale.ui:250 src/auale/res/glade/auale.ui:700
+#: src/resources/gtk/windows/auale_window.ui:60
 msgid "Opens a match file"
 msgstr "Abre una partida guardada"
 
-#: src/auale/res/glade/auale.ui:260 src/auale/res/glade/auale.ui:334
+#: src/resources/gtk/windows/auale_window.ui:147
 msgid "Opens a recently used match file"
 msgstr "Abre una partida usada recientemente"
 
-#: src/auale/gui/view.py:1263 src/auale/gui/view.py:1294
+#: src/auale/gui/filters/ogn_file_filter.py:31
+#: src/auale/gui/filters/ogn_recent_filter.py:31
 msgid "Oware match files"
 msgstr "Archivos de partidas de oware"
 
-#: src/auale/res/glade/auale.ui:1118
+#: src/resources/gtk/dialogs/new_match_dialog.ui:200
 msgid "Play as north"
 msgstr "Jugar como norte"
 
-#: src/auale/res/glade/auale.ui:1034
+#: src/resources/gtk/dialogs/new_match_dialog.ui:111
 msgid "Play as south"
 msgstr "Jugar como sud"
 
-#: src/auale/gui/view.py:1075
+#: src/auale/gui/actors/infobar.py:145
 msgid "Players gathered an equal number of seeds"
 msgstr "Ambos jugadores recogieron el mismo número de semillas"
 
-#: src/auale/res/glade/auale.ui:228 src/auale/res/glade/auale.ui:804
-msgid "Previous"
-msgstr "Anterior"
+#: src/resources/gtk/windows/auale_window.ui:177
+msgid "Prompt for unsaved changes"
+msgstr "Preguntar por los cambios no guardados"
 
-#: src/auale/res/glade/auale.ui:331
+#: src/resources/gtk/windows/auale_window.ui:148
+#: src/resources/gtk/windows/auale_window.ui:205
 msgid "Recent _files"
 msgstr "Archivos _recientes"
 
@@ -267,12 +232,7 @@ msgstr "Archivos _recientes"
 msgid "Result"
 msgstr "Resultado"
 
-#: src/auale/res/glade/auale.ui:142
-msgid "Rotate"
-msgstr "Girar"
-
-#: src/auale/res/glade/auale.ui:143 src/auale/res/glade/auale.ui:598
-#: src/auale/res/glade/auale.ui:736
+#: src/resources/gtk/windows/auale_window.ui:484
 msgid "Rotates the board"
 msgstr "Gira el tablero"
 
@@ -280,45 +240,46 @@ msgstr "Gira el tablero"
 msgid "Round"
 msgstr "Ronda"
 
-#: src/auale/res/glade/auale.ui:101
-msgid "Rules"
-msgstr "Reglamento"
-
-#: src/auale/res/glade/auale.ui:100
+#: src/resources/gtk/windows/auale_window.ui:529
 msgid "Rules of _oware"
 msgstr "_Reglamento del oware"
 
-#: src/auale/res/glade/auale.ui:194
+#: src/auale/gui/actors/infobar.py:153
+msgid "Same position was repeated twice"
+msgstr "La misma posición se repitió dos veces"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:36
 msgid "Save"
 msgstr "Guardar"
 
-#: src/auale/res/glade/auale.ui:193
+#: src/resources/gtk/windows/auale_window.ui:91
 msgid "Save _match"
 msgstr "_Guardar partida"
 
-#: src/auale/res/glade/auale.ui:204
-msgid "Save as..."
-msgstr "Guardar como..."
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:34
+msgid "Save anyway"
+msgstr "Guardar de todos modos"
 
-#: src/auale/gui/view.py:1282
+#: src/auale/gui/dialogs/save_match_dialog.py:32
 msgid "Save current match"
 msgstr "Guardar la partida actual"
 
-#: src/auale/res/glade/auale.ui:203
+#: src/auale/gui/dialogs/save_match_dialog.py:34
+#: src/resources/gtk/windows/auale_window.ui:891
+msgid "Save match"
+msgstr "Guardar partida"
+
+#: src/resources/gtk/windows/auale_window.ui:106
 msgid "Save match _as..."
 msgstr "Guardar partida _como..."
 
-#: src/auale/res/glade/auale.ui:195
+#: src/resources/gtk/windows/auale_window.ui:887
 msgid "Saves the current match"
 msgstr "Guarda la partida actual"
 
-#: src/auale/res/glade/auale.ui:205
+#: src/resources/gtk/windows/auale_window.ui:104
 msgid "Saves the current match to a file"
 msgstr "Guarda la partida actual en un archivo"
-
-#: src/auale/gui/application.py:49
-msgid "Show program's version number and exit"
-msgstr "Mostrar el número de versión del programa y salir"
 
 #: src/auale/game/match.py:31
 msgid "Site"
@@ -328,66 +289,41 @@ msgstr "Lugar"
 msgid "South"
 msgstr "Sud"
 
-#: src/auale/gui/view.py:1068
+#: src/auale/gui/actors/infobar.py:148
 msgid "South has won"
 msgstr "El sud ha ganado"
 
-#: src/auale/res/glade/auale.ui:935
-msgid "Start new match"
-msgstr "Empezar una nueva partida"
-
-#: src/auale/res/glade/auale.ui:115 src/auale/res/glade/auale.ui:686
+#: src/resources/gtk/windows/auale_window.ui:866
 msgid "Starts a new match"
 msgstr "Empieza una nueva partida"
 
-#: src/auale/res/glade/auale.ui:133
-msgid "Stop thinking"
-msgstr "Dejar de pensar"
-
-#: src/auale/res/glade/auale.ui:1446
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:79
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: src/auale/res/glade/auale.ui:1220
+#: src/resources/gtk/dialogs/new_match_dialog.ui:307
 msgid ""
 "The computer will play both as south and north while you can watch the match."
 msgstr ""
 "El ordenador jugará como norte y sud mientras usted puede ver la partida."
 
-#: src/auale/gui/view.py:282 src/auale/gui/view.py:432
-#: src/auale/gui/view.py:501 src/auale/gui/view.py:595
-msgid ""
-"The current match has unsaved changes. Your changes will be lost if you "
-"don't save them."
-msgstr ""
-"No se han guardado los cambios de la partida actual. Si no guarda la partida "
-"las modificaciones se perderán."
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:38
+msgid "The file was modified by another program"
+msgstr "El archivo fue modificado por otro programa"
 
-#: src/auale/gui/view.py:1069 src/auale/gui/view.py:1072
+#: src/auale/gui/actors/infobar.py:155
 msgid "The player gathered more than 24 seeds"
 msgstr "El jugador ha capturado más de 24 semillas"
 
-#: src/auale/gui/view.py:952
-msgid "The received move is not valid"
-msgstr "El movimiento recibido no es válido"
-
-#: src/auale/gui/view.py:1074
+#: src/auale/gui/actors/infobar.py:144
 msgid "This match was drawn"
 msgstr "La partida terminó en empate"
 
-#: src/auale/gui/view.py:1345
-msgid "Unable to open file"
-msgstr "No se puede abrir el archivo"
+#: src/resources/gtk/windows/auale_window.ui:469
+msgid "Toggles the fullscreen mode"
+msgstr "Commuta el modo de pantalla completa"
 
-#: src/auale/gui/view.py:657
-msgid "Unsaved match"
-msgstr "Partida no guardada"
-
-#: src/auale/gui/view.py:1381
-msgid "Untitled"
-msgstr "Sin título"
-
-#: src/auale/res/glade/auale.ui:1460
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:95
 msgid "Value"
 msgstr "Valor"
 
@@ -395,129 +331,220 @@ msgstr "Valor"
 msgid "Variant"
 msgstr "Variante"
 
-#: src/auale/res/glade/auale.ui:1202
+#: src/resources/gtk/dialogs/new_match_dialog.ui:289
 msgid "Watch the computer play"
 msgstr "Ver al ordenador jugando"
 
-#: src/auale/res/glade/auale.ui:977
+#: src/resources/gtk/dialogs/new_match_dialog.ui:31
 msgid "What do you want to do?"
 msgstr "¿Qué desea hacer?"
 
-#: src/auale/gui/view.py:258
-#, python-format
-msgid ""
-"You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the "
-"game</a> on our website. Have fun playing!"
-msgstr ""
-"Puede encontrar el <a href=\"%s\" title=\"Reglamento del oware abapa"
-"\">reglamento del juego</a> en nuestro sitio web ¡Diviértase!"
-
-#: src/auale/res/glade/auale.ui:1136
+#: src/resources/gtk/dialogs/new_match_dialog.ui:218
 msgid ""
 "You will play a new match against the computer. Computer will move first."
 msgstr ""
 "Jugará una nueva partida contra el ordenador. El ordenador moverá primero."
 
-#: src/auale/res/glade/auale.ui:1052
+#: src/resources/gtk/dialogs/new_match_dialog.ui:129
 msgid "You will play a new match against the computer. You will move first."
 msgstr "Jugará una nueva partida contra el ordenador. Usted moverá primero."
 
-#: src/auale/res/glade/auale.ui:502
+#: src/auale/gui/dialogs/request_save_dialog.py:40
+msgid "Your changes will be lost if you don't save them."
+msgstr "Sus cambios se perderán si no los guarda."
+
+#: src/resources/gtk/windows/auale_window.ui:543
+msgid "_About Aualé"
+msgstr "_Acerca de Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:760
 msgid "_Both players"
 msgstr "_Ambos jugadores"
 
-#: src/auale/res/glade/auale.ui:529
+#: src/resources/gtk/windows/auale_window.ui:428
+#: src/resources/gtk/windows/auale_window.ui:572
 msgid "_Computer strength"
 msgstr "_Pericia del ordenador"
 
-#: src/auale/res/glade/auale.ui:150
+#: src/resources/gtk/windows/auale_window.ui:501
 msgid "_Disable sound"
 msgstr "Desactivar el _sonido"
 
-#: src/auale/res/glade/auale.ui:540
+#: src/resources/gtk/windows/auale_window.ui:611
 msgid "_Easy"
 msgstr "_Fácil"
 
-#: src/auale/res/glade/auale.ui:158
+#: src/resources/gtk/windows/auale_window.ui:121
 msgid "_Edit match tags..."
 msgstr "_Etiquetas de la partida..."
 
-#: src/auale/res/glade/auale.ui:299
-msgid "_File"
-msgstr "_Archivo"
-
-#: src/auale/res/glade/auale.ui:217
+#: src/resources/gtk/windows/auale_window.ui:280
 msgid "_First move"
 msgstr "_Primer movimiento"
 
-#: src/auale/res/glade/auale.ui:564
+#: src/resources/gtk/windows/auale_window.ui:641
 msgid "_Hard"
 msgstr "_Difícil"
 
-#: src/auale/res/glade/auale.ui:617
-msgid "_Help"
-msgstr "_Ayuda"
-
-#: src/auale/res/glade/auale.ui:92
-msgid "_Help and support"
-msgstr "_Ayuda y soporte"
-
-#: src/auale/res/glade/auale.ui:84
-msgid "_Home page"
-msgstr "_Página principal"
-
-#: src/auale/res/glade/auale.ui:170
+#: src/resources/gtk/windows/auale_window.ui:343
 msgid "_Last move"
 msgstr "_Último movimiento"
 
-#: src/auale/res/glade/auale.ui:411
-msgid "_Match"
-msgstr "_Partida"
-
-#: src/auale/res/glade/auale.ui:552
+#: src/resources/gtk/windows/auale_window.ui:626
 msgid "_Medium"
 msgstr "_Media"
 
-#: src/auale/res/glade/auale.ui:123
+#: src/resources/gtk/windows/auale_window.ui:387
 msgid "_Move now"
 msgstr "_Mover ahora"
 
-#: src/auale/res/glade/auale.ui:113
+#: src/resources/gtk/windows/auale_window.ui:47
 msgid "_New match"
 msgstr "_Nueva partida"
 
-#: src/auale/res/glade/auale.ui:180
+#: src/resources/gtk/windows/auale_window.ui:322
+#: src/resources/gtk/windows/auale_window.ui:963
 msgid "_Next move"
 msgstr "_Siguiente movimiento"
 
-#: src/auale/res/glade/auale.ui:489
+#: src/resources/gtk/windows/auale_window.ui:745
 msgid "_North"
 msgstr "_Norte"
 
-#: src/auale/res/glade/auale.ui:248
+#: src/resources/gtk/windows/auale_window.ui:63
 msgid "_Open match..."
 msgstr "_Abrir una partida..."
 
-#: src/auale/res/glade/auale.ui:227
+#: src/resources/gtk/windows/auale_window.ui:301
+#: src/resources/gtk/windows/auale_window.ui:942
 msgid "_Previous move"
 msgstr "_Anterior movimiento"
 
-#: src/auale/res/glade/auale.ui:141
+#: src/resources/gtk/windows/auale_window.ui:486
 msgid "_Rotate board"
 msgstr "_Girar el tablero"
 
-#: src/auale/res/glade/auale.ui:478
+#: src/resources/gtk/windows/auale_window.ui:730
 msgid "_South"
 msgstr "_Sud"
 
-#: src/auale/res/glade/auale.ui:132
+#: src/resources/gtk/windows/auale_window.ui:402
 msgid "_Stop thinking"
 msgstr "_Dejar de pensar"
 
-#: src/auale/res/glade/auale.ui:159
-msgid "_Tags"
-msgstr "_Etiquetas"
+#: src/auale/gui/actors/infobar.py:181
+msgid "seeds"
+msgstr "semillas"
 
-#: src/auale/gui/view.py:1300
+#: src/auale/gui/windows/auale_window.py:400
 msgid "untitled.ogn"
 msgstr "sin-nombre.ogn"
+
+#~ msgid "Aualé home page"
+#~ msgstr "Página principal de Aualé"
+
+#~ msgid "Close without saving"
+#~ msgstr "Cerrar sin guardar"
+
+#~ msgid "Disable sound"
+#~ msgstr "Desactiva el sonido"
+
+#~ msgid "Do you want to save the match before closing?"
+#~ msgstr "¿Desea guardar la partida antes de salir?"
+
+#~ msgid "Engine is not responding"
+#~ msgstr "El motor no está respondiendo"
+
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#~ msgid "First"
+#~ msgstr "Primera"
+
+#~ msgid "Get answers to your questions"
+#~ msgstr "Obtenga respuesta a sus preguntas"
+
+#~ msgid "Help"
+#~ msgstr "Ayuda"
+
+#~ msgid "Home"
+#~ msgstr "Inicio"
+
+#~ msgid "How to play oware"
+#~ msgstr "Como jugar al oware"
+
+#~ msgid "Last"
+#~ msgstr "Última"
+
+#~ msgid "Match"
+#~ msgstr "Partida"
+
+#~ msgid "Move now"
+#~ msgstr "Mover ahora"
+
+#~ msgid "Next"
+#~ msgstr "Siguiente"
+
+#~ msgid "Not a valid match file"
+#~ msgstr "El archivo de partida no es válido"
+
+#~ msgid "Open recent"
+#~ msgstr "Abrir reciente"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "Rotate"
+#~ msgstr "Girar"
+
+#~ msgid "Rules"
+#~ msgstr "Reglamento"
+
+#~ msgid "Save as..."
+#~ msgstr "Guardar como..."
+
+#~ msgid "Show program's version number and exit"
+#~ msgstr "Mostrar el número de versión del programa y salir"
+
+#~ msgid "Start new match"
+#~ msgstr "Empezar una nueva partida"
+
+#~ msgid "Stop thinking"
+#~ msgstr "Dejar de pensar"
+
+#~ msgid "The received move is not valid"
+#~ msgstr "El movimiento recibido no es válido"
+
+#~ msgid "Unable to open file"
+#~ msgstr "No se puede abrir el archivo"
+
+#~ msgid "Unsaved match"
+#~ msgstr "Partida no guardada"
+
+#~ msgid "Untitled"
+#~ msgstr "Sin título"
+
+#~ msgid ""
+#~ "You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the "
+#~ "game</a> on our website. Have fun playing!"
+#~ msgstr ""
+#~ "Puede encontrar el <a href=\"%s\" title=\"Reglamento del oware abapa"
+#~ "\">reglamento del juego</a> en nuestro sitio web ¡Diviértase!"
+
+#~ msgid "_File"
+#~ msgstr "_Archivo"
+
+#~ msgid "_Help"
+#~ msgstr "_Ayuda"
+
+#~ msgid "_Help and support"
+#~ msgstr "_Ayuda y soporte"
+
+#~ msgid "_Home page"
+#~ msgstr "_Página principal"
+
+#~ msgid "_Match"
+#~ msgstr "_Partida"
+
+#~ msgid "_Tags"
+#~ msgstr "_Etiquetas"

@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Aualé 1.1.0\n"
+"Project-Id-Version: Aualé 2.0.0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -44,12 +44,3 @@ msgstr ""
 #: src/auale/game/match.py:31
 msgid "Result"
 msgstr ""
-
-#: src/auale/game/match.py:366
-msgid "Not a valid match file"
-msgstr ""
-
-#: src/auale/uci/client.py:545
-msgid "Engine is not responding"
-msgstr ""
-
