@@ -165,6 +165,13 @@ class BoardCanvas(GtkClutter.Embed):
         self.update_focus(self._moves)
         self.canvas_updated.emit(match)
 
+    def show_activables(self, match):
+        """Highlight the houses that can be activated"""
+
+        for house in self.get_children('houses'):
+            is_valid = match.is_valid_move(house.get_move())
+            house.set_property('activable', is_valid)
+
     def animate_move(self, match):
         """Animates the last move from a match"""
 
@@ -226,7 +233,6 @@ class BoardCanvas(GtkClutter.Embed):
 
         move = house.get_move()
         seeds = match.get_seeds(move)
-        is_valid = match.is_valid_move(move)
         is_legal = match.is_legal_move(move)
         is_active = house.is_move(match.get_move())
         state = self.get_ripening_stage(move, seeds, match)
@@ -235,7 +241,7 @@ class BoardCanvas(GtkClutter.Embed):
         house.set_content(canvas)
         house.set_property('reactive', is_legal)
         house.set_property('activated', is_active)
-        house.set_property('activable', is_valid)
+        house.set_property('activable', True)
         house.set_property('state', state)
 
     def update_hints(self, move):

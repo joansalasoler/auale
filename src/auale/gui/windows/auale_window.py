@@ -175,6 +175,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._game_loop.request_move(player, match)
         GLib.idle_add(self.refresh_view)
 
+        is_human = isinstance(player, Human)
+        self._board_canvas.show_activables(match) if is_human else None
+
     def toggle_active_player(self, match):
         """Requests a move to the current player of a match"""
 
