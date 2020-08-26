@@ -115,7 +115,7 @@ class BoardCanvas(GtkClutter.Embed):
         stage.connect('allocation-changed', self.on_allocation_changed)
 
         for house in self.get_children('houses'):
-            house.connect('house-activated', self.house_activated.emit)
+            house.connect('house-activated', self.on_house_activated)
             house.connect('key-focus-in', self.on_house_key_focus_in)
             house.connect('key-focus-out', self.on_house_key_focus_out)
             house.connect('notify::hovered', self.on_house_hover_changed)
@@ -339,6 +339,11 @@ class BoardCanvas(GtkClutter.Embed):
         scale = min(box.get_width() / width, box.get_height() / height)
         scene.set_scale(scale, scale)
         overlay.set_scale(scale, scale)
+
+    def on_house_activated(self, house):
+        """Bubble house activation signals"""
+
+        self.house_activated.emit(house)
 
     def on_house_hover_changed(self, house, params):
         """Show a hand cursor whenever a house is hovered"""
