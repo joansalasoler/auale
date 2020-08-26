@@ -45,6 +45,7 @@ class Auale(Gtk.Application):
     __DISPLAY_NAME = 'Aualé'
     __ID = 'com.joansala.auale'
     __FLAGS = Gio.ApplicationFlags.HANDLES_OPEN
+    __MULTINSTANCE = False
 
     def __init__(self):
         super(Auale, self).__init__(application_id=self.__ID, flags=self.__FLAGS)
@@ -116,6 +117,18 @@ class Auale(Gtk.Application):
         Gtk.StyleContext.add_provider_for_screen(screen, provider, priority)
         provider.load_from_resource(f'{ base_path }/gtk/application.css')
 
+    def show_application_window(self, uri=None):
+        """Adds or presents an application window"""
+
+        has_active_window = self.get_active_window()
+        allow_new_windows = self.__MULTINSTANCE
+
+        if allow_new_windows or not has_active_window:
+            window = self.add_application_window(uri)
+            return window.show_all()
+
+        self.present_application_window(uri)
+
     def add_application_window(self, uri=None):
         """Adds a new application window"""
 
@@ -138,6 +151,22 @@ class Auale(Gtk.Application):
 
         if isinstance(uri, str) and uri:
             window.set_match_from_uri(uri)
+
+        return window
+
+    def present_application_window(self, uri=None):
+        """Update and present the current application window"""
+
+        window = self.get_active_window()
+        command = self.get_engine_command()
+        immersive = self.get_immersive_mode()
+
+        if isinstance(uri, str) and uri:
+            window.set_match_from_uri(uri)
+
+        window.set_engine_command(command)
+        window.set_immersive_mode(immersive)
+        window.present()
 
         return window
 
@@ -281,15 +310,13 @@ class Auale(Gtk.Application):
     def on_new_action_activate(self, action, value):
         """Opens a new application window"""
 
-        window = self.add_application_window()
-        window.show_all()
+        self.show_application_window()
 
     def on_open_action_activate(self, action, value):
         """Opens a file in a new application window"""
 
         uri = value.get_string()
-        window = self.add_application_window(uri)
-        window.show_all()
+        self.show_application_window(uri)
 
     def on_fullscreen_action_activate(self, action, value):
         """Sets the immersive mode for new windows"""
