@@ -25,46 +25,64 @@ from gi.repository import Rsvg
 
 
 class Glyph(Clutter.Canvas):
-    """A canvas that draws a glyph from the scene"""
+    """A canvas that draws a glyph from an .svg file"""
 
     __gtype_name__ = 'Glyph'
-    __path = '/com/joansala/auale/canvas/scene.svg'
-    __handle = None
+    __cache = dict()
 
     def __init__(self):
         super(Glyph, self).__init__()
 
-        self._fragment = None
+        self._path = None
+        self._handle = None
         self._surface = None
+        self._fragment = None
 
         self.connect('draw', self.on_draw_request)
 
-    def get_svg_handle(self):
-        """Obtain the Rsvg handle to use for drawing"""
+    def get_path(self):
+        """Get the path for this mosaic image"""
 
-        return self.__handle or self.__create_svg_handle()
+        return self._path
 
-    def get_image_surface(self):
-        """Obtain the current Cairo image surface"""
+    def get_fragment(self):
+        """Gets the fragment to render from the .svg"""
 
-        return self._surface or self.__create_image_surface()
+        return self._fragment
+
+    def set_path(self, path):
+        """Set the path for this mosaic image"""
+
+        self._path = path
+        self._handle = None
+        self._surface = None
+        self.invalidate()
 
     def set_fragment(self, fragment):
         """Sets the fragment to render from the .svg"""
 
-        if self._fragment != fragment:
-            self._fragment = fragment
-            self.invalidate()
+        self._fragment = fragment
+        self.invalidate()
+
+    def get_svg_handle(self):
+        """Obtain the Rsvg handle to use for drawing"""
+
+        return self._handle or self._create_svg_handle()
+
+    def get_image_surface(self):
+        """Obtain the current Cairo image surface"""
+
+        return self._surface or self._create_image_surface()
 
     def on_draw_request(self, canvas, context, width, height):
         """Draws the loaded glyph on the canvas"""
 
-        if isinstance(self._fragment, str):
+        if self._path and self._fragment:
             surface = self.get_image_surface()
             context.set_source_surface(surface)
             context.paint()
 
-    def __create_image_surface(self):
+    def _create_image_surface(self):
         """Creates a surface for the current .svg fragment"""
 
         handle = self.get_svg_handle()
@@ -81,14 +99,18 @@ class Glyph(Clutter.Canvas):
 
         return surface
 
-    @classmethod
-    def __create_svg_handle(self):
+    def _create_svg_handle(self):
         """Creates a new .svg handle for the scene"""
 
-        flags = Gio.ResourceLookupFlags.NONE
-        data = Gio.resources_lookup_data(self.__path, flags)
-        self.__handle = Rsvg.Handle.new_from_data(data.get_data())
+        if self._path in self.__cache:
+            return self.__cache[self._path]
 
-        return self.__handle
+        flags = Gio.ResourceLookupFlags.NONE
+        data = Gio.resources_lookup_data(self._path, flags)
+        self._handle = Rsvg.Handle.new_from_data(data.get_data())
+        self.__cache[self._path] = self._handle
+
+        return self._handle
 
     fragment = GObject.Property(setter=set_fragment, type=str)
+    path = GObject.Property(get_path, set_path, str)

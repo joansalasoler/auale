@@ -23,7 +23,6 @@ from gi.repository import GObject
 from gi.repository import GtkClutter
 
 from ..actors import House
-from ..actors import Mosaic
 from ..values import RipeningStage
 from ..values import Rotation
 from .board_animator import BoardAnimator
@@ -85,29 +84,15 @@ class BoardCanvas(GtkClutter.Embed):
         """Configures this canvas's stage"""
 
         stage = self.get_stage()
-        scene = self.get_object('scene')
-        overlay = self.get_object('overlay')
+        root = self.get_object('root')
 
-        mosaic = Mosaic()
-        mosaic.allocate_image()
+        bind_root = Clutter.BindConstraint()
+        bind_root.set_coordinate(Clutter.BindCoordinate.ALL)
+        bind_root.set_source(stage)
 
-        align_scene = Clutter.AlignConstraint()
-        align_scene.set_align_axis(Clutter.AlignAxis.BOTH)
-        align_scene.set_source(stage)
-        align_scene.set_factor(0.5)
-        scene.add_constraint(align_scene)
-
-        align_overlay = Clutter.AlignConstraint()
-        align_overlay.set_align_axis(Clutter.AlignAxis.X_AXIS)
-        align_overlay.set_source(stage)
-        align_overlay.set_factor(0.5)
-        overlay.add_constraint(align_overlay)
-
-        stage.set_content(mosaic)
-        stage.set_content_repeat(Clutter.ContentRepeat.BOTH)
+        root.add_constraint(bind_root)
         stage.set_no_clear_hint(True)
-        stage.add_child(scene)
-        stage.add_child(overlay)
+        stage.add_child(root)
 
     def connect_canvas_signals(self):
         """Connects the required signals"""
@@ -376,12 +361,13 @@ class BoardCanvas(GtkClutter.Embed):
     def on_allocation_changed(self, stage, box, flags):
         """Scale the scene when the stage is resized"""
 
-        scene = self.get_object('scene')
-        overlay = self.get_object('overlay')
-        width, height = scene.get_size()
-        scale = min(box.get_width() / width, box.get_height() / height)
-        scene.set_scale(scale, scale)
-        overlay.set_scale(scale, scale)
+        stage_width = box.get_width()
+        stage_height = box.get_height()
+
+        for child in self.get_children('root'):
+            width, height = child.get_size()
+            scale = min(stage_width / width, stage_height / height)
+            child.set_scale(scale, scale)
 
     def on_house_activated(self, house):
         """Bubble house activation signals"""
