@@ -284,6 +284,14 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         if match := self._match_manager.get_match():
             player = self.toggle_active_player(match)
+
+            is_human = isinstance(player, Human)
+            has_cursor = self._board_canvas.get_cursor_visible()
+            is_endgame = match.has_ended()
+
+            if is_human and not has_cursor and not is_endgame:
+                self._board_canvas.focus_first_house()
+
             GLib.idle_add(self.refresh_view)
 
     def on_motion_notify(self, window, event):
