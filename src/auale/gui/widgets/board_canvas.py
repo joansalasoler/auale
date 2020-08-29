@@ -120,6 +120,11 @@ class BoardCanvas(GtkClutter.Embed):
             house.connect('key-focus-out', self.on_house_key_focus_out)
             house.connect('notify::hovered', self.on_house_hover_changed)
 
+    def is_animation_playing(self):
+        """Check if an animation is currently playing"""
+
+        return self._animator.is_playing()
+
     def get_object(self, name):
         """Obtains a board object given its name"""
 
@@ -141,7 +146,10 @@ class BoardCanvas(GtkClutter.Embed):
         self._is_reactive = is_reactive
 
         for house in self.get_children('houses'):
-            house.set_property('reactive', is_reactive)
+            move = house.get_move()
+            is_legal = move in self._moves
+            value = is_reactive and is_legal
+            house.set_property('reactive', value)
 
     def set_rotation(self, rotation):
         """Sets the board rotation angle"""
@@ -233,13 +241,11 @@ class BoardCanvas(GtkClutter.Embed):
 
         move = house.get_move()
         seeds = match.get_seeds(move)
-        is_legal = match.is_legal_move(move)
         is_active = house.is_move(match.get_move())
         state = self.get_ripening_stage(move, seeds, match)
         canvas = self.get_seed_canvas(seeds)
 
         house.set_content(canvas)
-        house.set_property('reactive', is_legal)
         house.set_property('activated', is_active)
         house.set_property('activable', True)
         house.set_property('state', state)

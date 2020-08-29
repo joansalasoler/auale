@@ -281,6 +281,7 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         if match := self._match_manager.get_match():
             self.toggle_active_player(match)
+            GLib.idle_add(self.refresh_view)
 
     def on_canvas_updated(self, canvas, match):
         """Emitted after a match is show on the canvas"""
@@ -568,11 +569,12 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         match = self._match_manager.get_match()
         is_unsaved = self._match_manager.has_unsaved_changes()
+        is_animating = self._board_canvas.is_animation_playing()
         is_engine = isinstance(self._active_player, Engine)
         is_human = isinstance(self._active_player, Human)
         is_ongoing_match = match and not match.has_ended()
-        can_move = is_human and is_ongoing_match
-        can_stop = is_engine and is_ongoing_match
+        can_move = is_human and is_ongoing_match and not is_animating
+        can_stop = is_engine and is_ongoing_match or is_animating
         can_undo = match and match.can_undo()
         can_redo = match and match.can_redo()
 
@@ -584,4 +586,4 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.lookup_action('stop').set_enabled(can_stop)
 
         self._unsaved_indicator.set_visible(is_unsaved)
-        self._board_canvas.set_sensitive(can_move)
+        self._board_canvas.set_reactive(can_move)
