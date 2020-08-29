@@ -93,6 +93,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.connect('delete-event', self.on_window_delete_event)
         self.connect('destroy', self.on_window_destroy)
         self.connect('realize', self.on_window_realize)
+        self.connect('motion-notify-event', self.on_motion_notify)
         self._board_canvas.connect('house-activated', self.on_board_canvas_house_activated)
         self._board_canvas.connect('animation-completed', self.on_move_animation_completed)
         self._board_canvas.connect('canvas_updated', self.on_canvas_updated)
@@ -183,6 +184,8 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         player = self._player_manager.get_player_for_turn(match)
         self.set_active_player(player, match)
+
+        return player
 
     def on_match_file_changed(self, manager, match, is_new):
         """Emitted when the match file changed"""
@@ -280,8 +283,14 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Emitted when a move animation finishes"""
 
         if match := self._match_manager.get_match():
-            self.toggle_active_player(match)
+            player = self.toggle_active_player(match)
             GLib.idle_add(self.refresh_view)
+
+    def on_motion_notify(self, window, event):
+        """Emitted when the cursor moves over the window"""
+
+        if not self._board_canvas.get_cursor_visible():
+            self._board_canvas.show_cursor()
 
     def on_canvas_updated(self, canvas, match):
         """Emitted after a match is show on the canvas"""
@@ -342,24 +351,28 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         if self._board_canvas.get_reactive():
             self._board_canvas.focus_previous_house()
+            self._board_canvas.hide_cursor()
 
     def on_right_action_activate(self, action, value):
         """Focus the next house on the board"""
 
         if self._board_canvas.get_reactive():
             self._board_canvas.focus_next_house()
+            self._board_canvas.hide_cursor()
 
     def on_up_action_activate(self, action, value):
         """Focus the first house on the board"""
 
         if self._board_canvas.get_reactive():
             self._board_canvas.focus_first_house()
+            self._board_canvas.hide_cursor()
 
     def on_down_action_activate(self, action, value):
         """Focus the last house on the board"""
 
         if self._board_canvas.get_reactive():
             self._board_canvas.focus_last_house()
+            self._board_canvas.hide_cursor()
 
     def on_new_action_activate(self, action, value):
         """Starts a new match on user request"""

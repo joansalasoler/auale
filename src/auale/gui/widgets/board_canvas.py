@@ -37,7 +37,8 @@ class BoardCanvas(GtkClutter.Embed):
     __states_path = '/com/joansala/auale/canvas/states.json'
 
     _display = Gdk.Display.get_default()
-    _pointer = Gdk.Cursor.new_from_name(_display, 'pointer')
+    _pointer_cursor = Gdk.Cursor.new_from_name(_display, 'pointer')
+    _hidden_cursor = Gdk.Cursor.new_from_name(_display, 'none')
 
     def __init__(self):
         super(BoardCanvas, self).__init__()
@@ -140,6 +141,60 @@ class BoardCanvas(GtkClutter.Embed):
 
         return self._is_reactive and self.is_sensitive()
 
+    def get_seed_canvas(self, number):
+        """Canvas for the given number of seeds"""
+
+        return self.get_object(f'seed-canvas-{ number }')
+
+    def get_sow_canvas(self, number):
+        """Hint for the given number of seeds"""
+
+        return self.get_object(f'sow-canvas-{ number }')
+
+    def get_ripening_stage(self, move, seeds, match):
+        """Rippening state of a move if it contains the given seeds"""
+
+        is_capture = match.is_capture_move(move)
+        house_state = RipeningStage.GREEN
+
+        for state in RipeningStage:
+            if seeds >= state.minimum_seeds:
+                if is_capture == state.needs_capture:
+                    house_state = state
+
+        return house_state
+
+    def get_hovered_house(self):
+        """House that is currently hovered"""
+
+        houses = self.get_children('houses')
+        house = next((h for h in houses if h.get_hovered()), None)
+
+        return house
+
+    def get_focused_house(self):
+        """House that has the key focus or none"""
+
+        stage = self.get_stage()
+        focus = stage.get_key_focus()
+        is_house = isinstance(focus, House)
+
+        return focus if is_house else None
+
+    def get_cursor_visible(self):
+        """Check if the cursor is visible"""
+
+        window = self.get_window()
+        cursor = window.get_cursor()
+        is_visible = cursor != self._hidden_cursor
+
+        return is_visible
+
+    def set_cursor_visible(self, is_visible):
+        """Sets the visibility of the cursor"""
+
+        self.show_cursor() if is_visible else self.hide_cursor()
+
     def set_reactive(self, is_reactive):
         """If the canvas actors will receive events"""
 
@@ -186,38 +241,6 @@ class BoardCanvas(GtkClutter.Embed):
         self._animator.stop_animation()
         self._animator.animate_move(match)
         self.set_reactive(False)
-
-    def get_seed_canvas(self, number):
-        """Canvas for the given number of seeds"""
-
-        return self.get_object(f'seed-canvas-{ number }')
-
-    def get_sow_canvas(self, number):
-        """Hint for the given number of seeds"""
-
-        return self.get_object(f'sow-canvas-{ number }')
-
-    def get_ripening_stage(self, move, seeds, match):
-        """Rippening state of a move if it contains the given seeds"""
-
-        is_capture = match.is_capture_move(move)
-        house_state = RipeningStage.GREEN
-
-        for state in RipeningStage:
-            if seeds >= state.minimum_seeds:
-                if is_capture == state.needs_capture:
-                    house_state = state
-
-        return house_state
-
-    def get_focused_house(self):
-        """House that has the key focus or none"""
-
-        stage = self.get_stage()
-        focus = stage.get_key_focus()
-        is_house = isinstance(focus, House)
-
-        return focus if is_house else None
 
     def activate_house(self, house):
         """Activates the given house"""
@@ -336,6 +359,20 @@ class BoardCanvas(GtkClutter.Embed):
             house = self._activables[index]
             house.grab_key_focus()
 
+    def hide_cursor(self):
+        """Sets the cursor visibility as hidden"""
+
+        window = self.get_window()
+        window.set_cursor(self._hidden_cursor)
+
+    def show_cursor(self):
+        """Sets the cursor visibility as visible"""
+
+        hovered_house = self.get_hovered_house()
+        cursor = self._pointer_cursor if hovered_house else None
+        window = self.get_window()
+        window.set_cursor(cursor)
+
     def on_allocation_changed(self, stage, box, flags):
         """Scale the scene when the stage is resized"""
 
@@ -354,9 +391,8 @@ class BoardCanvas(GtkClutter.Embed):
     def on_house_hover_changed(self, house, params):
         """Show a hand cursor whenever a house is hovered"""
 
-        is_hovered = house.get_hovered()
-        cursor = self._pointer if is_hovered else None
-        self.get_window().set_cursor(cursor)
+        if self.get_cursor_visible():
+            self.show_cursor()
 
     def on_house_key_focus_in(self, house):
         """Show hints when a house receives the focus"""
