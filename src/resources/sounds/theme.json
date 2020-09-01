@@ -1,6 +1,0 @@
-[
-{ "type": "SoundSample", "target": "AualeWindow", "signal": "map-event", "path": "/com/joansala/auale/sounds/generic.oga" },
-{ "type": "SoundSample", "target": "Board", "signal": "house-activated", "path": "/com/joansala/auale/sounds/generic.oga" },
-{ "type": "SoundSample", "target": "Board", "signal": "house-focused", "path": "/com/joansala/auale/sounds/generic.oga" },
-{ "type": "SoundSample", "target": "Board", "signal": "board-rotated", "channel": "rotate", "path": "/com/joansala/auale/sounds/generic.oga" }
-]

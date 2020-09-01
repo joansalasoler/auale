@@ -19,6 +19,7 @@
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
+from config import theme
 from i18n import gettext as _
 from uci import Engine
 from uci import Human
@@ -38,7 +39,6 @@ from ..values import Rotation
 from ..values import Side
 from ..widgets import BoardCanvas
 from ..widgets import RecentChooserPopoverMenu
-from ..mixer import SoundContext
 
 
 @Gtk.Template(resource_path='/com/joansala/auale/gtk/windows/auale_window.ui')
@@ -51,8 +51,6 @@ class AualeWindow(Gtk.ApplicationWindow):
     _recents_menu_box = Gtk.Template.Child('recents_menu_box')
     _unsaved_indicator = Gtk.Template.Child('unsaved_indicator')
 
-    __sounds_path = '/com/joansala/auale/sounds/theme.json'
-
     def __init__(self, application):
         super(AualeWindow, self).__init__()
 
@@ -62,7 +60,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._game_loop = GameLoop()
         self._match_manager = MatchManager()
         self._player_manager = PlayerManager()
-        self._sound_context = SoundContext()
+        self._sound_context = theme.create_sound_context()
 
         self._about_dialog = AboutDialog(self)
         self._new_match_dialog = NewMatchDialog(self)
@@ -71,8 +69,6 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._request_overwrite_dialog = RequestOverwriteDialog(self)
         self._save_match_dialog = SaveMatchDialog(self)
         self._scoresheet_dialog = ScoresheetDialog(self)
-        self._message = self._board_canvas.get_object('infobar')
-        self._engine_report = self._board_canvas.get_object('report')
 
         self.setup_window_widgets()
         self.connect_window_signals()
@@ -110,7 +106,6 @@ class AualeWindow(Gtk.ApplicationWindow):
     def connect_sound_signals(self):
         """Connects this window to the sound mixer"""
 
-        self._sound_context.load_script(self.__sounds_path)
         self._sound_context.connect_signals(self._board_canvas)
         self._sound_context.connect_signals(self)
 
@@ -194,8 +189,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         name = file and file.get_parse_name()
 
         if is_new is True:
+            infobar = self._board_canvas.get_object('report')
+            infobar.clear_message()
             match.undo_all_moves()
-            self._engine_report.clear_message()
 
         self._board_canvas.show_match(match)
         self._headerbar.set_subtitle(name)
@@ -237,7 +233,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         summary = _('Match file cannot be opened')
         message = f'<b>{ title }</b>: { summary }'
 
-        self._message.show_error_message(message)
+        infobar = self._board_canvas.get_object('infobar')
+        infobar.show_error_message(message)
 
     def on_match_file_save_error(self, manager, error):
         """Handle  match load errors"""
@@ -246,7 +243,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         summary = _('Cannot save current match')
         message = f'<b>{ title }</b>: { summary }'
 
-        self._message.show_error_message(message)
+        infobar = self._board_canvas.get_object('infobar')
+        infobar.show_error_message(message)
 
     def on_engine_start_error(self, manager, error):
         """Handle engine initialization errors"""
@@ -255,8 +253,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         summary = _('Could not start the engine')
         message = f'<b>{ title }</b>: { summary }'
 
+        infobar = self._board_canvas.get_object('report')
+        infobar.show_error_message(message)
         self.set_engine_side(Side.NEITHER)
-        self._engine_report.show_error_message(message)
         GLib.idle_add(self.refresh_view)
 
     def on_engine_failure_error(self, manager, reason):
@@ -265,8 +264,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         title = _('Computer player is disabled')
         message = f'<b>{ title }</b>: { _(reason) }'
 
+        infobar = self._board_canvas.get_object('report')
+        infobar.show_error_message(message)
         self.set_engine_side(Side.NEITHER)
-        self._engine_report.show_error_message(message)
         GLib.idle_add(self.refresh_view)
 
     def on_about_action_activate(self, action, value):
@@ -303,8 +303,9 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_canvas_updated(self, canvas, match):
         """Emitted after a match is show on the canvas"""
 
-        self._message.show_match_information(match)
-        has_message = self._message.has_message()
+        infobar = self._board_canvas.get_object('infobar')
+        infobar.show_match_information(match)
+        has_message = infobar.has_message()
         self._board_canvas.set_message_visible(has_message)
 
     def on_move_action_activate(self, action, value):
@@ -344,7 +345,8 @@ class AualeWindow(Gtk.ApplicationWindow):
         """A report was received from an engine player"""
 
         if report.get('cp') or report.get('pv'):
-            self._engine_report.show_principal_variation(report)
+            infobar = self._board_canvas.get_object('report')
+            infobar.show_principal_variation(report)
 
     def on_choose_action_activate(self, action, value):
         """Activates the board house that has the focus"""

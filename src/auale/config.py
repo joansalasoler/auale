@@ -20,6 +20,18 @@ from gui.factories import AccelsFactory
 from gui.factories import ActionFactory
 from gui.factories import ControlsFactory
 from gui.factories import OptionFactory
+from gui.factories import ThemeFactory
+
+
+# =============================================================================
+# Theme resource scripts
+# =============================================================================
+
+THEME_DESCRIPTORS = (
+    ('canvas',  '/com/joansala/auale/themes/classic/canvas/scene.json'),
+    ('canvas',  '/com/joansala/auale/themes/classic/canvas/states.json'),
+    ('sounds',  '/com/joansala/auale/themes/classic/sounds/events.json'),
+)
 
 # =============================================================================
 # Main actions of the application
@@ -126,6 +138,7 @@ GAMEPAD_DESCRIPTORS = (
 # Configuration factory instances
 # =============================================================================
 
+theme = ThemeFactory(THEME_DESCRIPTORS)
 options = OptionFactory(OPTION_DESCRIPTORS)
 actions = ActionFactory(ACTION_DESCRIPTORS)
 accelerators = AccelsFactory(ACCELS_DESCRIPTORS)

@@ -21,6 +21,7 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import GtkClutter
+from config import theme
 
 from ..actors import House
 from ..values import RipeningStage
@@ -32,8 +33,6 @@ class BoardCanvas(GtkClutter.Embed):
     """A widget that displays an oware board"""
 
     __gtype_name__ = 'BoardCanvas'
-    __scene_path = '/com/joansala/auale/canvas/board.json'
-    __states_path = '/com/joansala/auale/canvas/states.json'
 
     _display = Gdk.Display.get_default()
     _pointer_cursor = Gdk.Cursor.new_from_name(_display, 'pointer')
@@ -42,9 +41,7 @@ class BoardCanvas(GtkClutter.Embed):
     def __init__(self):
         super(BoardCanvas, self).__init__()
 
-        self._script = Clutter.Script()
-        self._script.load_from_resource(self.__scene_path)
-        self._script.load_from_resource(self.__states_path)
+        self._script = theme.create_canvas_script()
         self._animator = BoardAnimator(self)
         self._rotation = Rotation.BASE
         self._is_reactive = True

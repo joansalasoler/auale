@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/joansala/auale">
-    <file>canvas/mosaic.png</file>
-    <file>canvas/board.json</file>
-    <file>canvas/states.json</file>
-    <file>canvas/scene.svg</file>
     <file>gtk/application.css</file>
     <file>gtk/dialogs/about_dialog.ui</file>
     <file>gtk/dialogs/new_match_dialog.ui</file>
@@ -24,7 +20,11 @@
     <file>icons/scalable/mimetypes/text-x-oware-ogn-symbolic.svg</file>
     <file>icons/symbolic/apps/com.joansala.auale-symbolic.svg</file>
     <file>images/auale.ico</file>
-    <file>sounds/theme.json</file>
-    <file>sounds/generic.oga</file>
+    <file>themes/classic/canvas/scene.json</file>
+    <file>themes/classic/canvas/states.json</file>
+    <file>themes/classic/images/mosaic.png</file>
+    <file>themes/classic/images/scene.svg</file>
+    <file>themes/classic/sounds/events.json</file>
+    <file>themes/classic/sounds/generic.oga</file>
   </gresource>
 </gresources>

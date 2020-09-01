@@ -64,11 +64,19 @@ class SoundContext(GObject.GObject):
         if not self.is_muted():
             sample.play(self)
 
-    def load_script(self, script_path):
+    def connect_signals(self, widget):
+        """Context the loaded signals to the given object"""
+
+        for sample in self._samples:
+            if widget.__gtype_name__ == sample.get_target():
+                signal_name = sample.get_signal()
+                widget.connect(signal_name, self._invoke_play, sample)
+
+    def load_from_resource(self, resource_path):
         """Loads a sound script from a resource file"""
 
         flags = Gio.ResourceLookupFlags.NONE
-        data = Gio.resources_lookup_data(script_path, flags)
+        data = Gio.resources_lookup_data(resource_path, flags)
         contents = data.get_data().decode('utf-8')
         script = Json.from_string(contents).get_array()
 
@@ -77,14 +85,6 @@ class SoundContext(GObject.GObject):
             type_name = node.get_string_member('type')
             instance = Json.gobject_deserialize(type_name, element)
             self._samples.append(instance)
-
-    def connect_signals(self, widget):
-        """Context the loaded signals to the given object"""
-
-        for sample in self._samples:
-            if widget.__gtype_name__ == sample.get_target():
-                signal_name = sample.get_signal()
-                widget.connect(signal_name, self._invoke_play, sample)
 
     def _invoke_play(self, *params):
         """Invokes the play sample method"""
