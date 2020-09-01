@@ -120,6 +120,13 @@ class Client(GObject.GObject, Thread):
 
         self._search_timeout = milliseconds
 
+    def set_option(self, name, value=None):
+        """Sends a configuration parameter to the engine"""
+
+        param = '' if value is None else f' value { value }'
+        command = f'setoption name { name }{ param }'
+        self._send_command(command)
+
     def start(self):
         """Starts the client in UCI mode"""
 
