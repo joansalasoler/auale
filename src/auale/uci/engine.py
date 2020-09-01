@@ -64,7 +64,13 @@ class Engine(Client):
 
         self.set_search_depth(strength.search_depth)
         self.set_search_timeout(strength.search_timeout)
+        self.set_book_search(strength.allows_book_search)
         self._strength = strength
+
+    def set_book_search(self, enabled):
+        """Enables or disables the engine's opening book"""
+
+        self.set_option('OwnBook', 'true' if enabled else 'false')
 
     def _on_id_received(self, client, args):
         """Listens for identification messages"""
