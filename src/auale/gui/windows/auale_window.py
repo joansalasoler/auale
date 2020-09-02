@@ -16,11 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 from config import theme
 from i18n import gettext as _
+from book import OpeningBook
 from uci import Engine
 from uci import Human
 from uci import Strength
@@ -61,6 +64,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         self._match_manager = MatchManager()
         self._player_manager = PlayerManager()
         self._sound_context = theme.create_sound_context()
+        self._book = self.create_opening_book()
 
         self._about_dialog = AboutDialog(self)
         self._new_match_dialog = NewMatchDialog(self)
@@ -108,6 +112,16 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._sound_context.connect_signals(self._board_canvas)
         self._sound_context.connect_signals(self)
+
+    def create_opening_book(self):
+        """Instantiates the opening book"""
+
+        file_path = os.path.dirname(__file__)
+        base_path = os.path.abspath(os.path.join(file_path, os.pardir))
+        book_path = os.path.join(base_path, '../data/engine/oware-book.bin')
+        opening_book = OpeningBook(book_path)
+
+        return opening_book
 
     def apply_engine_settings(self):
         """Applies the strength setting to the engines"""
@@ -165,14 +179,33 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.activate_action('open', value)
 
     def set_active_player(self, player, match):
-        """Requests a move to a player unless the match finished"""
+        """Set the active player"""
 
         self._active_player = player
-        self._game_loop.request_move(player, match)
+
+        if isinstance(player, Human):
+            self.request_human_move(player, match)
+        else:
+            self.request_engine_move(player, match)
+
         GLib.idle_add(self.refresh_view)
 
-        is_human = isinstance(player, Human)
-        self._board_canvas.show_activables(match) if is_human else None
+    def request_human_move(self, player, match):
+        """Request a move to a human player"""
+
+        self._game_loop.request_move(player, match)
+        self._board_canvas.show_activables(match)
+
+    def request_engine_move(self, player, match):
+        """Request a move to an engine player"""
+
+        strength = player.get_playing_strength()
+        error = 50 + 100 * (1 - strength.strength_factor)
+
+        if book_move := self._book.pick_best_move(match, error):
+            return self.make_legal_move(match, book_move)
+
+        self._game_loop.request_move(player, match)
 
     def toggle_active_player(self, match):
         """Requests a move to the current player of a match"""
