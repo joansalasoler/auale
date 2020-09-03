@@ -809,7 +809,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="title">Aualé</property>
     <property name="role">auale-window</property>
     <property name="window_position">center</property>
-    <property name="default_width">960</property>
+    <property name="default_width">1056</property>
     <property name="default_height">594</property>
     <property name="icon_name">auale</property>
     <signal name="key-press-event" handler="on_main_window_key_press_event" swapped="no"/>
