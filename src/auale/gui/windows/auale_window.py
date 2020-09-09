@@ -200,9 +200,9 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Request a move to an engine player"""
 
         strength = player.get_playing_strength()
-        error = 50 + 100 * (1 - strength.strength_factor)
+        self._book.set_strength(strength)
 
-        if book_move := self._book.pick_best_move(match, error):
+        if book_move := self._book.pick_best_move(match):
             return self.make_legal_move(match, book_move)
 
         self._game_loop.request_move(player, match)

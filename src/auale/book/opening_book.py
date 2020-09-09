@@ -16,51 +16,68 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 import random
 import struct
 
 from game import Match
 from game import Oware
+from uci import Strength
+
 from .constants import COEFFICIENTS
 
 
 class OpeningBook(object):
     """Opening book implementation"""
 
+    __MARGIN = 42
+
     def __init__(self, path):
-        self._header = None
-        self._scores = None
+        self._scores = []
+        self._header = dict()
+        self._min_score = self.__MARGIN
         self._load_opening_book(path)
 
-    def pick_best_move(self, match, error=10):
+    def set_strength(self, strength):
+        """Sets the playing strength of the book"""
+
+        margin = self.__MARGIN
+        factor = 1 - strength.strength_factor
+        self._min_score = margin + (.25 * margin * factor) ** 2
+
+    def pick_best_move(self, match):
         """Choose a best move from the book"""
 
-        moves = self.find_best_moves(match, error)
+        moves = self.find_best_moves(match)
         choice = random.choice(moves) if moves else None
 
         return choice
 
-    def find_best_moves(self, match, error=10):
+    def find_best_moves(self, match):
         """Obtain the best moves from the book"""
 
         moves = list()
-        code = self._compute_hash_code(match)
-
-        if code not in self._scores:
-            return moves
-
         game = match.get_game()
         turn = match.get_turn()
+        scores = self._get_move_scores(match)
 
-        scores = self._scores[code]
+        max_score = max(scores) if scores else -math.inf
+        min_score = max(max_score - self._min_score, -self._min_score)
         offset = 0 if turn == game.SOUTH else 6
-        min_score = max(scores) - error
 
-        for index, move_score in enumerate(scores):
-            if move_score >= min_score:
-                moves.append(offset + index)
+        for move, score in enumerate(scores, offset):
+            if score >= min_score or score >= max_score:
+                moves.append(move)
 
         return moves
+
+    def _get_move_scores(self, match):
+        """Scores for the given match position"""
+
+        code = self._compute_hash_code(match)
+        scores = self._scores.get(code, [])
+
+        return scores
 
     def _load_opening_book(self, path):
         """Loads an opening book from a file"""
