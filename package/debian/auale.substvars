@@ -1,3 +1,0 @@
-python:Depends=python2:any (>= 2.6), python2:any (>= 2.6.6-7~)
-misc:Depends=dconf-gsettings-backend | gsettings-backend
-misc:Pre-Depends=

@@ -11,13 +11,12 @@ url="https://auale.joansala.com/"
 license=('GPL3')
 groups=()
 depends=(
-  'python>=2.6'
+  'python>=3.8'
   'gtk3>=3.10'
-  'java-runtime=7'
-  'java-environment=7'
+  'java-runtime>=8'
+  'java-environment>=8'
   'python-gobject'
   'desktop-file-utils'
-  'sdl2'
   'sdl2_mixer'
 )
 makedepends=(
@@ -25,7 +24,7 @@ makedepends=(
 )
 conflicts=('python2-auale')
 install=${pkgname}.install
-source=("https://auale.joansala.com/packages/$pkgname-$pkgver.tar.xz")
+source=("https://github.com/joansalasoler/auale/releases/download/$pkgver/$pkgname-$pkgver.tar.xz")
 sha256sums=('SKIP')
 
 build() {
@@ -49,7 +48,7 @@ package() {
     chmod +x ${pkgdir}/usr/share/${pkgname}/__main__.py
 
     # Install dist files
-    pushd ${pkgname}-${pkgver}/res/share
+    pushd ${pkgname}-${pkgver}/share
     install -D -m644 applications/${pkgname}.desktop \
         ${pkgdir}/usr/share/applications/${pkgname}.desktop
     install -D -m644 glib-2.0/schemas/com.joansala.${pkgname}.gschema.xml \

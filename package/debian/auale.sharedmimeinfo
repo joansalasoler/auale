@@ -3,7 +3,7 @@
     <mime-type type="text/x-oware-ogn">
       <comment>Oware Match</comment>
       <comment xml:lang="ca">Partida d'aualé</comment>
-      <comment xml:lang="es">Partidas de oware</comment>
+      <comment xml:lang="es">Partida de oware</comment>
       <generic-icon name="text-x-oware-ogn"/>
       <glob pattern="*.ogn"/>
       <sub-class-of type="text/plain"/>

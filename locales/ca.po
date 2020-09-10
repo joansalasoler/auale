@@ -208,6 +208,10 @@ msgstr "Obre una partida utilitzada recentment"
 msgid "Oware match files"
 msgstr "Fitxers de partides d'aualé"
 
+#: package/debian/auale.sharedmimeinfo:3
+msgid "Oware Match"
+msgstr "Partida d'aualé"
+
 #: src/resources/gtk/dialogs/new_match_dialog.ui:200
 msgid "Play as north"
 msgstr "Jugar com a nord"

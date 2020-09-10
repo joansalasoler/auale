@@ -28,7 +28,7 @@ apps:
     extensions: [gnome-3-28]
     environment:
       LOCPATH: $SNAP/usr/share/locale
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      JAVA_HOME: $SNAP/usr/lib/jvm/default-java
       PATH: $JAVA_HOME/bin:$PATH
     plugs:
       - home
@@ -46,11 +46,9 @@ parts:
       - ca-certificates-java
     stage-packages:
       - python
-      - python-gi
-      - python-gi-cairo
-      - ca-certificates
-      - ca-certificates-java
-      - openjdk-11-jre-headless
+      - default-jre-headless
+      - gir1.2-gtkclutter-1.0
+      - gir1.2-manette-0.2
       - gir1.2-rsvg-2.0
       - libsdl2-2.0-0
       - libsdl2-mixer-2.0-0

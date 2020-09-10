@@ -3,7 +3,7 @@ Version:        2.0.0
 Release:        1
 Summary:        Play Oware Mancala against the computer
 URL:            https://auale.joansala.com/
-Source0:        https://auale.joansala.com/packages/%{name}-%{version}.tar.xz
+Source0:        https://github.com/joansalasoler/auale/releases/download/%{version}/%{name}-%{version}.tar.xz
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -21,9 +21,9 @@ Group:          Amusements/Games
 
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
-Requires:       python >= 2.6
+Requires:       python >= 3.8
 Requires:       gtk3 >= 3.10
-Requires:       jre >= 1.6
+Requires:       jre >= 1.8
 Requires:       desktop-file-utils
 
 %if %{defined fedora}
@@ -98,7 +98,7 @@ ln -s %{_gamesdatadir}/%{name}/__main__.py %{buildroot}%{_gamesbindir}/%{name}
 chmod +x %{buildroot}%{_gamesdatadir}/%{name}/__main__.py
 
 # Install dist files
-pushd %{_builddir}/%{name}-%{version}/res/share
+pushd %{_builddir}/%{name}-%{version}/share
 install -D -m644 applications/%{name}.desktop \
     %{buildroot}%{_datadir}/applications/%{name}.desktop
 install -D -m644 glib-2.0/schemas/com.joansala.%{name}.gschema.xml \
@@ -114,8 +114,8 @@ install -D -m644 icons/hicolor/scalable/apps/%{name}.svg \
 popd
 
 # Move installed locales
-pushd %{buildroot}%{_gamesdatadir}/%{name}/res
-mv -v messages %{buildroot}%{_datadir}/locale
+pushd %{buildroot}%{_gamesdatadir}/%{name}/data
+mv -v locale %{buildroot}%{_datadir}/locale
 popd
 
 %find_lang %{name}
@@ -154,6 +154,10 @@ rm -rf %{buildroot}
 %{_bindir}/update-desktop-database &> /dev/null || :
 
 %changelog
+* Tue Sep 10 2020 Joan Sala <contact@joansala.com>
+- 2.0.0-1
+- auale 2.0.0 release
+
 * Sat Oct 6 2018 Joan Sala <contact@joansala.com>
 - 1.1.2-1
 - auale 1.1.2 release

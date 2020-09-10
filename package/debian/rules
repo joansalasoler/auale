@@ -4,18 +4,18 @@
 	dh $@ --with python2
 
 override_dh_auto_install:
-	cd ./src/auale && python setup.py install \
-		--root=../../debian/auale \
+	cd ../src && python setup.py install \
+		--root=.../package/debian/auale \
 		--install-layout=deb \
-		--install-lib=/usr/share/auale
-	mv -v debian/auale/usr/share/auale/res/messages \
+		--install-lib=/usr/share
+	mv -v debian/auale/usr/share/auale/data/locale \
 		debian/auale/usr/share/locale
-	rm -f debian/auale/usr/share/auale/*.egg-info
+	rm -f debian/auale/usr/share/auale-*.egg-info
 
 override_dh_fixperms:
 	dh_fixperms
 	chmod 755 debian/auale/usr/share/auale/__main__.py
 
 override_dh_clean:
-	cd ./src/auale && python setup.py clean --all
+	cd ./src && python setup.py clean --all
 	dh_clean

@@ -1,7 +1,0 @@
-
-# Automatically added by dh_python2:
-if which pycompile >/dev/null 2>&1; then
-	pycompile -p auale /usr/share/auale -V 2.6-
-fi
-
-# End automatically added section
