@@ -1,0 +1,562 @@
+# Malay translation for auale
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the auale package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: auale\n"
+"Report-Msgid-Bugs-To: contact@joansala.com\n"
+"POT-Creation-Date: 2020-08-25 10:35+0200\n"
+"PO-Revision-Date: 2015-09-18 07:39+0000\n"
+"Last-Translator: abuyop <Unknown>\n"
+"Language-Team: Malay <ms@li.org>\n"
+"Language: ms\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-11-01 10:20+0000\n"
+"X-Generator: Launchpad (build 17838)\n"
+
+#: src/resources/gtk/dialogs/about_dialog.ui:39
+msgid "A graphical user interface for oware"
+msgstr "Antaramuka pengguna bergrafik untuk oware"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:396
+msgid ""
+"A new match will be created where you will be able to move as either player."
+msgstr ""
+"Satu perlawanan baharu akan dicipta iaitu anda dapat bermain sebagai pemain."
+
+#: src/resources/gtk/dialogs/about_dialog.ui:32
+msgid "About Aualé"
+msgstr "Perihal Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:175
+msgid "Always ask to save modified matches"
+msgstr ""
+
+#: src/auale/gui/filters/any_file_filter.py:31
+msgid "Any files"
+msgstr "Sebarang fail"
+
+#: src/resources/gtk/windows/auale_window.ui:384
+msgid "Asks the engine to make a move"
+msgstr "Tanya enjin untuk melakukan gerakan"
+
+#: src/resources/gtk/windows/auale_window.ui:400
+msgid "Asks the engine to stop thinking"
+msgstr "Tanya enjin untuk berhenti berfikir"
+
+#: src/resources/gtk/windows/auale_window.ui:823
+#, fuzzy
+msgid "Aualé"
+msgstr "Perihal Aualé"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:34
+#: src/auale/gui/dialogs/request_save_dialog.py:35
+#: src/auale/gui/dialogs/save_match_dialog.py:33
+msgid "Cancel"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:243
+msgid "Cannot save current match"
+msgstr "Tidak dapat simpan perlawanan semasa"
+
+#: src/resources/gtk/windows/auale_window.ui:442
+#: src/resources/gtk/windows/auale_window.ui:691
+msgid "Computer _player"
+msgstr "_Pemain komputer"
+
+#: src/auale/gui/windows/auale_window.py:251
+#: src/auale/gui/windows/auale_window.py:262
+msgid "Computer player is disabled"
+msgstr "Pemain komputer dilumpuhkan"
+
+#: src/auale/gui/windows/auale_window.py:252
+msgid "Could not start the engine"
+msgstr "Tidak dapat memulakan enjin"
+
+#: src/auale/game/match.py:31
+msgid "Date"
+msgstr "Tarikh"
+
+#: src/auale/game/match.py:31
+msgid "Description"
+msgstr "Keterangan"
+
+#: src/resources/gtk/windows/auale_window.ui:499
+msgid "Disables sound effects"
+msgstr "Lumpuhkan kesan bunyi"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:34
+msgid "Discard unsaved changes"
+msgstr "Singkir perubahan tidak disimpan"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:39
+#, fuzzy
+msgid "Do you really want to overwrite it?"
+msgstr "Anda mahu simpan perlawanan semasa?"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:39
+msgid "Do you want to save the current match?"
+msgstr "Anda mahu simpan perlawanan semasa?"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:35
+msgid "Don't save"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:656
+msgid "E_xpert"
+msgstr "Pa_kar"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:378
+msgid "Edit a match"
+msgstr "Sunting perlawanan"
+
+#: src/resources/gtk/windows/auale_window.ui:119
+msgid "Edit current match tags"
+msgstr "Sunting penetapan perlawanan semasa"
+
+#: src/auale/gui/windows/auale_window.py:233
+msgid "Error opening match"
+msgstr "Ralat membuka perlawanan"
+
+#: src/auale/gui/windows/auale_window.py:242
+msgid "Error saving match"
+msgstr "Ralat menyimpan perlawanan"
+
+#: src/auale/game/match.py:31
+msgid "Event"
+msgstr "Pertandingan"
+
+#: src/resources/gtk/windows/auale_window.ui:277
+msgid "Goes to the first position"
+msgstr "Pergi ke kedudukan pertama"
+
+#: src/resources/gtk/windows/auale_window.ui:340
+msgid "Goes to the last position"
+msgstr "Pergi ke kedudukan terakhir"
+
+#: src/resources/gtk/windows/auale_window.ui:319
+#: src/resources/gtk/windows/auale_window.ui:960
+msgid "Goes to the next position"
+msgstr "Pergi ke kedudukan berikutnya"
+
+#: src/resources/gtk/windows/auale_window.ui:298
+#: src/resources/gtk/windows/auale_window.ui:939
+msgid "Goes to the previous position"
+msgstr "Pergi ke kedudukan terdahulu"
+
+#: src/resources/gtk/windows/auale_window.ui:471
+msgid "Immersive mode"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:527
+msgid "Learn how to play oware"
+msgstr "Ketahui cara bermain oware"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:32
+msgid "Match changed on disk"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:234
+msgid "Match file cannot be opened"
+msgstr "Fail perlawanan tidak dapat dibuka"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:43
+msgid "Match tags"
+msgstr "Teg perlawanan"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:32
+#: src/resources/gtk/windows/auale_window.ui:850
+msgid "Match with unsaved changes"
+msgstr "Perlawanan dengan perubahan tidak disimpan"
+
+#: src/resources/gtk/windows/auale_window.ui:775
+msgid "N_either player"
+msgstr "T_iada pemain"
+
+#: src/resources/gtk/windows/auale_window.ui:869
+msgid "New match"
+msgstr "Perlawanan baharu"
+
+#: src/auale/game/match.py:31
+msgid "North"
+msgstr "Utara"
+
+#: src/auale/gui/actors/infobar.py:150
+msgid "North has won"
+msgstr "Utara telah menang"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:33
+msgid "Open an oware match"
+msgstr "Buka satu perlawanan oware"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:35
+msgid "Open match"
+msgstr "Buka perlawanan"
+
+#: src/resources/gtk/windows/auale_window.ui:60
+msgid "Opens a match file"
+msgstr "Buka satu fail perlawanan"
+
+#: src/resources/gtk/windows/auale_window.ui:147
+msgid "Opens a recently used match file"
+msgstr "Buka fail perlawanan yang telah digunakan baru-baru ini"
+
+#: src/auale/gui/filters/ogn_file_filter.py:31
+#: src/auale/gui/filters/ogn_recent_filter.py:31
+msgid "Oware match files"
+msgstr "Fail perlawanan Oware"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:200
+msgid "Play as north"
+msgstr "Main sebagai utara"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:111
+msgid "Play as south"
+msgstr "Main sebagai selatan"
+
+#: src/auale/gui/actors/infobar.py:145
+msgid "Players gathered an equal number of seeds"
+msgstr "Kedua-dua pemain memiliki jumlah buah yang sama"
+
+#: src/resources/gtk/windows/auale_window.ui:177
+#, fuzzy
+msgid "Prompt for unsaved changes"
+msgstr "Singkir perubahan tidak disimpan"
+
+#: src/resources/gtk/windows/auale_window.ui:148
+#: src/resources/gtk/windows/auale_window.ui:205
+msgid "Recent _files"
+msgstr "_Fail baru-baru ini"
+
+#: src/auale/game/match.py:31
+msgid "Result"
+msgstr "Keputusan"
+
+#: src/resources/gtk/windows/auale_window.ui:484
+msgid "Rotates the board"
+msgstr "Putar papan"
+
+#: src/auale/game/match.py:31
+msgid "Round"
+msgstr "Pusingan"
+
+#: src/resources/gtk/windows/auale_window.ui:529
+msgid "Rules of _oware"
+msgstr "Peraturan _oware"
+
+#: src/auale/gui/actors/infobar.py:153
+msgid "Same position was repeated twice"
+msgstr ""
+
+#: src/auale/gui/dialogs/request_save_dialog.py:36
+msgid "Save"
+msgstr "Simpan"
+
+#: src/resources/gtk/windows/auale_window.ui:91
+msgid "Save _match"
+msgstr "Simpan pe_rlawanan"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:34
+msgid "Save anyway"
+msgstr ""
+
+#: src/auale/gui/dialogs/save_match_dialog.py:32
+msgid "Save current match"
+msgstr "Simpan perlawanan semasa"
+
+#: src/auale/gui/dialogs/save_match_dialog.py:34
+#: src/resources/gtk/windows/auale_window.ui:891
+#, fuzzy
+msgid "Save match"
+msgstr "Simpan pe_rlawanan"
+
+#: src/resources/gtk/windows/auale_window.ui:106
+msgid "Save match _as..."
+msgstr "Simpan perlawanan seb_agai..."
+
+#: src/resources/gtk/windows/auale_window.ui:887
+msgid "Saves the current match"
+msgstr "Simpan perlawanan semasa"
+
+#: src/resources/gtk/windows/auale_window.ui:104
+msgid "Saves the current match to a file"
+msgstr "Simpan perlawanan semasa ke dalam satu fail"
+
+#: src/auale/game/match.py:31
+msgid "Site"
+msgstr "Laman"
+
+#: src/auale/game/match.py:31
+msgid "South"
+msgstr "Selatan"
+
+#: src/auale/gui/actors/infobar.py:148
+msgid "South has won"
+msgstr "Selatan telah menang"
+
+#: src/resources/gtk/windows/auale_window.ui:866
+msgid "Starts a new match"
+msgstr "Mulakan perlawanan baharu"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:79
+msgid "Tag"
+msgstr "Teg"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:307
+msgid ""
+"The computer will play both as south and north while you can watch the match."
+msgstr ""
+"Komputer akan bermain kedua-dua bahagian sebagai utara dan selatan, anda "
+"boleh tonton perlawanan ini."
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:38
+msgid "The file was modified by another program"
+msgstr ""
+
+#: src/auale/gui/actors/infobar.py:155
+msgid "The player gathered more than 24 seeds"
+msgstr "Pemain telah mengumpul lebih daripada 24 butir"
+
+#: src/auale/gui/actors/infobar.py:144
+msgid "This match was drawn"
+msgstr "Perlawanan ini berakhir dengan seri"
+
+#: src/resources/gtk/windows/auale_window.ui:469
+msgid "Toggles the fullscreen mode"
+msgstr ""
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:95
+msgid "Value"
+msgstr "Nilai"
+
+#: src/auale/game/match.py:31
+msgid "Variant"
+msgstr "Varian"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:289
+msgid "Watch the computer play"
+msgstr "Tonton komputer beraksi"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:31
+msgid "What do you want to do?"
+msgstr "Apa yang ingin anda lakukan?"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:218
+msgid ""
+"You will play a new match against the computer. Computer will move first."
+msgstr ""
+"Anda akan berlawan dengan pihak komputer. Komputer akan mulakan terlebih "
+"dahulu."
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:129
+msgid "You will play a new match against the computer. You will move first."
+msgstr ""
+"Anda akan berlawan dengan pihak komputer. Anda akan mulakan gerakan dahulu."
+
+#: src/auale/gui/dialogs/request_save_dialog.py:40
+#, fuzzy
+msgid "Your changes will be lost if you don't save them."
+msgstr ""
+"Perlawanan semasa mempunyai perubahan tidak disimpan. Perubahan yang dibuat "
+"akan hilang jika anda tidak menyimpannya."
+
+#: src/resources/gtk/windows/auale_window.ui:543
+#, fuzzy
+msgid "_About Aualé"
+msgstr "Perihal Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:760
+msgid "_Both players"
+msgstr "Ke_dua-dua pemain"
+
+#: src/resources/gtk/windows/auale_window.ui:428
+#: src/resources/gtk/windows/auale_window.ui:572
+msgid "_Computer strength"
+msgstr "Kekuatan k_omputer"
+
+#: src/resources/gtk/windows/auale_window.ui:501
+msgid "_Disable sound"
+msgstr "_Lumpuhkan bunyi"
+
+#: src/resources/gtk/windows/auale_window.ui:611
+msgid "_Easy"
+msgstr "_Mudah"
+
+#: src/resources/gtk/windows/auale_window.ui:121
+msgid "_Edit match tags..."
+msgstr "S_unting teg perlawanan..."
+
+#: src/resources/gtk/windows/auale_window.ui:280
+msgid "_First move"
+msgstr "Gerakan pe_rtama"
+
+#: src/resources/gtk/windows/auale_window.ui:641
+msgid "_Hard"
+msgstr "_Sukar"
+
+#: src/resources/gtk/windows/auale_window.ui:343
+msgid "_Last move"
+msgstr "Gerakan tera_khir"
+
+#: src/resources/gtk/windows/auale_window.ui:626
+msgid "_Medium"
+msgstr "_Sederhana"
+
+#: src/resources/gtk/windows/auale_window.ui:387
+msgid "_Move now"
+msgstr "_Gerak sekarang"
+
+#: src/resources/gtk/windows/auale_window.ui:47
+msgid "_New match"
+msgstr "Perlawanan _baharu"
+
+#: src/resources/gtk/windows/auale_window.ui:322
+#: src/resources/gtk/windows/auale_window.ui:963
+msgid "_Next move"
+msgstr "Gerakan _berikutnya"
+
+#: src/resources/gtk/windows/auale_window.ui:745
+msgid "_North"
+msgstr "_Utara"
+
+#: src/resources/gtk/windows/auale_window.ui:63
+msgid "_Open match..."
+msgstr "_Buka perlawanan..."
+
+#: src/resources/gtk/windows/auale_window.ui:301
+#: src/resources/gtk/windows/auale_window.ui:942
+msgid "_Previous move"
+msgstr "Gerakan ter_dahulu"
+
+#: src/resources/gtk/windows/auale_window.ui:486
+msgid "_Rotate board"
+msgstr "P_utar papan"
+
+#: src/resources/gtk/windows/auale_window.ui:730
+msgid "_South"
+msgstr "_Selatan"
+
+#: src/resources/gtk/windows/auale_window.ui:402
+msgid "_Stop thinking"
+msgstr "_Henti berfikir"
+
+#: src/auale/gui/actors/infobar.py:181
+msgid "seeds"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:400
+msgid "untitled.ogn"
+msgstr "takbertajuk.ogn"
+
+#~ msgid "Aualé home page"
+#~ msgstr "Laman sesawang Aualé"
+
+#~ msgid "Close without saving"
+#~ msgstr "Tutup tanpa menyimpan"
+
+#~ msgid "Disable sound"
+#~ msgstr "Lumpuhkan bunyi"
+
+#~ msgid "Do you want to save the match before closing?"
+#~ msgstr "Anda mahu simpan pelawanan sebelum tutup?"
+
+#~ msgid "Engine is not responding"
+#~ msgstr "Enjin tidak memberi respon"
+
+#~ msgid "Error"
+#~ msgstr "Ralat"
+
+#~ msgid "First"
+#~ msgstr "Pertama"
+
+#~ msgid "Get answers to your questions"
+#~ msgstr "Dapatkan jawapan persoalan anda"
+
+#~ msgid "Help"
+#~ msgstr "Bantuan"
+
+#~ msgid "Home"
+#~ msgstr "Rumah"
+
+#~ msgid "How to play oware"
+#~ msgstr "Bagaimana hendak bermain oware"
+
+#~ msgid "Last"
+#~ msgstr "Terakhir"
+
+#~ msgid "Match"
+#~ msgstr "Perlawanan"
+
+#~ msgid "Move now"
+#~ msgstr "Gerak sekarang"
+
+#~ msgid "Next"
+#~ msgstr "Berikutnya"
+
+#~ msgid "Not a valid match file"
+#~ msgstr "Bukan fail perlawanan yang sah"
+
+#~ msgid "Open recent"
+#~ msgstr "Buka terkini"
+
+#~ msgid "Previous"
+#~ msgstr "Terdahulu"
+
+#~ msgid "Rotate"
+#~ msgstr "Putar"
+
+#~ msgid "Rules"
+#~ msgstr "Peraturan"
+
+#~ msgid "Save as..."
+#~ msgstr "Simpan sebagai..."
+
+#~ msgid "Show program's version number and exit"
+#~ msgstr "Tunjuk nombor versi program kemudian keluar"
+
+#~ msgid "Start new match"
+#~ msgstr "Mulakan perlawanan baharu"
+
+#~ msgid "Stop thinking"
+#~ msgstr "Henti berfikir"
+
+#~ msgid "The received move is not valid"
+#~ msgstr "Gerakan adalah tidak sah"
+
+#~ msgid "Unable to open file"
+#~ msgstr "Tidak boleh buka fail"
+
+#~ msgid "Unsaved match"
+#~ msgstr "Perlawanan tidak disimpan"
+
+#~ msgid "Untitled"
+#~ msgstr "Tidak Bertajuk"
+
+#~ msgid ""
+#~ "You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the "
+#~ "game</a> on our website. Have fun playing!"
+#~ msgstr ""
+#~ "Anda boleh ketahui <a href=\"%s\" title=\"Oware abapa rules\">peraturan "
+#~ "permainan</a> di laman sesawang kami. Selamat mencuba!"
+
+#~ msgid "_File"
+#~ msgstr "_Fail"
+
+#~ msgid "_Help"
+#~ msgstr "_Bantuan"
+
+#~ msgid "_Help and support"
+#~ msgstr "_Bantuan dan sokongan"
+
+#~ msgid "_Home page"
+#~ msgstr "Laman sesa_wang"
+
+#~ msgid "_Match"
+#~ msgstr "Per_lawanan"
+
+#~ msgid "_Tags"
+#~ msgstr "_Teg"

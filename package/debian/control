@@ -1,0 +1,30 @@
+Source: auale
+Section: contrib/games
+Priority: optional
+Maintainer: Joan Sala Soler <contact@joansala.com>
+Homepage: https://auale.joansala.com/
+Standards-Version: 3.9.5
+Build-Depends: python (>= 2.6), debhelper (>= 9)
+X-Python-Version: >= 2.6
+
+Package: auale
+Section: contrib/games
+Priority: optional
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-gi, python-gi-cairo,
+ python-cairo, default-jre (>= 1.6) | java7-runtime (>= 1.6), gir1.2-rsvg-2.0,
+ libglib2.0-bin, libgtk-3-0 (>= 3.10), libsdl2-2.0-0, libsdl2-mixer-2.0-0
+Description: Play Oware Mancala against the computer
+  Oware is a strategy board game of the Mancala family.
+  .
+  The goal of Oware is to capture the greatest amount of seeds as possible. To
+  do so, players make moves in alternate turns until one of them has captured
+  more than 24 seeds. The player who captured more seeds than the opponent when
+  the game ends wins the match.
+  .
+  Play against one of the strongest computer players out there, watch it play
+  alone while you learn or choose one of the provided strengths: easy, medium,
+  hard or expert.
+  .
+  Analyze, record, tag and share your own Mancala games. Aualé can save your
+  Oware matches in a portable and human-readable format.

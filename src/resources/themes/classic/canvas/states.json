@@ -1,0 +1,214 @@
+[
+    {
+        "id": "scene-rotation",
+        "type": "ClutterState",
+        "duration": 1500,
+        "state": "base",
+        "transitions": [
+            {
+                "source": "rotated",
+                "target": "base",
+                "keys" : [
+                    ["houses", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["focuses", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["actives", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["board", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["shadow", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["states", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["labels", "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["hints",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-0",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-1",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-2",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-3",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-4",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-5",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-6",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-7",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-8",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-9",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-10",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["label-11",  "rotation-angle-z", "easeInOutBack", 0.0]
+                ]
+            },
+            {
+                "source": "base",
+                "target": "rotated",
+                "keys" : [
+                    ["houses", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["focuses", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["actives", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["board", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["shadow", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["states", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["labels", "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["hints",  "rotation-angle-z", "easeInOutBack", 180.0],
+                    ["label-0",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-1",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-2",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-3",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-4",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-5",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-6",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-7",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-8",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-9",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-10",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["label-11",  "rotation-angle-z", "easeInOutBack", -180.0]
+                ]
+            }
+        ]
+    },
+    {
+        "id": "house-rotation",
+        "type": "ClutterState",
+        "duration": 1300,
+        "state": "base",
+        "transitions": [
+            {
+                "source": "rotated",
+                "target": "base",
+                "keys" : [
+                    ["house-0",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-1",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-2",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-3",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-4",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-5",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-6",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-7",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-8",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-9",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-10",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-11",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-12",  "rotation-angle-z", "easeInOutBack", 0.0],
+                    ["house-13",  "rotation-angle-z", "easeInOutBack", 0.0]
+                ]
+            },
+            {
+                "source": "base",
+                "target": "rotated",
+                "keys" : [
+                    ["house-0",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-1",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-2",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-3",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-4",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-5",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-6",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-7",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-8",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-9",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-10",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-11",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-12",  "rotation-angle-z", "easeInOutBack", -180.0],
+                    ["house-13",  "rotation-angle-z", "easeInOutBack", -180.0]
+                ]
+            }
+        ]
+    },
+    {
+        "id": "hint-visibility",
+        "type": "ClutterState",
+        "state": "hidden",
+        "transitions": [
+            {
+                "source": "visible",
+                "target": "hidden",
+                "duration": 100,
+                "keys" : [
+                    ["hint-0",  "scale-x", "linear", 0.0],
+                    ["hint-1",  "scale-x", "linear", 0.0],
+                    ["hint-2",  "scale-x", "linear", 0.0],
+                    ["hint-3",  "scale-x", "linear", 0.0],
+                    ["hint-4",  "scale-x", "linear", 0.0],
+                    ["hint-5",  "scale-x", "linear", 0.0],
+                    ["hint-6",  "scale-x", "linear", 0.0],
+                    ["hint-7",  "scale-x", "linear", 0.0],
+                    ["hint-8",  "scale-x", "linear", 0.0],
+                    ["hint-9",  "scale-x", "linear", 0.0],
+                    ["hint-10",  "scale-x", "linear", 0.0],
+                    ["hint-11",  "scale-x", "linear", 0.0],
+                    ["hint-0",  "scale-y", "linear", 0.0],
+                    ["hint-1",  "scale-y", "linear", 0.0],
+                    ["hint-2",  "scale-y", "linear", 0.0],
+                    ["hint-3",  "scale-y", "linear", 0.0],
+                    ["hint-4",  "scale-y", "linear", 0.0],
+                    ["hint-5",  "scale-y", "linear", 0.0],
+                    ["hint-6",  "scale-y", "linear", 0.0],
+                    ["hint-7",  "scale-y", "linear", 0.0],
+                    ["hint-8",  "scale-y", "linear", 0.0],
+                    ["hint-9",  "scale-y", "linear", 0.0],
+                    ["hint-10",  "scale-y", "linear", 0.0],
+                    ["hint-11",  "scale-y", "linear", 0.0],
+                    ["hint-0",  "opacity", "linear", 0],
+                    ["hint-1",  "opacity", "linear", 0],
+                    ["hint-2",  "opacity", "linear", 0],
+                    ["hint-3",  "opacity", "linear", 0],
+                    ["hint-4",  "opacity", "linear", 0],
+                    ["hint-5",  "opacity", "linear", 0],
+                    ["hint-6",  "opacity", "linear", 0],
+                    ["hint-7",  "opacity", "linear", 0],
+                    ["hint-8",  "opacity", "linear", 0],
+                    ["hint-9",  "opacity", "linear", 0],
+                    ["hint-10",  "opacity", "linear", 0],
+                    ["hint-11",  "opacity", "linear", 0]
+                ]
+            },
+            {
+                "source": "hidden",
+                "target": "visible",
+                "duration": 800,
+                "keys" : [
+                    ["hint-0",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-1",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-2",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-3",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-4",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-5",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-6",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-7",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-8",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-9",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-10",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-11",  "scale-x", "easeOutElastic", 1.0],
+                    ["hint-0",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-1",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-2",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-3",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-4",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-5",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-6",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-7",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-8",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-9",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-10",  "scale-y", "easeOutElastic", 1.0],
+                    ["hint-11",  "scale-y", "easeOutElastic", 1.0]
+                ]
+            }
+        ]
+    },
+    {
+        "id": "message-visibility",
+        "type": "ClutterState",
+        "state": "hidden",
+        "transitions": [
+            {
+                "source": "visible",
+                "target": "hidden",
+                "duration": 50,
+                "keys" : [
+                    ["message",  "y", "linear", -72.0]
+                ]
+            },
+            {
+                "source": "hidden",
+                "target": "visible",
+                "duration": 200,
+                "keys" : [
+                    ["message",  "y", "easeOutQuart", -2.0]
+                ]
+            }
+        ]
+    }
+]

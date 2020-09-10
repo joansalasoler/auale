@@ -1,0 +1,442 @@
+# CATALAN TRANSLATION FOR AUALÉ
+# Copyright (C) 2014 Joan Sala Soler
+# This file is distributed under the same license as the Aualé package.
+# Joan Sala Soler <contact@joansala.com>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Aualé 1.1.0\n"
+"Report-Msgid-Bugs-To: contact@joansala.com\n"
+"POT-Creation-Date: 2020-08-25 10:35+0200\n"
+"PO-Revision-Date: 2020-08-25 10:49+0200\n"
+"Last-Translator: Joan Sala Soler <contact@joansala.com>\n"
+"Language-Team: \n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-11-01 10:20+0000\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#: src/resources/gtk/dialogs/about_dialog.ui:39
+msgid "A graphical user interface for oware"
+msgstr "Una interfície gràfica per a l'aualé"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:396
+msgid ""
+"A new match will be created where you will be able to move as either player."
+msgstr ""
+"Es crearà una nova partida en la qual podreu moure qualsevol dels jugadors."
+
+#: src/resources/gtk/dialogs/about_dialog.ui:32
+msgid "About Aualé"
+msgstr "Quant a Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:175
+msgid "Always ask to save modified matches"
+msgstr "Pregunta sempre si cal desar les partides"
+
+#: src/auale/gui/filters/any_file_filter.py:31
+msgid "Any files"
+msgstr "Tots els fitxers"
+
+#: src/resources/gtk/windows/auale_window.ui:384
+msgid "Asks the engine to make a move"
+msgstr "Demana a l'ordinador que faci un moviment"
+
+#: src/resources/gtk/windows/auale_window.ui:400
+msgid "Asks the engine to stop thinking"
+msgstr "Demana a l'ordinador que deixi de pensar"
+
+#: src/resources/gtk/windows/auale_window.ui:823
+msgid "Aualé"
+msgstr "Aualé"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:34
+#: src/auale/gui/dialogs/request_save_dialog.py:35
+#: src/auale/gui/dialogs/save_match_dialog.py:33
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#: src/auale/gui/windows/auale_window.py:243
+msgid "Cannot save current match"
+msgstr "No es pot desar la partida"
+
+#: src/resources/gtk/windows/auale_window.ui:442
+#: src/resources/gtk/windows/auale_window.ui:691
+msgid "Computer _player"
+msgstr "_Jugador de l'ordinador"
+
+#: src/auale/gui/windows/auale_window.py:251
+#: src/auale/gui/windows/auale_window.py:262
+msgid "Computer player is disabled"
+msgstr "El jugador de l'ordinador s'ha inhabilitat"
+
+#: src/auale/gui/windows/auale_window.py:252
+msgid "Could not start the engine"
+msgstr "No s'ha pogut iniciar el motor"
+
+#: src/auale/game/match.py:31
+msgid "Date"
+msgstr "Data"
+
+#: src/auale/game/match.py:31
+msgid "Description"
+msgstr "Descripció"
+
+#: src/resources/gtk/windows/auale_window.ui:499
+msgid "Disables sound effects"
+msgstr "Desactiva els efectes de so"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:34
+msgid "Discard unsaved changes"
+msgstr "Descarta les modificacions"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:39
+msgid "Do you really want to overwrite it?"
+msgstr "Segur que el voleu sobreescriure?"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:39
+msgid "Do you want to save the current match?"
+msgstr "Voleu desar la partida actual?"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:35
+msgid "Don't save"
+msgstr "No desis"
+
+#: src/resources/gtk/windows/auale_window.ui:656
+msgid "E_xpert"
+msgstr "_Experta"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:378
+msgid "Edit a match"
+msgstr "Editar una partida"
+
+#: src/resources/gtk/windows/auale_window.ui:119
+msgid "Edit current match tags"
+msgstr "Edita les etiquetes de la partida actual"
+
+#: src/auale/gui/windows/auale_window.py:233
+msgid "Error opening match"
+msgstr "Errada en obrir la partida"
+
+#: src/auale/gui/windows/auale_window.py:242
+msgid "Error saving match"
+msgstr "Errada en desar la partida"
+
+#: src/auale/game/match.py:31
+msgid "Event"
+msgstr "Esdeveniment"
+
+#: src/resources/gtk/windows/auale_window.ui:277
+msgid "Goes to the first position"
+msgstr "Va fins a la primera posició"
+
+#: src/resources/gtk/windows/auale_window.ui:340
+msgid "Goes to the last position"
+msgstr "Va fins a la darrera posició"
+
+#: src/resources/gtk/windows/auale_window.ui:319
+#: src/resources/gtk/windows/auale_window.ui:960
+msgid "Goes to the next position"
+msgstr "Va a la posició següent"
+
+#: src/resources/gtk/windows/auale_window.ui:298
+#: src/resources/gtk/windows/auale_window.ui:939
+msgid "Goes to the previous position"
+msgstr "Va a la posició anterior"
+
+#: src/resources/gtk/windows/auale_window.ui:471
+msgid "Immersive mode"
+msgstr "Mode immersiu"
+
+#: src/resources/gtk/windows/auale_window.ui:527
+msgid "Learn how to play oware"
+msgstr "Apreneu a jugar a l'aualé"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:32
+msgid "Match changed on disk"
+msgstr "La partida ha canviat al disc"
+
+#: src/auale/gui/windows/auale_window.py:234
+msgid "Match file cannot be opened"
+msgstr "La partida no es pot obrir"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:43
+msgid "Match tags"
+msgstr "Etiquetes de la partida"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:32
+#: src/resources/gtk/windows/auale_window.ui:850
+msgid "Match with unsaved changes"
+msgstr "Partida amb modificacions no desades"
+
+#: src/resources/gtk/windows/auale_window.ui:775
+msgid "N_either player"
+msgstr "_Cap dels jugadors"
+
+#: src/resources/gtk/windows/auale_window.ui:869
+msgid "New match"
+msgstr "Nova partida"
+
+#: src/auale/game/match.py:31
+msgid "North"
+msgstr "Nord"
+
+#: src/auale/gui/actors/infobar.py:150
+msgid "North has won"
+msgstr "El nord ha guanyat"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:33
+msgid "Open an oware match"
+msgstr "Obre una partida d'aualé"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:35
+msgid "Open match"
+msgstr "Obre una partida"
+
+#: src/resources/gtk/windows/auale_window.ui:60
+msgid "Opens a match file"
+msgstr "Obre una partida desada"
+
+#: src/resources/gtk/windows/auale_window.ui:147
+msgid "Opens a recently used match file"
+msgstr "Obre una partida utilitzada recentment"
+
+#: src/auale/gui/filters/ogn_file_filter.py:31
+#: src/auale/gui/filters/ogn_recent_filter.py:31
+msgid "Oware match files"
+msgstr "Fitxers de partides d'aualé"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:200
+msgid "Play as north"
+msgstr "Jugar com a nord"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:111
+msgid "Play as south"
+msgstr "Jugar com a sud"
+
+#: src/auale/gui/actors/infobar.py:145
+msgid "Players gathered an equal number of seeds"
+msgstr "Els jugadors han recollit el mateix nombre de llavors"
+
+#: src/resources/gtk/windows/auale_window.ui:177
+msgid "Prompt for unsaved changes"
+msgstr "Pregunta pels canvis no desasats"
+
+#: src/resources/gtk/windows/auale_window.ui:148
+#: src/resources/gtk/windows/auale_window.ui:205
+msgid "Recent _files"
+msgstr "_Fitxers recents"
+
+#: src/auale/game/match.py:31
+msgid "Result"
+msgstr "Resultat"
+
+#: src/resources/gtk/windows/auale_window.ui:484
+msgid "Rotates the board"
+msgstr "Capgira el tauler"
+
+#: src/auale/game/match.py:31
+msgid "Round"
+msgstr "Ronda"
+
+#: src/resources/gtk/windows/auale_window.ui:529
+msgid "Rules of _oware"
+msgstr "_Reglament de l'aualé"
+
+#: src/auale/gui/actors/infobar.py:153
+msgid "Same position was repeated twice"
+msgstr "S'ha repetit la mateixa posició"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:36
+msgid "Save"
+msgstr "Desa"
+
+#: src/resources/gtk/windows/auale_window.ui:91
+msgid "Save _match"
+msgstr "_Desa la partida"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:34
+msgid "Save anyway"
+msgstr "Desa igualment"
+
+#: src/auale/gui/dialogs/save_match_dialog.py:32
+msgid "Save current match"
+msgstr "Desa la partida actual"
+
+#: src/auale/gui/dialogs/save_match_dialog.py:34
+#: src/resources/gtk/windows/auale_window.ui:891
+msgid "Save match"
+msgstr "Desa la partida"
+
+#: src/resources/gtk/windows/auale_window.ui:106
+msgid "Save match _as..."
+msgstr "_Anomena i desa la partida..."
+
+#: src/resources/gtk/windows/auale_window.ui:887
+msgid "Saves the current match"
+msgstr "Desa la partida actual"
+
+#: src/resources/gtk/windows/auale_window.ui:104
+msgid "Saves the current match to a file"
+msgstr "Desa la partida actual a un fitxer"
+
+#: src/auale/game/match.py:31
+msgid "Site"
+msgstr "Lloc"
+
+#: src/auale/game/match.py:31
+msgid "South"
+msgstr "Sud"
+
+#: src/auale/gui/actors/infobar.py:148
+msgid "South has won"
+msgstr "El sud ha guanyat"
+
+#: src/resources/gtk/windows/auale_window.ui:866
+msgid "Starts a new match"
+msgstr "Comença una nova partida"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:79
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:307
+msgid ""
+"The computer will play both as south and north while you can watch the match."
+msgstr ""
+"L'ordinador jugarà com a sud i també com a nord mentre podeu observar la "
+"partida."
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:38
+msgid "The file was modified by another program"
+msgstr "Un altre programa ha modificat el fitxer"
+
+#: src/auale/gui/actors/infobar.py:155
+msgid "The player gathered more than 24 seeds"
+msgstr "El jugador ha recollit més de 24 llavors"
+
+#: src/auale/gui/actors/infobar.py:144
+msgid "This match was drawn"
+msgstr "La partida ha acabat en empat"
+
+#: src/resources/gtk/windows/auale_window.ui:469
+msgid "Toggles the fullscreen mode"
+msgstr "Commuta el mode de pantalla completa"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:95
+msgid "Value"
+msgstr "Valor"
+
+#: src/auale/game/match.py:31
+msgid "Variant"
+msgstr "Variant"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:289
+msgid "Watch the computer play"
+msgstr "Observar com juga l'ordinador"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:31
+msgid "What do you want to do?"
+msgstr "Què voleu fer?"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:218
+msgid ""
+"You will play a new match against the computer. Computer will move first."
+msgstr "Jugareu una nova partida contra l'ordinador. L'ordinador mourà primer."
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:129
+msgid "You will play a new match against the computer. You will move first."
+msgstr "Jugareu una nova partida contra l'ordinador. Vostè mourà primer."
+
+#: src/auale/gui/dialogs/request_save_dialog.py:40
+msgid "Your changes will be lost if you don't save them."
+msgstr "Les modificacions es perdran si no les deseu."
+
+#: src/resources/gtk/windows/auale_window.ui:543
+msgid "_About Aualé"
+msgstr "_Quant a Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:760
+msgid "_Both players"
+msgstr "_Ambdós jugadors"
+
+#: src/resources/gtk/windows/auale_window.ui:428
+#: src/resources/gtk/windows/auale_window.ui:572
+msgid "_Computer strength"
+msgstr "_Destresa de l'ordinador"
+
+#: src/resources/gtk/windows/auale_window.ui:501
+msgid "_Disable sound"
+msgstr "Desactiva els _sons"
+
+#: src/resources/gtk/windows/auale_window.ui:611
+msgid "_Easy"
+msgstr "_Fàcil"
+
+#: src/resources/gtk/windows/auale_window.ui:121
+msgid "_Edit match tags..."
+msgstr "_Etiquetes de la partida..."
+
+#: src/resources/gtk/windows/auale_window.ui:280
+msgid "_First move"
+msgstr "_Primer moviment"
+
+#: src/resources/gtk/windows/auale_window.ui:641
+msgid "_Hard"
+msgstr "_Difícil"
+
+#: src/resources/gtk/windows/auale_window.ui:343
+msgid "_Last move"
+msgstr "_Darrer moviment"
+
+#: src/resources/gtk/windows/auale_window.ui:626
+msgid "_Medium"
+msgstr "_Mitjana"
+
+#: src/resources/gtk/windows/auale_window.ui:387
+msgid "_Move now"
+msgstr "_Mou ara"
+
+#: src/resources/gtk/windows/auale_window.ui:47
+msgid "_New match"
+msgstr "_Nova partida"
+
+#: src/resources/gtk/windows/auale_window.ui:322
+#: src/resources/gtk/windows/auale_window.ui:963
+msgid "_Next move"
+msgstr "_Següent moviment"
+
+#: src/resources/gtk/windows/auale_window.ui:745
+msgid "_North"
+msgstr "_Nord"
+
+#: src/resources/gtk/windows/auale_window.ui:63
+msgid "_Open match..."
+msgstr "_Obre una partida..."
+
+#: src/resources/gtk/windows/auale_window.ui:301
+#: src/resources/gtk/windows/auale_window.ui:942
+msgid "_Previous move"
+msgstr "_Anterior moviment"
+
+#: src/resources/gtk/windows/auale_window.ui:486
+msgid "_Rotate board"
+msgstr "_Capgira el tauler"
+
+#: src/resources/gtk/windows/auale_window.ui:730
+msgid "_South"
+msgstr "_Sud"
+
+#: src/resources/gtk/windows/auale_window.ui:402
+msgid "_Stop thinking"
+msgstr "_Deixa de pensar"
+
+#: src/auale/gui/actors/infobar.py:181
+msgid "seeds"
+msgstr "llavors"
+
+#: src/auale/gui/windows/auale_window.py:400
+msgid "untitled.ogn"
+msgstr "sense-nom.ogn"

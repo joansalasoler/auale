@@ -1,6 +1,0 @@
-# List of source files containing translatable strings.
-
-src/auale/res/glade/auale.ui
-src/auale/gui/view.py
-src/auale/gui/application.py
-po/auale.inc.po

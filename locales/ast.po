@@ -1,0 +1,557 @@
+# Asturian translation for auale
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the auale package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: auale\n"
+"Report-Msgid-Bugs-To: contact@joansala.com\n"
+"POT-Creation-Date: 2020-08-25 10:35+0200\n"
+"PO-Revision-Date: 2015-09-06 16:21+0000\n"
+"Last-Translator: Xuacu Saturio <xuacusk8@gmail.com>\n"
+"Language-Team: Asturian <ast@li.org>\n"
+"Language: ast\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-11-01 10:20+0000\n"
+"X-Generator: Launchpad (build 17838)\n"
+
+#: src/resources/gtk/dialogs/about_dialog.ui:39
+msgid "A graphical user interface for oware"
+msgstr "Interfaz gráfica pal xuegu oware"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:396
+msgid ""
+"A new match will be created where you will be able to move as either player."
+msgstr "Crearáse una nueva partida na que podrás mover con cualquier xugador."
+
+#: src/resources/gtk/dialogs/about_dialog.ui:32
+msgid "About Aualé"
+msgstr "Tocante a Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:175
+msgid "Always ask to save modified matches"
+msgstr ""
+
+#: src/auale/gui/filters/any_file_filter.py:31
+msgid "Any files"
+msgstr "Cualquier ficheru"
+
+#: src/resources/gtk/windows/auale_window.ui:384
+msgid "Asks the engine to make a move"
+msgstr "Pide al motor que faiga un movimientu"
+
+#: src/resources/gtk/windows/auale_window.ui:400
+msgid "Asks the engine to stop thinking"
+msgstr "Pide al motor que dexe de pensar"
+
+#: src/resources/gtk/windows/auale_window.ui:823
+#, fuzzy
+msgid "Aualé"
+msgstr "Tocante a Aualé"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:34
+#: src/auale/gui/dialogs/request_save_dialog.py:35
+#: src/auale/gui/dialogs/save_match_dialog.py:33
+msgid "Cancel"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:243
+msgid "Cannot save current match"
+msgstr "Nun pué guardase la partida actual"
+
+#: src/resources/gtk/windows/auale_window.ui:442
+#: src/resources/gtk/windows/auale_window.ui:691
+msgid "Computer _player"
+msgstr "_Xugador del ordenador"
+
+#: src/auale/gui/windows/auale_window.py:251
+#: src/auale/gui/windows/auale_window.py:262
+msgid "Computer player is disabled"
+msgstr "El xugador del ordenador ta desactiváu"
+
+#: src/auale/gui/windows/auale_window.py:252
+msgid "Could not start the engine"
+msgstr "Nun pudo aniciase'l motor"
+
+#: src/auale/game/match.py:31
+msgid "Date"
+msgstr "Data"
+
+#: src/auale/game/match.py:31
+msgid "Description"
+msgstr "Descripción"
+
+#: src/resources/gtk/windows/auale_window.ui:499
+msgid "Disables sound effects"
+msgstr "Desactiva los efectos de soníu"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:34
+msgid "Discard unsaved changes"
+msgstr "Descartar los cambios sin guardar"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:39
+#, fuzzy
+msgid "Do you really want to overwrite it?"
+msgstr "¿Quies guardar la partida actual?"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:39
+msgid "Do you want to save the current match?"
+msgstr "¿Quies guardar la partida actual?"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:35
+msgid "Don't save"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:656
+msgid "E_xpert"
+msgstr "E_spertu"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:378
+msgid "Edit a match"
+msgstr "Editar una partida"
+
+#: src/resources/gtk/windows/auale_window.ui:119
+msgid "Edit current match tags"
+msgstr "Editar les etiquetes de la partida actual"
+
+#: src/auale/gui/windows/auale_window.py:233
+msgid "Error opening match"
+msgstr "Error al abrir la partida"
+
+#: src/auale/gui/windows/auale_window.py:242
+msgid "Error saving match"
+msgstr "Error al guardar la partida"
+
+#: src/auale/game/match.py:31
+msgid "Event"
+msgstr "Socesu"
+
+#: src/resources/gtk/windows/auale_window.ui:277
+msgid "Goes to the first position"
+msgstr "Va a la primera posición"
+
+#: src/resources/gtk/windows/auale_window.ui:340
+msgid "Goes to the last position"
+msgstr "Va a la última posición"
+
+#: src/resources/gtk/windows/auale_window.ui:319
+#: src/resources/gtk/windows/auale_window.ui:960
+msgid "Goes to the next position"
+msgstr "Va a la siguiente posición"
+
+#: src/resources/gtk/windows/auale_window.ui:298
+#: src/resources/gtk/windows/auale_window.ui:939
+msgid "Goes to the previous position"
+msgstr "Va a la posición anterior"
+
+#: src/resources/gtk/windows/auale_window.ui:471
+msgid "Immersive mode"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:527
+msgid "Learn how to play oware"
+msgstr "Depriende a xugar al oware"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:32
+msgid "Match changed on disk"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:234
+msgid "Match file cannot be opened"
+msgstr "Nun pudo abrise'l ficheru de partida"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:43
+msgid "Match tags"
+msgstr "Etiquetes de la partida"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:32
+#: src/resources/gtk/windows/auale_window.ui:850
+msgid "Match with unsaved changes"
+msgstr "Partida con cambios sin guardar"
+
+#: src/resources/gtk/windows/auale_window.ui:775
+msgid "N_either player"
+msgstr "N_engún xugador"
+
+#: src/resources/gtk/windows/auale_window.ui:869
+msgid "New match"
+msgstr "Nueva partida"
+
+#: src/auale/game/match.py:31
+msgid "North"
+msgstr "Norte"
+
+#: src/auale/gui/actors/infobar.py:150
+msgid "North has won"
+msgstr "Ganó el norte"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:33
+msgid "Open an oware match"
+msgstr "Abrir una partida de oware"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:35
+msgid "Open match"
+msgstr "Abrir partida"
+
+#: src/resources/gtk/windows/auale_window.ui:60
+msgid "Opens a match file"
+msgstr "Abre un ficheru de partida"
+
+#: src/resources/gtk/windows/auale_window.ui:147
+msgid "Opens a recently used match file"
+msgstr "Abre un ficheru de partida usáu recientemente"
+
+#: src/auale/gui/filters/ogn_file_filter.py:31
+#: src/auale/gui/filters/ogn_recent_filter.py:31
+msgid "Oware match files"
+msgstr "Ficheros de partíes d'oware"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:200
+msgid "Play as north"
+msgstr "Xugar como norte"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:111
+msgid "Play as south"
+msgstr "Xugar como sur"
+
+#: src/auale/gui/actors/infobar.py:145
+msgid "Players gathered an equal number of seeds"
+msgstr "Los xugadores collecharon el mesmu númberu de granos"
+
+#: src/resources/gtk/windows/auale_window.ui:177
+#, fuzzy
+msgid "Prompt for unsaved changes"
+msgstr "Descartar los cambios sin guardar"
+
+#: src/resources/gtk/windows/auale_window.ui:148
+#: src/resources/gtk/windows/auale_window.ui:205
+msgid "Recent _files"
+msgstr "_Ficheros recientes"
+
+#: src/auale/game/match.py:31
+msgid "Result"
+msgstr "Resultáu"
+
+#: src/resources/gtk/windows/auale_window.ui:484
+msgid "Rotates the board"
+msgstr "Xira'l tableru"
+
+#: src/auale/game/match.py:31
+msgid "Round"
+msgstr "Ronda"
+
+#: src/resources/gtk/windows/auale_window.ui:529
+msgid "Rules of _oware"
+msgstr "Reglamentu del _oware"
+
+#: src/auale/gui/actors/infobar.py:153
+msgid "Same position was repeated twice"
+msgstr ""
+
+#: src/auale/gui/dialogs/request_save_dialog.py:36
+msgid "Save"
+msgstr "Guardar"
+
+#: src/resources/gtk/windows/auale_window.ui:91
+msgid "Save _match"
+msgstr "_Guardar partida"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:34
+msgid "Save anyway"
+msgstr ""
+
+#: src/auale/gui/dialogs/save_match_dialog.py:32
+msgid "Save current match"
+msgstr "Guardar la partida actual"
+
+#: src/auale/gui/dialogs/save_match_dialog.py:34
+#: src/resources/gtk/windows/auale_window.ui:891
+#, fuzzy
+msgid "Save match"
+msgstr "_Guardar partida"
+
+#: src/resources/gtk/windows/auale_window.ui:106
+msgid "Save match _as..."
+msgstr "Gu_ardar partida como..."
+
+#: src/resources/gtk/windows/auale_window.ui:887
+msgid "Saves the current match"
+msgstr "Guarda la partida actual"
+
+#: src/resources/gtk/windows/auale_window.ui:104
+msgid "Saves the current match to a file"
+msgstr "Guarda la partida actual nun ficheru"
+
+#: src/auale/game/match.py:31
+msgid "Site"
+msgstr "Sitiu"
+
+#: src/auale/game/match.py:31
+msgid "South"
+msgstr "Sur"
+
+#: src/auale/gui/actors/infobar.py:148
+msgid "South has won"
+msgstr "Ganó'l sur"
+
+#: src/resources/gtk/windows/auale_window.ui:866
+msgid "Starts a new match"
+msgstr "Anicia una nueva partida"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:79
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:307
+msgid ""
+"The computer will play both as south and north while you can watch the match."
+msgstr "L'ordenador xugará como sur y como norte mentanto mires la partida."
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:38
+msgid "The file was modified by another program"
+msgstr ""
+
+#: src/auale/gui/actors/infobar.py:155
+msgid "The player gathered more than 24 seeds"
+msgstr "El xugador collechó más de 24 granos"
+
+#: src/auale/gui/actors/infobar.py:144
+msgid "This match was drawn"
+msgstr "Empatóse esta partida"
+
+#: src/resources/gtk/windows/auale_window.ui:469
+msgid "Toggles the fullscreen mode"
+msgstr ""
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:95
+msgid "Value"
+msgstr "Valor"
+
+#: src/auale/game/match.py:31
+msgid "Variant"
+msgstr "Variante"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:289
+msgid "Watch the computer play"
+msgstr "Ver xugar al ordenador"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:31
+msgid "What do you want to do?"
+msgstr "¿Qué quies facer?"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:218
+msgid ""
+"You will play a new match against the computer. Computer will move first."
+msgstr ""
+"Xugarás una nueva partida contra l'ordenador. L'ordenador moverá primero."
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:129
+msgid "You will play a new match against the computer. You will move first."
+msgstr "Xugarás una nueva partida contra l'ordenador. Tu moverás primero."
+
+#: src/auale/gui/dialogs/request_save_dialog.py:40
+#, fuzzy
+msgid "Your changes will be lost if you don't save them."
+msgstr ""
+"La partida actual tien cambios sin guardar. Los cambios perderánse si nun "
+"los guardes."
+
+#: src/resources/gtk/windows/auale_window.ui:543
+#, fuzzy
+msgid "_About Aualé"
+msgstr "Tocante a Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:760
+msgid "_Both players"
+msgstr "Dam_bos xugadores"
+
+#: src/resources/gtk/windows/auale_window.ui:428
+#: src/resources/gtk/windows/auale_window.ui:572
+msgid "_Computer strength"
+msgstr "Fuer_cia del ordenador"
+
+#: src/resources/gtk/windows/auale_window.ui:501
+msgid "_Disable sound"
+msgstr "_Desactivar el soníu"
+
+#: src/resources/gtk/windows/auale_window.ui:611
+msgid "_Easy"
+msgstr "_Fácil"
+
+#: src/resources/gtk/windows/auale_window.ui:121
+msgid "_Edit match tags..."
+msgstr "_Editar etiquetes de la partida..."
+
+#: src/resources/gtk/windows/auale_window.ui:280
+msgid "_First move"
+msgstr "_Primer movimientu"
+
+#: src/resources/gtk/windows/auale_window.ui:641
+msgid "_Hard"
+msgstr "_Díficil"
+
+#: src/resources/gtk/windows/auale_window.ui:343
+msgid "_Last move"
+msgstr "_Últimu movimientu"
+
+#: src/resources/gtk/windows/auale_window.ui:626
+msgid "_Medium"
+msgstr "_Medianu"
+
+#: src/resources/gtk/windows/auale_window.ui:387
+msgid "_Move now"
+msgstr "_Mover agora"
+
+#: src/resources/gtk/windows/auale_window.ui:47
+msgid "_New match"
+msgstr "_Nueva partida"
+
+#: src/resources/gtk/windows/auale_window.ui:322
+#: src/resources/gtk/windows/auale_window.ui:963
+msgid "_Next move"
+msgstr "_Siguiente movimientu"
+
+#: src/resources/gtk/windows/auale_window.ui:745
+msgid "_North"
+msgstr "_Norte"
+
+#: src/resources/gtk/windows/auale_window.ui:63
+msgid "_Open match..."
+msgstr "_Abrir una partida..."
+
+#: src/resources/gtk/windows/auale_window.ui:301
+#: src/resources/gtk/windows/auale_window.ui:942
+msgid "_Previous move"
+msgstr "_Movimientu anterior"
+
+#: src/resources/gtk/windows/auale_window.ui:486
+msgid "_Rotate board"
+msgstr "Xi_rar el tableru"
+
+#: src/resources/gtk/windows/auale_window.ui:730
+msgid "_South"
+msgstr "_Sur"
+
+#: src/resources/gtk/windows/auale_window.ui:402
+msgid "_Stop thinking"
+msgstr "_Dexar de pensar"
+
+#: src/auale/gui/actors/infobar.py:181
+msgid "seeds"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:400
+msgid "untitled.ogn"
+msgstr "sin-títulu.ogn"
+
+#~ msgid "Aualé home page"
+#~ msgstr "Páxina web d'Aualé"
+
+#~ msgid "Close without saving"
+#~ msgstr "Zarrar ensin guardar"
+
+#~ msgid "Disable sound"
+#~ msgstr "Desactivar el soníu"
+
+#~ msgid "Do you want to save the match before closing?"
+#~ msgstr "¿Quies guardar la partida antes de zarrar?"
+
+#~ msgid "Engine is not responding"
+#~ msgstr "El motor nun ta respondiendo"
+
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#~ msgid "First"
+#~ msgstr "Primer"
+
+#~ msgid "Get answers to your questions"
+#~ msgstr "Alcontrar respuestes a les tos entrugues"
+
+#~ msgid "Help"
+#~ msgstr "Ayuda"
+
+#~ msgid "Home"
+#~ msgstr "Aniciu"
+
+#~ msgid "How to play oware"
+#~ msgstr "Como xugar al oware"
+
+#~ msgid "Last"
+#~ msgstr "Última"
+
+#~ msgid "Match"
+#~ msgstr "Partida"
+
+#~ msgid "Move now"
+#~ msgstr "Mover agora"
+
+#~ msgid "Next"
+#~ msgstr "_Siguiente"
+
+#~ msgid "Not a valid match file"
+#~ msgstr "Nun ye un ficheru de partida válidu"
+
+#~ msgid "Open recent"
+#~ msgstr "Abrir reciente"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "Rotate"
+#~ msgstr "Xirar"
+
+#~ msgid "Rules"
+#~ msgstr "Reglamentu"
+
+#~ msgid "Save as..."
+#~ msgstr "Guardar como..."
+
+#~ msgid "Show program's version number and exit"
+#~ msgstr "Amosar el númberu de versión del programa y colar"
+
+#~ msgid "Start new match"
+#~ msgstr "Aniciar una nueva partida"
+
+#~ msgid "Stop thinking"
+#~ msgstr "Dexar de pensar"
+
+#~ msgid "The received move is not valid"
+#~ msgstr "El movimientu recibíu nun ye válidu"
+
+#~ msgid "Unable to open file"
+#~ msgstr "Nun pudo abrise'l ficheru"
+
+#~ msgid "Unsaved match"
+#~ msgstr "Partida sin guardar"
+
+#~ msgid "Untitled"
+#~ msgstr "Ensin títulu"
+
+#~ msgid ""
+#~ "You can find the <a href=\"%s\" title=\"Oware abapa rules\">rules of the "
+#~ "game</a> on our website. Have fun playing!"
+#~ msgstr ""
+#~ "Pues alcontrar el <a href=\"%s\" title=\"Reglamentu del oware abapa"
+#~ "\">reglamentu del xuegu</a> nel nuesu sitiu web ¡Pásalo bien xugando!"
+
+#~ msgid "_File"
+#~ msgstr "_Ficheru"
+
+#~ msgid "_Help"
+#~ msgstr "_Ayuda"
+
+#~ msgid "_Help and support"
+#~ msgstr "_Ayuda y encontu"
+
+#~ msgid "_Home page"
+#~ msgstr "_Páxina d'aniciu"
+
+#~ msgid "_Match"
+#~ msgstr "_Partida"
+
+#~ msgid "_Tags"
+#~ msgstr "E_tiquetes"

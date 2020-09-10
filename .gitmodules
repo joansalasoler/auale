@@ -1,0 +1,6 @@
+[submodule "src/py-sdl2"]
+	path = src/py-sdl2
+	url = https://github.com/marcusva/py-sdl2.git
+[submodule "src/engine"]
+	path = src/engine
+	url = https://github.com/joansalasoler/aalina.git

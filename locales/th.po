@@ -1,0 +1,513 @@
+# Thai translation for auale
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the auale package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: auale\n"
+"Report-Msgid-Bugs-To: contact@joansala.com\n"
+"POT-Creation-Date: 2020-08-25 10:37+0200\n"
+"PO-Revision-Date: 2015-10-01 07:24+0000\n"
+"Last-Translator: Rockworld <sumoisrock@gmail.com>\n"
+"Language-Team: Thai <th@li.org>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-11-01 10:20+0000\n"
+"X-Generator: Launchpad (build 17838)\n"
+
+#: src/resources/gtk/dialogs/about_dialog.ui:39
+msgid "A graphical user interface for oware"
+msgstr "ส่วนติดต่อผู้ใช้สำหรับ oware"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:396
+msgid ""
+"A new match will be created where you will be able to move as either player."
+msgstr "คู่ใหม่จะถูกสร้างขึ้นไว้ในที่ที่คุณสามารถเปลี่ยนไปเป็นผู้เล่นคนอื่นได้"
+
+#: src/resources/gtk/dialogs/about_dialog.ui:32
+msgid "About Aualé"
+msgstr "เกี่ยวกับเกม Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:175
+msgid "Always ask to save modified matches"
+msgstr ""
+
+#: src/auale/gui/filters/any_file_filter.py:31
+msgid "Any files"
+msgstr "บางไฟล์"
+
+#: src/resources/gtk/windows/auale_window.ui:384
+msgid "Asks the engine to make a move"
+msgstr "ร้องขอให้เครื่องจำลองผู้เล่นทำการเคลื่อนย้าย"
+
+#: src/resources/gtk/windows/auale_window.ui:400
+msgid "Asks the engine to stop thinking"
+msgstr "ร้องขอให้เครื่องจำลองผู้เล่นหยุดคิด"
+
+#: src/resources/gtk/windows/auale_window.ui:823
+#, fuzzy
+msgid "Aualé"
+msgstr "เกี่ยวกับเกม Aualé"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:34
+#: src/auale/gui/dialogs/request_save_dialog.py:35
+#: src/auale/gui/dialogs/save_match_dialog.py:33
+msgid "Cancel"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:243
+msgid "Cannot save current match"
+msgstr "ไม่สามารถบันทึกคู่ปัจจุบันได้"
+
+#: src/resources/gtk/windows/auale_window.ui:442
+#: src/resources/gtk/windows/auale_window.ui:691
+msgid "Computer _player"
+msgstr "คอมพิวเตอร์จำลองผู้เล่นเกม"
+
+#: src/auale/gui/windows/auale_window.py:251
+#: src/auale/gui/windows/auale_window.py:262
+msgid "Computer player is disabled"
+msgstr "คอมพิวเตอร์จำลองผู้เล่นถูกปิดอยู่"
+
+#: src/auale/gui/windows/auale_window.py:252
+msgid "Could not start the engine"
+msgstr "ไม่สามารถเริ่มเครื่องจำลองผู้เล่นได้"
+
+#: src/auale/game/match.py:31
+msgid "Date"
+msgstr "วันที่"
+
+#: src/auale/game/match.py:31
+msgid "Description"
+msgstr "รายละเอียด"
+
+#: src/resources/gtk/windows/auale_window.ui:499
+msgid "Disables sound effects"
+msgstr "ปิดเอฟเฟกต์เสียง"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:34
+msgid "Discard unsaved changes"
+msgstr "ละทิ้งการเปลี่ยนแปลงที่ยังไม่ได้บันทึก"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:39
+#, fuzzy
+msgid "Do you really want to overwrite it?"
+msgstr "คุณต้องการบันทึกคู่ปัจจุบันหรือไม่"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:39
+msgid "Do you want to save the current match?"
+msgstr "คุณต้องการบันทึกคู่ปัจจุบันหรือไม่"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:35
+msgid "Don't save"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:656
+msgid "E_xpert"
+msgstr "โหมด_ผู้เชี่ยวชาญ"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:378
+msgid "Edit a match"
+msgstr "แก้ไขคู่"
+
+#: src/resources/gtk/windows/auale_window.ui:119
+msgid "Edit current match tags"
+msgstr "แก้ไขป้ายชื่อของคู่ปัจจุบัน"
+
+#: src/auale/gui/windows/auale_window.py:233
+msgid "Error opening match"
+msgstr "เกิดข้อผิดพลาดในการเปิดคู่"
+
+#: src/auale/gui/windows/auale_window.py:242
+msgid "Error saving match"
+msgstr "เกิดข้อผิดพลาดในการบันทึกคู่"
+
+#: src/auale/game/match.py:31
+msgid "Event"
+msgstr "เหตุการณ์"
+
+#: src/resources/gtk/windows/auale_window.ui:277
+msgid "Goes to the first position"
+msgstr "ไปยังจุดแรก"
+
+#: src/resources/gtk/windows/auale_window.ui:340
+msgid "Goes to the last position"
+msgstr "ไปยังจุดสุดท้าย"
+
+#: src/resources/gtk/windows/auale_window.ui:319
+#: src/resources/gtk/windows/auale_window.ui:960
+msgid "Goes to the next position"
+msgstr "ไปยังจุดต่อไป"
+
+#: src/resources/gtk/windows/auale_window.ui:298
+#: src/resources/gtk/windows/auale_window.ui:939
+msgid "Goes to the previous position"
+msgstr "ไปยังจุดที่แล้ว"
+
+#: src/resources/gtk/windows/auale_window.ui:471
+msgid "Immersive mode"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:527
+msgid "Learn how to play oware"
+msgstr "เรียนรู้วิธีการเล่น oware"
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:32
+msgid "Match changed on disk"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:234
+msgid "Match file cannot be opened"
+msgstr "ไม่สามารถเปิดไฟล์คู่ได้"
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:43
+msgid "Match tags"
+msgstr "จับคู่แท็ก"
+
+#: src/auale/gui/dialogs/request_save_dialog.py:32
+#: src/resources/gtk/windows/auale_window.ui:850
+msgid "Match with unsaved changes"
+msgstr "จับคู่ด้วยการเปลี่ยนแปลงที่ยังไม่ได้บันทึก"
+
+#: src/resources/gtk/windows/auale_window.ui:775
+msgid "N_either player"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:869
+msgid "New match"
+msgstr "การจับคู่ใหม่"
+
+#: src/auale/game/match.py:31
+msgid "North"
+msgstr "เหนือ"
+
+#: src/auale/gui/actors/infobar.py:150
+msgid "North has won"
+msgstr ""
+
+#: src/auale/gui/dialogs/open_match_dialog.py:33
+msgid "Open an oware match"
+msgstr "เปิดคู่ของ oware"
+
+#: src/auale/gui/dialogs/open_match_dialog.py:35
+msgid "Open match"
+msgstr "เปิดคู่"
+
+#: src/resources/gtk/windows/auale_window.ui:60
+msgid "Opens a match file"
+msgstr "เปิดไฟล์คู่"
+
+#: src/resources/gtk/windows/auale_window.ui:147
+msgid "Opens a recently used match file"
+msgstr "เปิดไฟล์คู่ที่เพิ่งใช้"
+
+#: src/auale/gui/filters/ogn_file_filter.py:31
+#: src/auale/gui/filters/ogn_recent_filter.py:31
+msgid "Oware match files"
+msgstr "ไฟล์คู่ของ Oware"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:200
+msgid "Play as north"
+msgstr "เล่นเป็น North"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:111
+msgid "Play as south"
+msgstr "เล่นเป็น South"
+
+#: src/auale/gui/actors/infobar.py:145
+msgid "Players gathered an equal number of seeds"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:177
+#, fuzzy
+msgid "Prompt for unsaved changes"
+msgstr "ละทิ้งการเปลี่ยนแปลงที่ยังไม่ได้บันทึก"
+
+#: src/resources/gtk/windows/auale_window.ui:148
+#: src/resources/gtk/windows/auale_window.ui:205
+msgid "Recent _files"
+msgstr "_ไฟล์ล่าสุด"
+
+#: src/auale/game/match.py:31
+msgid "Result"
+msgstr "ผลลัพธ์"
+
+#: src/resources/gtk/windows/auale_window.ui:484
+msgid "Rotates the board"
+msgstr "หมุนกระดาน"
+
+#: src/auale/game/match.py:31
+msgid "Round"
+msgstr "ปัดเศษ"
+
+#: src/resources/gtk/windows/auale_window.ui:529
+msgid "Rules of _oware"
+msgstr ""
+
+#: src/auale/gui/actors/infobar.py:153
+msgid "Same position was repeated twice"
+msgstr ""
+
+#: src/auale/gui/dialogs/request_save_dialog.py:36
+msgid "Save"
+msgstr "บันทึก"
+
+#: src/resources/gtk/windows/auale_window.ui:91
+msgid "Save _match"
+msgstr ""
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:34
+msgid "Save anyway"
+msgstr ""
+
+#: src/auale/gui/dialogs/save_match_dialog.py:32
+msgid "Save current match"
+msgstr ""
+
+#: src/auale/gui/dialogs/save_match_dialog.py:34
+#: src/resources/gtk/windows/auale_window.ui:891
+#, fuzzy
+msgid "Save match"
+msgstr "การจับคู่ใหม่"
+
+#: src/resources/gtk/windows/auale_window.ui:106
+msgid "Save match _as..."
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:887
+msgid "Saves the current match"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:104
+msgid "Saves the current match to a file"
+msgstr ""
+
+#: src/auale/game/match.py:31
+msgid "Site"
+msgstr "เว็บไซต์"
+
+#: src/auale/game/match.py:31
+msgid "South"
+msgstr "ใต้"
+
+#: src/auale/gui/actors/infobar.py:148
+msgid "South has won"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:866
+msgid "Starts a new match"
+msgstr ""
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:79
+msgid "Tag"
+msgstr "แท็ก"
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:307
+msgid ""
+"The computer will play both as south and north while you can watch the match."
+msgstr ""
+
+#: src/auale/gui/dialogs/request_overwrite_dialog.py:38
+msgid "The file was modified by another program"
+msgstr ""
+
+#: src/auale/gui/actors/infobar.py:155
+msgid "The player gathered more than 24 seeds"
+msgstr ""
+
+#: src/auale/gui/actors/infobar.py:144
+msgid "This match was drawn"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:469
+msgid "Toggles the fullscreen mode"
+msgstr ""
+
+#: src/resources/gtk/dialogs/scoresheet_dialog.ui:95
+msgid "Value"
+msgstr "มูลค่า"
+
+#: src/auale/game/match.py:31
+msgid "Variant"
+msgstr ""
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:289
+msgid "Watch the computer play"
+msgstr ""
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:31
+msgid "What do you want to do?"
+msgstr ""
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:218
+msgid ""
+"You will play a new match against the computer. Computer will move first."
+msgstr ""
+
+#: src/resources/gtk/dialogs/new_match_dialog.ui:129
+msgid "You will play a new match against the computer. You will move first."
+msgstr ""
+
+#: src/auale/gui/dialogs/request_save_dialog.py:40
+msgid "Your changes will be lost if you don't save them."
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:543
+#, fuzzy
+msgid "_About Aualé"
+msgstr "เกี่ยวกับเกม Aualé"
+
+#: src/resources/gtk/windows/auale_window.ui:760
+msgid "_Both players"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:428
+#: src/resources/gtk/windows/auale_window.ui:572
+msgid "_Computer strength"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:501
+msgid "_Disable sound"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:611
+msgid "_Easy"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:121
+msgid "_Edit match tags..."
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:280
+msgid "_First move"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:641
+msgid "_Hard"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:343
+msgid "_Last move"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:626
+msgid "_Medium"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:387
+msgid "_Move now"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:47
+msgid "_New match"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:322
+#: src/resources/gtk/windows/auale_window.ui:963
+msgid "_Next move"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:745
+msgid "_North"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:63
+msgid "_Open match..."
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:301
+#: src/resources/gtk/windows/auale_window.ui:942
+msgid "_Previous move"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:486
+msgid "_Rotate board"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:730
+msgid "_South"
+msgstr ""
+
+#: src/resources/gtk/windows/auale_window.ui:402
+msgid "_Stop thinking"
+msgstr ""
+
+#: src/auale/gui/actors/infobar.py:181
+msgid "seeds"
+msgstr ""
+
+#: src/auale/gui/windows/auale_window.py:400
+msgid "untitled.ogn"
+msgstr ""
+
+#~ msgid "Aualé home page"
+#~ msgstr "หน้าหลักของ Aualé"
+
+#~ msgid "Close without saving"
+#~ msgstr "ออกจากเกมโดยไม่บันทึกข้อมูล"
+
+#~ msgid "Disable sound"
+#~ msgstr "ปิดระบบเสียง"
+
+#~ msgid "Do you want to save the match before closing?"
+#~ msgstr "คุณต้องการบันทึกคู่ปัจจุบันก่อนปิดโปรแกรมหรือไม่"
+
+#~ msgid "Engine is not responding"
+#~ msgstr "เครื่องจำลองผู้เล่นไม่มีการตอบสนอง"
+
+#~ msgid "Error"
+#~ msgstr "เกิดข้อผิดพลาด"
+
+#~ msgid "First"
+#~ msgstr "แรกสุด"
+
+#~ msgid "Get answers to your questions"
+#~ msgstr "ขอรับคำตอบเกี่ยวกับคำถามของคุณ"
+
+#~ msgid "Help"
+#~ msgstr "วิธีใช้"
+
+#~ msgid "Home"
+#~ msgstr "ตำแหน่งหลัก"
+
+#~ msgid "How to play oware"
+#~ msgstr "วิธีเล่น oware"
+
+#~ msgid "Last"
+#~ msgstr "ล่าสุด"
+
+#~ msgid "Match"
+#~ msgstr "เข้าคู่"
+
+#~ msgid "Move now"
+#~ msgstr "ย้ายไปเดี๋ยวนี้"
+
+#~ msgid "Next"
+#~ msgstr "ถัดไป"
+
+#~ msgid "Not a valid match file"
+#~ msgstr "ไม่ใช่แฟ้มคู่ที่ถูกต้อง"
+
+#~ msgid "Open recent"
+#~ msgstr "เปิดรายการล่าสุด"
+
+#~ msgid "Previous"
+#~ msgstr "ก่อนหน้านี้"
+
+#~ msgid "Rotate"
+#~ msgstr "หมุนภาพ"
+
+#~ msgid "Rules"
+#~ msgstr "กฏ"
+
+#~ msgid "Save as..."
+#~ msgstr "บันทึกเป็น..."
+
+#~ msgid "Unable to open file"
+#~ msgstr "ไม่สามารถเปิดแฟ้มได้"
+
+#~ msgid "Untitled"
+#~ msgstr "ยังไม่กำหนดชื่อ"
