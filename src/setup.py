@@ -20,6 +20,7 @@
 import os
 import sys
 import site
+import setuptools
 
 try:
     import py2exe
@@ -40,16 +41,14 @@ PACKAGE_CONFIG = dict(
     license='GPL3+',
     description='Play Oware Mancala against the computer',
     long_description="""Oware is a strategy board game of the Mancala family.""",
-
-    packages=[
-        'auale',
-    ],
+    packages=setuptools.find_packages(),
 
     package_data={
         'auale': [
             'data/engine/*',
             'data/locale/*/*/*',
             'data/auale.gresource',
+            'game/oware.pkl',
         ],
     },
 
