@@ -14,52 +14,9 @@ If you just want to install Aualé on your system, you can download
 one of the provided packages from https://auale.joansala.com/
 
 
-Basic installation
-======================================================================
-
-Aualé is a multi-platform application written in interpreted languages;
-Python is used for the graphical user interface and Java for the
-artificial intelligence engine. Therefore, it can virtually run on any
-platform which supports those interpreters and the required libraries.
-
-To install it in your system just make sure the following libraries are
-installed and copy all the files under the folder 'src/auale' to a
-suitable location. Then you can just run it issuing the command
-'python __main__.py'.
-
-  Required libraries and interpreters:
-
-    GTK         >= 3.10
-    Java        >= 1.6
-    Python      >= 2.6
-
-  Required Python libraries:
-
-    PyGObject   >= 3.8
-    PyCairo
-    PySDL2      Already included with the source code
-
-  Optional libraries (used for sound support):
-
-    SDL2
-    SDL2_mixer
-
-
 Creating a package
 ======================================================================
 
 This software may be packaged using the standard Python Distribution
 Utilities. Please check the official Python documentation [1] for
-instructions.
-
-
-  * For Debian based systems, you may want to use 'debuild' and the
-    provided scripts under the 'deb' folder.
-
-  * For RPM based systems, you may want to use 'rpmbuild' and the
-    provided scripts under the 'rpm' folder.
-
-  * For Windows systems, you can use 'py2exe'.
-
-
-[1] https://docs.python.org/2/install/
+instructions and the scripts on the 'package' folder.

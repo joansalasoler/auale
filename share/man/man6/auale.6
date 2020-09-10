@@ -1,60 +1,52 @@
 '\" t
 .\"
 .pc
-.TH AUALE 6 "2015-03-26" "1.1.0" "Aualé Manual"
+.TH AUALE 6 "2020-09-10" "2.0.0" "Aualé Manual"
 .SH NAME
 Aualé \- Play Oware Mancala against the computer
 .\" ********************************************************************
 .SH SYNOPSIS
 .B auale
-.RB [\| \-h \|]
-.RB [\| \-v \|]
+.RB [\| OPTIONS \|]
 .RI [\| match_file \|]
 .\" ********************************************************************
 .SH DESCRIPTION
-.B Aualé
-is a graphical user interface for the popular
-.B "Oware Abapa"
-board game. It may be used to analyze, record and share your own
-.B mancala
-games or to play against the computer.
+.B Oware
+is a strategy board game of the Mancala family.
 .PP
-This interface communicates with an oware engine through an adapted version of
-the
-.B "Universal Chess Interface"
-protocol, which makes it suitable for use with multiple mancala playing
-programs. Although, currently only the
-.B Aalina
-game engine supports this protocol.
+The goal of Oware is to capture the greatest amount of seeds as possible. To
+do so, players make moves in alternate turns until one of them has captured
+more than 24 seeds. The player who captured more seeds than the opponent when
+the game ends wins the match.
 .PP
-Some of its main features include:
+Play against one of the strongest computer players out there, watch it play
+alone while you learn or choose one of the provided strengths: easy, medium,
+hard or expert.
 .PP
-* Play against the computer or watch how it plays.
-.br
-* Easily configurable computer strength.
-.br
-* Annotate your matches with an easy to use interface.
-.br
-* Save your games using a portable format which resembles the
-.br
-  popular
-.B "Portable Game Notation"
-format.
+Analyze, record, tag and share your own Mancala games. Aualé can save your
+Oware matches in a portable and human-readable format.
 .\" ********************************************************************
 .SH OPTIONS
 .TP
 .RI \| match_file \|
-Specifies a match file to open when
+Specifies a match file to open when.
 .B Aualé
 starts.
 .TP
-.BR \-h ", " \-\-help
+.BR \-\-debug
+Enable the debug mode.
+.TP
+.BR \-\-engine=<command>
+Set the engine to use.
+.TP
+.BR \-\-fullscreen
+Start in fullscreen mode.
+.TP
+.BR \-\-help
 Show a help message and exit.
 .TP
-.BR \-v ", " \-\-version
+.BR \-\-version
 Show program's version number and exit.
 .\" ********************************************************************
 .SH AUTHORS
-This program was written and designed by Joan Sala (contact@joansala.com)
-with help from Arnau Sala (contact@arnausalasoler.com) who kindly recorded
-the game sounds for the interface.
+2014-2020 Joan Sala (contact@joansala.com)
