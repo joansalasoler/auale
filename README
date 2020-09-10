@@ -1,6 +1,6 @@
 README of Aualé
 
-  Copyright (C) 2014-2015 Joan Sala Soler
+  Copyright (C) 2014-2020 Joan Sala Soler
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
@@ -11,30 +11,27 @@ README of Aualé
   What is it?
   -----------
 
-  Aualé - Play oware abapa against the computer or annotate your games
-  
-  Aualé is a graphical user interface for the popular Oware Abapa board
-  game. It may be used to analyze, record and share your own mancala
-  games or to play against the computer.
+  Aualé - Play Oware Mancala against the computer
 
-  This interface communicates with an oware engine through an adapted
-  version of the Universal Chess Interface protocol, which makes it
-  suitable for use with multiple mancala playing programs. Although,
-  currently only the Aalina game engine supports this protocol.
+  Oware is a strategy board game of the Mancala family.
 
-  Some of its main features include:
+  The goal of Oware is to capture the greatest amount of seeds as possible. To
+  do so, players make moves in alternate turns until one of them has captured
+  more than 24 seeds. The player who captured more seeds than the opponent when
+  the game ends wins the match.
 
-   * Play against the computer or watch how it plays.
-   * Easily configurable computer strength.
-   * Annotate your matches with an easy to use interface.
-   * Save your games using a portable format which resembles that of
-     the popular Portable Game Notation format.
+  Play against one of the strongest computer players out there, watch it play
+  alone while you learn or choose one of the provided strengths: easy, medium,
+  hard or expert.
+
+  Analyze, record, tag and share your own Mancala games. Aualé can save your
+  Oware matches in a portable and human-readable format.
 
   The Latest Version
   ------------------
 
   Information on the latest version of this software and its current
-  development can be found on http://www.joansala.com/auale/
+  development can be found on https://auale.joansala.com/
 
   Installation
   ------------
@@ -45,4 +42,3 @@ README of Aualé
   ---------
 
   Please see the COPYING file.
-

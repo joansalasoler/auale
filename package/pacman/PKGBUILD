@@ -3,11 +3,11 @@
 # Contributor: Andrew Dabrowski <dabrowsa@indiana.edu>
 
 pkgname=auale
-pkgver=1.1.2
+pkgver=2.0.0
 pkgrel=1
-pkgdesc="A free mancala game for the serious player"
+pkgdesc="Play Oware Mancala against the computer"
 arch=('any')
-url="http://www.joansala.com/auale"
+url="https://auale.joansala.com/"
 license=('GPL3')
 groups=()
 depends=(
@@ -25,7 +25,7 @@ makedepends=(
 )
 conflicts=('python2-auale')
 install=${pkgname}.install
-source=("http://www.joansala.com/auale/packages/$pkgname-$pkgver.tar.xz")
+source=("https://auale.joansala.com/packages/$pkgname-$pkgver.tar.xz")
 sha256sums=('SKIP')
 
 build() {
@@ -41,13 +41,13 @@ package() {
         --install-lib=/usr/share/${pkgname} \
         --skip-build
     popd
-    
+
     # Link the game launcher
     install -d ${pkgdir}/usr/bin
     ln -s /usr/share/${pkgname}/__main__.py \
           ${pkgdir}/usr/bin/${pkgname}
     chmod +x ${pkgdir}/usr/share/${pkgname}/__main__.py
-    
+
     # Install dist files
     pushd ${pkgname}-${pkgver}/res/share
     install -D -m644 applications/${pkgname}.desktop \
@@ -63,7 +63,7 @@ package() {
     install -D -m644 icons/hicolor/scalable/apps/${pkgname}.svg \
         ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg
     popd
-    
+
     # Move installed locales
     pushd ${pkgdir}/usr/share/${pkgname}/res
     mv -v messages ${pkgdir}/usr/share/locale

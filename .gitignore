@@ -1,9 +1,9 @@
 __pycache__
-/debian/.debhelper
-/debian/*.debhelper
-/debian/*.log
-/debian/*.substvars
-/debian/auale
-/debian/files
+/package/debian/.debhelper
+/package/debian/*.debhelper
+/package/debian/*.log
+/package/debian/*.substvars
+/package/debian/auale
+/package/debian/files
 /src/auale/build
 *~

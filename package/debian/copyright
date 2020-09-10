@@ -4,11 +4,11 @@ Upstream-Contact: Joan Sala Soler <contact@joansala.com>
 Source: https://github.com/joansalasoler/auale
 
 Files: *
-Copyright: 2014-2015 Joan Sala Soler <contact@joansala.com>
+Copyright: 2014-2020 Joan Sala Soler <contact@joansala.com>
 License: GPL-3+
 
 Files: src/auale/res/sound/*
-Copyright: 2014-2015 Arnau Sala Soler <contact@arnausalasoler.com>
+Copyright: 2014-2020 Arnau Sala Soler <contact@arnausalasoler.com>
 License: GPL-3+
 
 Files: src/auale/sdl2/*

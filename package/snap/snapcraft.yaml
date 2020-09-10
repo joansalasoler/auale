@@ -1,0 +1,61 @@
+name: auale
+base: core18
+version: '2.0.0-1'
+license: GPL-3.0
+summary: Play Oware Mancala against the computer
+description: |
+  Oware is a strategy board game of the Mancala family.
+
+  The goal of Oware is to capture the greatest amount of seeds as possible. To
+  do so, players make moves in alternate turns until one of them has captured
+  more than 24 seeds. The player who captured more seeds than the opponent when
+  the game ends wins the match.
+
+  Play against one of the strongest computer players out there, watch it play
+  alone while you learn or choose one of the provided strengths: easy, medium,
+  hard or expert.
+
+  Analyze, record, tag and share your own Mancala games. Aualé can save your
+  Oware matches in a portable and human-readable format.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+apps:
+  auale:
+    command: usr/games/auale
+    desktop: usr/share/applications/auale.desktop
+    extensions: [gnome-3-28]
+    environment:
+      LOCPATH: $SNAP/usr/share/locale
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      PATH: $JAVA_HOME/bin:$PATH
+    plugs:
+      - home
+      - gsettings
+      - pulseaudio
+
+parts:
+  auale:
+    plugin: dump
+    source: auale_2.0.0-1_all.deb
+    source-type: deb
+    build-packages:
+      - python
+      - ca-certificates
+      - ca-certificates-java
+    stage-packages:
+      - python
+      - python-gi
+      - python-gi-cairo
+      - ca-certificates
+      - ca-certificates-java
+      - openjdk-11-jre-headless
+      - gir1.2-rsvg-2.0
+      - libsdl2-2.0-0
+      - libsdl2-mixer-2.0-0
+    override-pull: |
+      snapcraftctl pull
+      export DESKTOP_PATH=usr/share/applications/auale.desktop
+      export ICON_PATH=/usr/share/icons/hicolor/scalable/apps/auale.svg
+      sed -i -e "s|Icon=auale|Icon=$ICON_PATH|g" "$DESKTOP_PATH"

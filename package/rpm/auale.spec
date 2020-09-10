@@ -1,9 +1,9 @@
 Name:           auale
-Version:        1.1.2
+Version:        2.0.0
 Release:        1
-Summary:        A free mancala game for the serious player
-URL:            http://www.joansala.com/auale
-Source0:        http://www.joansala.com/auale/packages/%{name}-%{version}.tar.xz
+Summary:        Play Oware Mancala against the computer
+URL:            https://auale.joansala.com/
+Source0:        https://auale.joansala.com/packages/%{name}-%{version}.tar.xz
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -62,22 +62,19 @@ Recommends:     %{_lib}sdl2_mixer2.0_0
 %endif
 
 %description
-Aualé is a graphical user interface for the popular Oware Abapa board
-game. It may be used to analyze, record and share your own mancala
-games or to play against the computer.
+Oware is a strategy board game of the Mancala family.
 
-This interface communicates with an oware engine through an adapted
-version of the Universal Chess Interface protocol, which makes it
-suitable for use with multiple mancala playing programs. Although,
-currently only the Aalina game engine supports this protocol.
+The goal of Oware is to capture the greatest amount of seeds as possible. To
+do so, players make moves in alternate turns until one of them has captured
+more than 24 seeds. The player who captured more seeds than the opponent when
+the game ends wins the match.
 
-Some of its main features include:
+Play against one of the strongest computer players out there, watch it play
+alone while you learn or choose one of the provided strengths: easy, medium,
+hard or expert.
 
- * Play against the computer or watch how it plays.
- * Easily configurable computer strength.
- * Annotate your matches with an easy to use interface.
- * Save your games using a portable format which resembles that of
-   the popular Portable Game Notation format.
+Analyze, record, tag and share your own Mancala games. Aualé can save your
+Oware matches in a portable and human-readable format.
 
 %prep
 %setup -q
@@ -168,4 +165,3 @@ rm -rf %{buildroot}
 * Sun Nov 8 2015 Joan Sala <contact@joansala.com>
 - 1.1.0-1
 - auale 1.1.0 release
-

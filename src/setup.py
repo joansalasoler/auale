@@ -33,44 +33,35 @@ from distutils import dir_util
 
 PACKAGE_CONFIG = dict(
     name='auale',
-    version='1.1.2',
-    url='http://www.joansala.com/auale/',
+    version='2.0.0',
+    url='https://auale.joansala.com/',
     author='Joan Sala Soler',
     author_email='contact@joansala.com',
     license='GPL3+',
-    description='Graphic user interface for oware',
-    long_description="""Aualé is a graphic user interface for the oware abapa
-        board game. Allows the users to analyse and record their own matches
-        or play against a strong computer player.""",
+    description='Play Oware Mancala against the computer',
+    long_description="""Oware is a strategy board game of the Mancala family.""",
 
     packages=[
-        '.',
-        'game',
-        'gui',
-        'uci',
-        'sdl2',
+        'auale',
     ],
 
     package_data={
-        '.': [
-            'res/engine/*',
-            'res/glade/*',
-            'res/image/*',
-            'res/other/*',
-            'res/sound/*',
-            'res/locale/*/*/*'
+        'auale': [
+            'data/engine/*',
+            'data/locale/*/*/*',
+            'data/auale.gresource',
         ],
     },
 
     windows=[{
         'script': '__main__.py',
-        'icon_resources': [(1, './res/image/auale.ico')]
+        'icon_resources': [(1, './resources/images/auale.ico')]
     }],
 
     options={
         'py2exe': {
-            'packages': ['gi', 'cairo'],
-            'includes': ['gi', 'cairo'],
+            'packages': ['gi'],
+            'includes': ['gi'],
         }
     },
 )
@@ -90,6 +81,5 @@ setup(**PACKAGE_CONFIG)
 # configuration files for GTK and SDL are stored on /bin/win32/
 
 if 'py2exe' in sys.argv and 'win' in sys.platform:
-    dir_util.copy_tree('./res', './dist/res')
     dir_util.copy_tree('../../bin/win32/', './dist/')
     os.rename('./dist/__main__.exe', './dist/auale.exe')
