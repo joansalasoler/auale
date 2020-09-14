@@ -82,7 +82,7 @@ class OpeningBook(object):
     def _load_opening_book(self, path):
         """Loads an opening book from a file"""
 
-        with open(path, 'r+b') as file:
+        with open(path, 'rb') as file:
             self._header = self._read_header(file)
             self._scores = self._read_scores(file)
 
