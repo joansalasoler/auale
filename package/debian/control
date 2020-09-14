@@ -1,31 +1,32 @@
 Source: auale
+License: gpl3
 Section: contrib/games
 Priority: optional
 Maintainer: Joan Sala Soler <contact@joansala.com>
 Homepage: https://auale.joansala.com/
-Standards-Version: 3.9.5
-Build-Depends: python (>= 3.8), debhelper (>= 11)
-X-Python-Version: >= 3.8
+Standards-Version: 4.5.0
+Build-Depends: dh-python, python3 (>= 3.8), debhelper (>= 11)
+X-Python3-Version: >= 3.8
 
 Package: auale
+License: gpl3
 Section: contrib/games
 Priority: optional
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, default-jre-headless (>= 1.8),
-  gir1.2-gtkclutter-1.0, gir1.2-manette-0.2, gir1.2-rsvg-2.0,
-  libsdl2-mixer-2.0-0
-
+Depends: ${misc:Depends}, ${python3:Depends}, default-jre-headless (>= 1.8),
+ gir1.2-gtkclutter-1.0, gir1.2-manette-0.2, gir1.2-rsvg-2.0,
+ libsdl2-mixer-2.0-0
 Description: Play Oware Mancala against the computer
-  Oware is a strategy board game of the Mancala family.
-  .
-  The goal of Oware is to capture the greatest amount of seeds as possible. To
-  do so, players make moves in alternate turns until one of them has captured
-  more than 24 seeds. The player who captured more seeds than the opponent when
-  the game ends wins the match.
-  .
-  Play against one of the strongest computer players out there, watch it play
-  alone while you learn or choose one of the provided strengths: easy, medium,
-  hard or expert.
-  .
-  Analyze, record, tag and share your own Mancala games. Aualé can save your
-  Oware matches in a portable and human-readable format.
+ Oware is a strategy board game of the Mancala family.
+ .
+ The goal of Oware is to capture the greatest amount of seeds as possible. To
+ do so, players make moves in alternate turns until one of them has captured
+ more than 24 seeds. The player who captured more seeds than the opponent when
+ the game ends wins the match.
+ .
+ Play against one of the strongest computer players out there, watch it play
+ alone while you learn or choose one of the provided strengths: easy, medium,
+ hard or expert.
+ .
+ Analyze, record, tag and share your own Mancala games. Aualé can save your
+ Oware matches in a portable and human-readable format.

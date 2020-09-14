@@ -1,4 +1,4 @@
-share/applications/auale.desktop /usr/share/applications/
-share/icons/hicolor/scalable/apps/auale.svg /usr/share/icons/hicolor/scalable/apps/
-share/icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg /usr/share/icons/hicolor/scalable/mimetypes/
-share/glib-2.0/schemas/com.joansala.auale.gschema.xml usr/share/glib-2.0/schemas/
+../share/applications/auale.desktop /usr/share/applications/
+../share/icons/hicolor/scalable/apps/auale.svg /usr/share/icons/hicolor/scalable/apps/
+../share/icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg /usr/share/icons/hicolor/scalable/mimetypes/
+../share/glib-2.0/schemas/com.joansala.auale.gschema.xml usr/share/glib-2.0/schemas/
