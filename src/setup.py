@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 # Aualé oware graphic user interface.
@@ -20,12 +20,6 @@
 import os
 import sys
 import site
-import setuptools
-
-try:
-    import py2exe
-except BaseException:
-    pass
 
 from distutils.core import setup
 from distutils import dir_util
@@ -39,9 +33,31 @@ PACKAGE_CONFIG = dict(
     author='Joan Sala Soler',
     author_email='contact@joansala.com',
     license='GPL3+',
-    description='Play Oware Mancala against the computer',
+    description='Aualé — The Game of Mancala',
     long_description="""Oware is a strategy board game of the Mancala family.""",
-    packages=setuptools.find_packages(),
+    packages=[
+        'auale',
+        'auale.uci',
+        'auale.book',
+        'auale.game',
+        'auale.sdl2',
+        'auale.gui',
+        'auale.i18n',
+        'auale.gamepad',
+        'auale.serialize',
+        'auale.sdl2.test',
+        'auale.sdl2.ext',
+        'auale.gui.widgets',
+        'auale.gui.dialogs',
+        'auale.gui.services',
+        'auale.gui.filters',
+        'auale.gui.animation',
+        'auale.gui.mixer',
+        'auale.gui.actors',
+        'auale.gui.values',
+        'auale.gui.factories',
+        'auale.gui.windows'
+    ],
 
     package_data={
         'auale': [
@@ -51,19 +67,26 @@ PACKAGE_CONFIG = dict(
             'game/oware.pkl',
         ],
     },
-
-    windows=[{
-        'script': '__main__.py',
-        'icon_resources': [(1, './resources/images/auale.ico')]
-    }],
-
-    options={
-        'py2exe': {
-            'packages': ['gi'],
-            'includes': ['gi'],
-        }
-    },
 )
+
+# Py2exe configuration
+
+if 'win' in sys.platform:
+    import py2exe
+
+    PACKAGE_CONFIG.update({
+        'windows': [{
+            'script': '__main__.py',
+            'icon_resources': [(1, './resources/images/auale.ico')]
+        }],
+
+        'options': {
+            'py2exe': {
+                'packages': ['gi'],
+                'includes': ['gi'],
+            }
+        },
+    })
 
 # Add the 'gnome' package to the path
 
