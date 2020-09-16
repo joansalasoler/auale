@@ -1,11 +1,10 @@
 Name:           auale
-Version:        2.0.0
+Version:        2.0.0+develop
 Release:        1
-Summary:        Play Oware Mancala against the computer
+Summary:        Aualé — The Game of Mancala
 URL:            https://auale.joansala.com/
-Source0:        https://github.com/joansalasoler/auale/releases/download/%{version}/%{name}-%{version}.tar.xz
+Source0:        %{name}_%{version}.tar.xz
 BuildArch:      noarch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{defined suse_version}
 License:        GPL-3.0+
@@ -16,19 +15,26 @@ License:        GPLv3+
 %if %{defined mgaversion}
 Group:          Games/Boards
 %else
+%if %{defined suse_version}
+Group:          Amusements/Games/Board/Other
+%else
 Group:          Amusements/Games
 %endif
+%endif
 
-BuildRequires:  python-devel
-BuildRequires:  python-setuptools
-Requires:       python >= 3.8
-Requires:       gtk3 >= 3.10
+BuildRequires:  python3 >= 3.6
+BuildRequires:  python3-devel
+BuildRequires:  python3-rpm-macros
+
 Requires:       jre >= 1.8
+Requires:       python3 >= 3.6
+Requires:       gtk3 >= 3.10
 Requires:       desktop-file-utils
+Requires:       %{_lib}manette >= 0.2
 
 %if %{defined fedora}
+Requires:       clutter-gtk >= 1.8
 Requires:       pygobject3 >= 3.8
-Requires:       pycairo
 %endif
 
 %if 0%{?fedora_version} >= 21
@@ -37,9 +43,8 @@ Requires:       SDL2_mixer
 %endif
 
 %if %{defined suse_version}
-Requires:       python-gobject >= 3.8
-Requires:       python-gobject-cairo >= 3.8
-Requires:       python-cairo
+Requires:       clutter-gtk >= 1.8
+Requires:       python3-gobject3 >= 3.8
 Requires:       typelib-1_0-Gtk-3_0
 Requires:       typelib-1_0-Rsvg-2_0
 Requires:       glib2-tools
@@ -51,14 +56,20 @@ Requires:       SDL2_mixer
 %endif
 
 %if %{defined mgaversion}
-Requires:       python-cairo
-Requires:       python-gi
-Requires:       python-gi-cairo
-Recommends:     %{_lib}sdl2_mixer2.0_0
+Requires:       python3-gi
+Requires:       python3-gi-cairo
+Requires:       %{_lib}clutter-gtk
+Requires:       %{_lib}sdl2_mixer
 %else
 %define         _gamesbindir    %{_bindir}
 %define         _gamesdatadir   %{_datadir}
 %define         _iconsdir       %{_datadir}/icons
+%endif
+
+%define         __python        %{__python3}
+
+%if %{defined mgaversion}
+%global         _python_bytecompile_extra 0
 %endif
 
 %description
@@ -77,18 +88,18 @@ Analyze, record, tag and share your own Mancala games. Aualé can save your
 Oware matches in a portable and human-readable format.
 
 %prep
-%setup -q
+%setup -q -c %{name}-%{version}
 
 %build
-pushd %{_builddir}/%{name}-%{version}/src/%{name}
+pushd %{_builddir}/%{name}-%{version}/src
 %{__python} setup.py build
 popd
 
 %install
-pushd %{_builddir}/%{name}-%{version}/src/%{name}
+pushd %{_builddir}/%{name}-%{version}/src
 %{__python} setup.py install \
     --root=%{buildroot} \
-    --install-lib=%{_gamesdatadir}/%{name} \
+    --install-lib=%{_gamesdatadir} \
     --skip-build
 popd
 
@@ -107,16 +118,33 @@ install -D -m644 man/man6/%{name}.6 \
     %{buildroot}%{_mandir}/man6/%{name}.6
 install -D -m644 mime/packages/%{name}.xml \
     %{buildroot}%{_datadir}/mime/packages/%{name}.xml
-install -D -m644 icons/hicolor/scalable/mimetypes/text-x-oware-ogn.svg \
-    %{buildroot}%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn.svg
+install -D -m644 icons/hicolor/16x16/mimetypes/text-x-oware-ogn.png \
+    %{buildroot}%{_iconsdir}/hicolor/16x16/mimetypes/text-x-oware-ogn.png
+install -D -m644 icons/hicolor/24x24/mimetypes/text-x-oware-ogn.png \
+    %{buildroot}%{_iconsdir}/hicolor/24x24/mimetypes/text-x-oware-ogn.png
+install -D -m644 icons/hicolor/32x32/mimetypes/text-x-oware-ogn.png \
+    %{buildroot}%{_iconsdir}/hicolor/32x32/mimetypes/text-x-oware-ogn.png
+install -D -m644 icons/hicolor/48x48/mimetypes/text-x-oware-ogn.png \
+    %{buildroot}%{_iconsdir}/hicolor/48x48/mimetypes/text-x-oware-ogn.png
+install -D -m644 icons/hicolor/256x256/mimetypes/text-x-oware-ogn.png \
+    %{buildroot}%{_iconsdir}/hicolor/256x256/mimetypes/text-x-oware-ogn.png
+install -D -m644 icons/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg \
+    %{buildroot}%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg
 install -D -m644 icons/hicolor/scalable/apps/%{name}.svg \
     %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
 popd
+
+# Remove generated egg-info files
+rm -R -f %{buildroot}%{_gamesdatadir}/%{name}-*.egg-info
 
 # Move installed locales
 pushd %{buildroot}%{_gamesdatadir}/%{name}/data
 mv -v locale %{buildroot}%{_datadir}/locale
 popd
+
+%if %{defined mgaversion}
+%py_byte_compile %{__python3} %{buildroot}%{_gamesdatadir}/%{name}
+%endif
 
 %find_lang %{name}
 
@@ -129,6 +157,16 @@ rm -rf %{buildroot}
 %dir %{_datadir}/glib-2.0
 %dir %{_datadir}/glib-2.0/schemas
 %dir %{_iconsdir}/hicolor
+%dir %{_iconsdir}/hicolor/16x16
+%dir %{_iconsdir}/hicolor/24x24
+%dir %{_iconsdir}/hicolor/32x32
+%dir %{_iconsdir}/hicolor/48x48
+%dir %{_iconsdir}/hicolor/256x256
+%dir %{_iconsdir}/hicolor/16x16/mimetypes
+%dir %{_iconsdir}/hicolor/24x24/mimetypes
+%dir %{_iconsdir}/hicolor/32x32/mimetypes
+%dir %{_iconsdir}/hicolor/48x48/mimetypes
+%dir %{_iconsdir}/hicolor/256x256/mimetypes
 %dir %{_iconsdir}/hicolor/scalable
 %dir %{_iconsdir}/hicolor/scalable/apps
 %dir %{_iconsdir}/hicolor/scalable/mimetypes
@@ -138,7 +176,12 @@ rm -rf %{buildroot}
 %{_datadir}/glib-2.0/schemas/com.joansala.%{name}.gschema.xml
 %{_datadir}/mime/packages/%{name}.xml
 %{_iconsdir}/hicolor/scalable/apps/%{name}.svg
-%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn.svg
+%{_iconsdir}/hicolor/16x16/mimetypes/text-x-oware-ogn.png
+%{_iconsdir}/hicolor/24x24/mimetypes/text-x-oware-ogn.png
+%{_iconsdir}/hicolor/32x32/mimetypes/text-x-oware-ogn.png
+%{_iconsdir}/hicolor/48x48/mimetypes/text-x-oware-ogn.png
+%{_iconsdir}/hicolor/256x256/mimetypes/text-x-oware-ogn.png
+%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg
 %{_mandir}/man6/%{name}.6*
 
 %post
@@ -154,18 +197,14 @@ rm -rf %{buildroot}
 %{_bindir}/update-desktop-database &> /dev/null || :
 
 %changelog
-* Tue Sep 10 2020 Joan Sala <contact@joansala.com>
-- 2.0.0-1
-- auale 2.0.0 release
+* Tue Sep 15 2020 Joan Sala <contact@joansala.com> - 2.0.0+develop-1
+- Development version
 
-* Sat Oct 6 2018 Joan Sala <contact@joansala.com>
-- 1.1.2-1
+* Sat Oct 6 2018 Joan Sala <contact@joansala.com> - 1.1.2-1
 - auale 1.1.2 release
 
-* Fri Nov 13 2015 Joan Sala <contact@joansala.com>
-- 1.1.0-2
+* Fri Nov 13 2015 Joan Sala <contact@joansala.com> - 1.1.0-2
 - Fix OpenSUSE dependencies
 
-* Sun Nov 8 2015 Joan Sala <contact@joansala.com>
-- 1.1.0-1
+* Sun Nov 8 2015 Joan Sala <contact@joansala.com> - 1.1.0-1
 - auale 1.1.0 release

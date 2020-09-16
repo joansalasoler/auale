@@ -1,7 +1,7 @@
-auale (2.0.0-1) UNRELEASED; urgency=medium
-  * Initial release of the 2.0 series
+auale (2.0.0+develop-1) UNRELEASED; urgency=medium
+  * Development version
 
- -- Joan Sala Soler <contact@joansala.com>  Thu, 10 Sep 2020 17:51:53 +0100
+ -- Joan Sala Soler <contact@joansala.com>  Tue, 15 Sep 2020 08:21:24 +0100
 
 auale (1.1.2-1) UNRELEASED; urgency=medium
   * Fix issues with SVG rendering

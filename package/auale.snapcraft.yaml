@@ -2,7 +2,7 @@ name: auale
 base: core18
 version: '2.0.0-1'
 license: GPL-3.0
-summary: Play Oware Mancala against the computer
+summary: Aualé — The Game of Mancala
 description: |
   Oware is a strategy board game of the Mancala family.
 
