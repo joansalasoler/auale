@@ -18,7 +18,7 @@ depends=(
   'jre-openjdk-headless>=8'
   'libmanette>=0.2'
   'librsvg>=2.0'
-  'python-gobject'
+  'python-gobject>=3.29'
   'desktop-file-utils'
   'sdl2_mixer'
 )

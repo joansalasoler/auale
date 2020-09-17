@@ -34,7 +34,7 @@ Requires:       %{_lib}manette >= 0.2
 
 %if %{defined fedora}
 Requires:       clutter-gtk >= 1.8
-Requires:       pygobject3 >= 3.8
+Requires:       pygobject3 >= 3.29
 %endif
 
 %if 0%{?fedora_version} >= 21
@@ -44,7 +44,7 @@ Requires:       SDL2_mixer
 
 %if %{defined suse_version}
 Requires:       clutter-gtk >= 1.8
-Requires:       python3-gobject3 >= 3.8
+Requires:       python3-gobject3 >= 3.29
 Requires:       typelib-1_0-Gtk-3_0
 Requires:       typelib-1_0-Rsvg-2_0
 Requires:       glib2-tools
@@ -56,7 +56,7 @@ Requires:       SDL2_mixer
 %endif
 
 %if %{defined mgaversion}
-Requires:       python3-gi
+Requires:       python3-gi >= 3.29
 Requires:       python3-gi-cairo
 Requires:       %{_lib}clutter-gtk
 Requires:       %{_lib}sdl2_mixer
@@ -67,10 +67,6 @@ Requires:       %{_lib}sdl2_mixer
 %endif
 
 %define         __python        %{__python3}
-
-%if %{defined mgaversion}
-%global         _python_bytecompile_extra 0
-%endif
 
 %description
 Oware is a strategy board game of the Mancala family.
@@ -141,10 +137,6 @@ rm -R -f %{buildroot}%{_gamesdatadir}/%{name}-*.egg-info
 pushd %{buildroot}%{_gamesdatadir}/%{name}/data
 mv -v locale %{buildroot}%{_datadir}/locale
 popd
-
-%if %{defined mgaversion}
-%py_byte_compile %{__python3} %{buildroot}%{_gamesdatadir}/%{name}
-%endif
 
 %find_lang %{name}
 

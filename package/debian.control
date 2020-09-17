@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Joan Sala Soler <contact@joansala.com>
 Homepage: https://auale.joansala.com/
 Standards-Version: 4.5.0
-Build-Depends: dh-python, python3 (>= 3.6), debhelper (>= 9)
+Build-Depends: dh-python, python3 (>= 3.6), debhelper (>= 11)
 X-Python3-Version: >= 3.6
 
 Package: auale
@@ -12,8 +12,8 @@ Section: contrib/games
 Priority: optional
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python3 (>= 3.6),
- default-jre-headless (>= 1.8), gir1.2-gtkclutter-1.0, gir1.2-manette-0.2,
- gir1.2-rsvg-2.0, libsdl2-mixer-2.0-0
+ python3-gi (>= 3.29), default-jre-headless (>= 1.8), gir1.2-gtkclutter-1.0,
+ gir1.2-manette-0.2, gir1.2-rsvg-2.0, libsdl2-mixer-2.0-0
 Description: Aualé — The Game of Mancala
  Oware is a strategy board game of the Mancala family.
  .

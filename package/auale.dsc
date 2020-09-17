@@ -6,7 +6,7 @@ Version: 2.0.0+develop-1
 Maintainer: Joan Sala Soler <contact@joansala.com>
 Homepage: https://auale.joansala.com/
 Standards-Version: 4.5.0
-Build-Depends: dh-python, python3 (>= 3.6), debhelper (>= 9)
+Build-Depends: dh-python, python3 (>= 3.6), debhelper (>= 11)
 Package-List:
  auale deb contrib/games optional arch=all
 Checksums-Sha1:
