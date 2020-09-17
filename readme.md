@@ -32,8 +32,8 @@ Many thanks to:
 * My brother, Arnau Sala, for the sounds effects.
 * Andrew Dabrowski, for his help with the pacman packages.
 * Rémi Verschelde, for his help with the rpm packages.
-* The amazing Launchpad translators for translating it.
-* Everyone who submitted bug reports.
+* The amazing Launchpad translators for [translating it](https://translations.launchpad.net/auale).
+* Everyone who submitted [bug reports](https://github.com/joansalasoler/auale/issues).
 
 The Latest Version
 ==================
