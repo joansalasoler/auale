@@ -1,8 +1,8 @@
 name: auale
 base: core18
-version: '2.0.0-1'
+version: '2.0.0+develop-1'
 license: GPL-3.0
-summary: Play Oware Mancala against the computer
+summary: Aualé — The Game of Mancala
 description: |
   Oware is a strategy board game of the Mancala family.
 
@@ -28,34 +28,38 @@ apps:
     extensions: [gnome-3-28]
     environment:
       LOCPATH: $SNAP/usr/share/locale
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      JAVA_HOME: $SNAP/usr/lib/jvm/default-java
+      PYTHONPATH: $PYTHONPATH:$SNAP/lib/python3.6/site-packages
       PATH: $JAVA_HOME/bin:$PATH
     plugs:
       - home
       - gsettings
+      - joystick
       - pulseaudio
 
 parts:
   auale:
     plugin: dump
-    source: auale_2.0.0-1_all.deb
+    source: auale_2.0.0+develop-1_all.deb
     source-type: deb
     build-packages:
-      - python
       - ca-certificates
       - ca-certificates-java
     stage-packages:
-      - python
-      - python-gi
-      - python-gi-cairo
-      - ca-certificates
-      - ca-certificates-java
-      - openjdk-11-jre-headless
+      - default-jre-headless
+      - gir1.2-gtkclutter-1.0
+      - gir1.2-manette-0.2
       - gir1.2-rsvg-2.0
-      - libsdl2-2.0-0
       - libsdl2-mixer-2.0-0
     override-pull: |
       snapcraftctl pull
       export DESKTOP_PATH=usr/share/applications/auale.desktop
       export ICON_PATH=/usr/share/icons/hicolor/scalable/apps/auale.svg
       sed -i -e "s|Icon=auale|Icon=$ICON_PATH|g" "$DESKTOP_PATH"
+  site-packages:
+    plugin: python
+    python-version: python3
+    build-packages:
+      - libgirepository1.0-dev
+    python-packages:
+      - PyGObject

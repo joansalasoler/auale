@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Clutter
 from gi.repository import GLib
 from game import Match
 from i18n import gettext as _
-
 from .actor import Actor
 
 
@@ -31,13 +31,21 @@ class Infobar(Actor):
     def __init__(self):
         super(Infobar, self).__init__()
 
+    def has_content(self):
+        """Checks the canvas is attached to this actor"""
+
+        return isinstance(self.get_content(), Clutter.Canvas)
+
     def has_message(self):
         """Checks if a message is shown"""
 
-        if canvas := self.get_content():
-            return bool(canvas.get_markup())
+        if not self.has_content():
+            return False
 
-        return False
+        canvas = self.get_content()
+        markup = canvas.get_markup()
+
+        return bool(markup)
 
     def show_match_information(self, match):
         """Show information about a match file"""
@@ -45,7 +53,7 @@ class Infobar(Actor):
         if not isinstance(match, Match):
             return self.clear_message()
 
-        if comment := match.get_comment():
+        if match.get_comment():
             return self.show_match_comment(match)
 
         if self._is_first_position(match):
@@ -79,7 +87,8 @@ class Infobar(Actor):
     def show_error_message(self, message):
         """Shows an error message"""
 
-        if canvas := self.get_content():
+        if self.has_content():
+            canvas = self.get_content()
             style = 'foreground="#feebc4"'
             markup = f'<span { style }>{ message }</span>'
             canvas.set_markup(markup)
@@ -87,13 +96,15 @@ class Infobar(Actor):
     def show_info_message(self, markup):
         """Shows an informative message"""
 
-        if canvas := self.get_content():
+        if self.has_content():
+            canvas = self.get_content()
             canvas.set_markup(markup)
 
     def clear_message(self):
         """Clears the current message"""
 
-        if canvas := self.get_content():
+        if self.has_content():
+            canvas = self.get_content()
             canvas.set_markup('')
 
     def _is_first_position(self, match):

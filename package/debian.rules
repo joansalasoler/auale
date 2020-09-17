@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python3
+
+override_dh_auto_install:
+	cd ./src && python3 setup.py install \
+		--root=../debian/auale \
+		--install-layout=deb \
+		--install-lib=/usr/share
+	mv -v debian/auale/usr/share/auale/data/locale \
+		debian/auale/usr/share/locale
+	rm -R -f debian/auale/usr/share/auale-*.egg-info
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 755 debian/auale/usr/share/auale/__main__.py
+
+override_dh_clean:
+	cd ./src && python3 setup.py clean --all
+	dh_clean

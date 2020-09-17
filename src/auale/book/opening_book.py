@@ -82,7 +82,7 @@ class OpeningBook(object):
     def _load_opening_book(self, path):
         """Loads an opening book from a file"""
 
-        with open(path, 'r+b') as file:
+        with open(path, 'rb') as file:
             self._header = self._read_header(file)
             self._scores = self._read_scores(file)
 
@@ -92,8 +92,9 @@ class OpeningBook(object):
         header = dict()
         signature = file.readline()
 
-        while field := file.readline():
-            if field == b'\x00\n': break
+        while True:
+            field = file.readline()
+            if not field or field == b'\x00\n': break
             values = field.decode('utf-8').split(':', 1)
             header.setdefault(*values)
 
@@ -104,7 +105,9 @@ class OpeningBook(object):
 
         scores = dict()
 
-        while entry := file.read(20):
+        while True:
+            entry = file.read(20)
+            if not entry: break
             code, *values = struct.unpack('>q6h', entry)
             scores.setdefault(code, values)
 

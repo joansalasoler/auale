@@ -6,6 +6,9 @@ News of Aualé
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
+Version 2.0.0 (10 Sep 2020) (Joan Sala Soler)
+  Initial release of the 2.0 series.
+
 Version 1.1.2 (06 Oct 2018) (Joan Sala Soler)
   Fixed some compatibility issues and updated PySDL2 to the latest
   version of the library.

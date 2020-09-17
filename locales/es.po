@@ -207,6 +207,10 @@ msgstr "Abre una partida usada recientemente"
 msgid "Oware match files"
 msgstr "Archivos de partidas de oware"
 
+#: package/debian/auale.sharedmimeinfo:3
+msgid "Oware Match"
+msgstr "Partida de oware"
+
 #: src/resources/gtk/dialogs/new_match_dialog.ui:200
 msgid "Play as north"
 msgstr "Jugar como norte"

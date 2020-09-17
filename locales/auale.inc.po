@@ -9,6 +9,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: package/debian/auale.sharedmimeinfo:3
+msgid "Oware Match"
+msgstr ""
+
 #: src/auale/game/match.py:31
 msgid "Variant"
 msgstr ""

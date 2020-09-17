@@ -303,10 +303,11 @@ class BoardCanvas(GtkClutter.Embed):
         if current not in self._activables:
             return self.focus_first_house()
 
-        if count := len(self._activables):
+        if len(self._activables):
+            length = len(self._activables)
             index = self._activables.index(current)
             direction = self._rotation.direction
-            next_index = (index + direction) % count
+            next_index = (index + direction) % length
             house = self._activables[next_index]
             house.grab_key_focus()
 
@@ -318,10 +319,11 @@ class BoardCanvas(GtkClutter.Embed):
         if current not in self._activables:
             return self.focus_last_house()
 
-        if count := len(self._activables):
+        if len(self._activables):
+            length = len(self._activables)
             index = self._activables.index(current)
             direction = -self._rotation.direction
-            previous_index = (index + direction) % count
+            previous_index = (index + direction) % length
             house = self._activables[previous_index]
             house.grab_key_focus()
 
@@ -412,6 +414,8 @@ class BoardCanvas(GtkClutter.Embed):
     def _refresh_house_focus(self, house):
         """Ensures this widget is focused"""
 
-        if stage := self.get_stage():
+        stage = self.get_stage()
+
+        if isinstance(stage, Clutter.Stage):
             stage.set_key_focus(house)
             self.grab_focus()
