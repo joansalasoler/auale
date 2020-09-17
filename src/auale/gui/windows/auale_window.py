@@ -23,6 +23,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from config import theme
 from i18n import gettext as _
+from game import Match
 from book import OpeningBook
 from uci import Engine
 from uci import Human
@@ -202,10 +203,19 @@ class AualeWindow(Gtk.ApplicationWindow):
         strength = player.get_playing_strength()
         self._book.set_strength(strength)
 
-        if book_move := self._book.pick_best_move(match):
-            return self.make_legal_move(match, book_move)
+        if not self.request_book_move(match):
+            self._game_loop.request_move(player, match)
 
-        self._game_loop.request_move(player, match)
+    def request_book_move(self, match):
+        """Request a move from the openings book"""
+
+        book_move = self._book.pick_best_move(match)
+        has_move = book_move is not None
+
+        if has_move is True:
+            self.make_legal_move(match, book_move)
+
+        return has_move
 
     def toggle_active_player(self, match):
         """Requests a move to the current player of a match"""
@@ -315,7 +325,9 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_move_animation_completed(self, canvas):
         """Emitted when a move animation finishes"""
 
-        if match := self._match_manager.get_match():
+        match = self._match_manager.get_match()
+
+        if isinstance(match, Match):
             player = self.toggle_active_player(match)
 
             is_human = isinstance(player, Human)
@@ -371,7 +383,9 @@ class AualeWindow(Gtk.ApplicationWindow):
     def on_player_move_received(self, game_loop, player, move):
         """A move was received from an engine player"""
 
-        if match := self._match_manager.get_match():
+        match = self._match_manager.get_match()
+
+        if isinstance(match, Match):
             self.make_legal_move(match, move)
 
     def on_player_info_received(self, game_loop, player, report):

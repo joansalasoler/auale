@@ -349,7 +349,9 @@ class Client(GObject.GObject, Thread):
         """Evaluates responses while the input file is open"""
 
         try:
-            while response := self._read_response():
+            while True:
+                response = self._read_response()
+                if not response: break
                 self._eval_response(response)
         finally:
             self._is_running.clear()

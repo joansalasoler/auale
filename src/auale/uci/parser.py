@@ -33,8 +33,8 @@ class Parser(object):
         haystack = haystack.strip()
 
         for pattern in self._patterns:
-            if match := pattern.match(haystack):
-                return match.groupdict()
+            match = pattern.match(haystack)
+            if match: return match.groupdict()
 
     def _compile_rules(self, rules=()):
         """Compiles a set of command rules as regular expressions"""
