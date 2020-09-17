@@ -29,7 +29,7 @@ apps:
     environment:
       LOCPATH: $SNAP/usr/share/locale
       JAVA_HOME: $SNAP/usr/lib/jvm/default-java
-      PYTHONPATH: $PYTHONPATH:$SNAP/usr/lib/python3/dist-packages
+      PYTHONPATH: $PYTHONPATH:$SNAP/lib/python3.6/site-packages
       PATH: $JAVA_HOME/bin:$PATH
     plugs:
       - home
@@ -46,8 +46,6 @@ parts:
       - ca-certificates
       - ca-certificates-java
     stage-packages:
-      - python3-gi
-      - python3-gi-cairo
       - default-jre-headless
       - gir1.2-gtkclutter-1.0
       - gir1.2-manette-0.2
@@ -58,3 +56,10 @@ parts:
       export DESKTOP_PATH=usr/share/applications/auale.desktop
       export ICON_PATH=/usr/share/icons/hicolor/scalable/apps/auale.svg
       sed -i -e "s|Icon=auale|Icon=$ICON_PATH|g" "$DESKTOP_PATH"
+  site-packages:
+    plugin: python
+    python-version: python3
+    build-packages:
+      - libgirepository1.0-dev
+    python-packages:
+      - PyGObject
