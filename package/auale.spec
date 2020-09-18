@@ -128,6 +128,8 @@ install -D -m644 icons/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg 
     %{buildroot}%{_iconsdir}/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg
 install -D -m644 icons/hicolor/scalable/apps/%{name}.svg \
     %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
+install -D -m644 metainfo/com.joansala.%{name}.metainfo.xml \
+    %{buildroot}%{_datadir}/metainfo/com.joansala.%{name}.metainfo.xml
 popd
 
 # Remove generated egg-info files
@@ -148,6 +150,7 @@ rm -rf %{buildroot}
 %doc AUTHORS COPYING NEWS README
 %dir %{_datadir}/glib-2.0
 %dir %{_datadir}/glib-2.0/schemas
+%dir %{_datadir}/metainfo
 %dir %{_iconsdir}/hicolor
 %dir %{_iconsdir}/hicolor/16x16
 %dir %{_iconsdir}/hicolor/24x24
@@ -167,6 +170,7 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/glib-2.0/schemas/com.joansala.%{name}.gschema.xml
 %{_datadir}/mime/packages/%{name}.xml
+%{_datadir}/metainfo/com.joansala.%{name}.metainfo.xml
 %{_iconsdir}/hicolor/scalable/apps/%{name}.svg
 %{_iconsdir}/hicolor/16x16/mimetypes/text-x-oware-ogn.png
 %{_iconsdir}/hicolor/24x24/mimetypes/text-x-oware-ogn.png

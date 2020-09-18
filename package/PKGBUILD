@@ -73,6 +73,8 @@ package() {
         ${pkgdir}/usr/share/icons/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg
     install -D -m644 icons/hicolor/scalable/apps/${pkgname}.svg \
         ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg
+    install -D -m644 metainfo/com.joansala.auale.metainfo.xml \
+        %{buildroot}%{_datadir}/metainfo/com.joansala.auale.metainfo.xml
     popd
 
     # Remove generated egg-info files

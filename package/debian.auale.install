@@ -1,9 +1,10 @@
 ./share/applications/auale.desktop /usr/share/applications/
-./share/icons/hicolor/scalable/apps/auale.svg /usr/share/icons/hicolor/scalable/apps/
+./share/glib-2.0/schemas/com.joansala.auale.gschema.xml usr/share/glib-2.0/schemas/
 ./share/icons/hicolor/16x16/mimetypes/text-x-oware-ogn.png /usr/share/icons/hicolor/16x16/
 ./share/icons/hicolor/24x24/mimetypes/text-x-oware-ogn.png /usr/share/icons/hicolor/24x24/
+./share/icons/hicolor/256x256/mimetypes/text-x-oware-ogn.png /usr/share/icons/hicolor/256x256/
 ./share/icons/hicolor/32x32/mimetypes/text-x-oware-ogn.png /usr/share/icons/hicolor/32x32/
 ./share/icons/hicolor/48x48/mimetypes/text-x-oware-ogn.png /usr/share/icons/hicolor/48x48/
-./share/icons/hicolor/256x256/mimetypes/text-x-oware-ogn.png /usr/share/icons/hicolor/256x256/
+./share/icons/hicolor/scalable/apps/auale.svg /usr/share/icons/hicolor/scalable/apps/
 ./share/icons/hicolor/scalable/mimetypes/text-x-oware-ogn-symbolic.svg /usr/share/icons/hicolor/scalable/mimetypes/
-./share/glib-2.0/schemas/com.joansala.auale.gschema.xml usr/share/glib-2.0/schemas/
+./share/metainfo/com.joansala.auale.metainfo.xml /usr/share/metainfo/
