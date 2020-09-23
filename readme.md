@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/joansalasoler/auale/assets/logo.png" alt="Aualé" width="258" height="90"/>
+<img src="https://raw.githubusercontent.com/joansalasoler/assets/master/logos/auale.png" alt="Aualé" width="258" height="90"/>
 Play <b>Oware Mancala</b> against the computer
 <hr>
 
@@ -13,7 +13,7 @@ Play against one of the strongest computer players out there, watch it play alon
 
 Analyze, record, tag and share your own Mancala games. Aualé can save your Oware matches in a portable and human-readable format.
 
-![Demo](https://raw.githubusercontent.com/joansalasoler/auale/assets/auale-2.0.0.gif)
+![Demo](https://raw.githubusercontent.com/joansalasoler/assets/master/demos/auale-2.0.0.gif)
 
 Implementation details:
 -----------------------

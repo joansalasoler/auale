@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.joansala.auale</id>
+  <name>Aualé — The Game of Mancala</name>
+  <summary>Play mancala against a computer oponent</summary>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <recommends>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>gamepad</control>
+  </recommends>
+  <description>
+    <p>Oware is a strategy board game of the Mancala family.</p>
+    <p>The goal of Oware is to capture the greatest amount of seeds as possible. To do so, players make moves in alternate turns until one of them has captured more than 24 seeds. The player who captured more seeds than the opponent when the game ends wins the match.</p>
+    <p>Play against one of the strongest computer players out there, watch it play alone while you learn or choose one of the provided strengths: easy, medium, hard or expert.</p>
+    <p>Analyze, record, tag and share your own Mancala games. Aualé can save your  Oware matches in a portable and human-readable format.</p>
+  </description>
+  <launchable type="desktop-id">auale.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://images.joansala.com/auale-2.0.0.png</image>
+    </screenshot>
+  </screenshots>
+</component>
