@@ -112,6 +112,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Connects this window to the sound mixer"""
 
         self._sound_context.connect_signals(self._board_canvas)
+        self._sound_context.connect_signals(self._board_canvas.get_animator())
         self._sound_context.connect_signals(self)
 
     def create_opening_book(self):

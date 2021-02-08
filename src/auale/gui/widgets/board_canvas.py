@@ -108,6 +108,11 @@ class BoardCanvas(GtkClutter.Embed):
 
         return self._animator.is_playing()
 
+    def get_animator(self):
+        """Obtain the board animator"""
+
+        return self._animator
+
     def get_object(self, name):
         """Obtains a board object given its name"""
 
