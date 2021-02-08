@@ -20,6 +20,7 @@ import os
 
 from gi.repository import Gdk
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 from config import theme
 from i18n import gettext as _
@@ -77,6 +78,10 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self.setup_window_widgets()
         self.connect_window_signals()
+
+    @GObject.Signal
+    def match_finished(self):
+        """Emitted when an ongoing match finishes"""
 
     def setup_window_widgets(self):
         """Attach an initialize this window's widgets"""
@@ -334,6 +339,9 @@ class AualeWindow(Gtk.ApplicationWindow):
             is_human = isinstance(player, Human)
             has_cursor = self._board_canvas.get_cursor_visible()
             is_endgame = match.has_ended()
+
+            if is_endgame is True:
+                self.match_finished.emit()
 
             if is_human and not has_cursor and not is_endgame:
                 self._board_canvas.focus_first_house()
