@@ -18,8 +18,8 @@ description: |
   Analyze, record, tag and share your own Mancala games. Aualé can save your
   Oware matches in a portable and human-readable format.
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
   auale:
@@ -33,9 +33,18 @@ apps:
       PATH: $JAVA_HOME/bin:$PATH
     plugs:
       - home
+      - audio-playback
       - gsettings
       - joystick
       - pulseaudio
+    slots:
+      - dbus-auale
+
+slots:
+  dbus-auale:
+    bus: session
+    interface: dbus
+    name: com.joansala.auale
 
 parts:
   auale:
