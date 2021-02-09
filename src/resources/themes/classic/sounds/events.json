@@ -1,6 +1,39 @@
 [
-{ "type": "SoundSample", "target": "AualeWindow", "signal": "map-event", "path": "/com/joansala/auale/themes/classic/sounds/generic.oga" },
-{ "type": "SoundSample", "target": "BoardCanvas", "signal": "house-activated", "path": "/com/joansala/auale/themes/classic/sounds/generic.oga" },
-{ "type": "SoundSample", "target": "BoardCanvas", "signal": "house-focused", "path": "/com/joansala/auale/themes/classic/sounds/generic.oga" },
-{ "type": "SoundSample", "target": "BoardCanvas", "signal": "board-rotated", "channel": "rotate", "path": "/com/joansala/auale/themes/classic/sounds/generic.oga" }
+    {
+        "type": "SoundSample",
+        "target": "AualeWindow",
+        "signal": "house-selected",
+        "path": "/com/joansala/auale/themes/classic/sounds/house-selected.oga"
+    },
+    {
+        "type": "SoundSample",
+        "target": "AualeWindow",
+        "signal": "match-finished",
+        "path": "/com/joansala/auale/themes/classic/sounds/match-finished.oga"
+    },
+    {
+        "type": "SoundSample",
+        "target": "BoardAnimator",
+        "signal": "capture-animation",
+        "path": "/com/joansala/auale/themes/classic/sounds/capture-animation.oga"
+    },
+    {
+        "type": "SoundSample",
+        "target": "BoardAnimator",
+        "signal": "harvest-animation",
+        "path": "/com/joansala/auale/themes/classic/sounds/harvest-animation.oga"
+    },
+    {
+        "type": "SoundSample",
+        "target": "BoardAnimator",
+        "signal": "sow-animation",
+        "path": "/com/joansala/auale/themes/classic/sounds/sow-animation.oga"
+    },
+    {
+        "channel": "board",
+        "type": "SoundSample",
+        "target": "BoardCanvas",
+        "signal": "board-rotated",
+        "path": "/com/joansala/auale/themes/classic/sounds/board-rotated.oga"
+    }
 ]

@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.36.0
 
 Aualé -
-Copyright (C) 2014-2020 Joan Sala Soler <contact@joansala.com>
+Copyright (C) 2014-2021 Joan Sala Soler <contact@joansala.com>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   <!-- interface-css-provider-path auale.css -->
   <!-- interface-license-type lgplv2 -->
   <!-- interface-name Aual\303\251 -->
-  <!-- interface-copyright 2014-2020 Joan Sala Soler <contact@joansala.com> -->
+  <!-- interface-copyright 2014-2021 Joan Sala Soler <contact@joansala.com> -->
   <template class="AboutDialog" parent="GtkAboutDialog">
     <property name="can_focus">False</property>
     <property name="border_width">10</property>
@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <property name="type_hint">dialog</property>
     <property name="program_name">Aualé</property>
     <property name="version">2.0.0+develop</property>
-    <property name="copyright">Copyright © 2014-2020 Joan Sala Soler</property>
+    <property name="copyright">Copyright © 2014-2021 Joan Sala Soler</property>
     <property name="comments" translatable="yes">A graphical user interface for oware</property>
     <property name="website">https://auale.joansala.com</property>
     <property name="website_label">https://auale.joansala.com</property>
@@ -51,9 +51,7 @@ Joan Sala Soler https://launchpad.net/~joansalasoler
 Xuacu Saturio https://launchpad.net/~xuacusk8
 Yuri Chornoivan https://launchpad.net/~yurchor-gmail
 </property>
-    <property name="artists">Arnau Sala Soler &lt;contact@arnausalasoler.com&gt; (sound recording)
-Joan Sala Soler &lt;contact@joansala.com&gt; (interface)
-</property>
+    <property name="artists">Dustyroom https://dustyroom.com (sounds)</property>
     <property name="logo_icon_name">auale</property>
     <property name="license_type">gpl-3-0</property>
     <signal name="response" handler="on_about_dialog_response" swapped="no"/>
