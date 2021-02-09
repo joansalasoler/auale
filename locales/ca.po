@@ -226,7 +226,7 @@ msgstr "Els jugadors han recollit el mateix nombre de llavors"
 
 #: src/resources/gtk/windows/auale_window.ui:177
 msgid "Prompt for unsaved changes"
-msgstr "Pregunta pels canvis no desasats"
+msgstr "Pregunta pels canvis no desats"
 
 #: src/resources/gtk/windows/auale_window.ui:148
 #: src/resources/gtk/windows/auale_window.ui:205

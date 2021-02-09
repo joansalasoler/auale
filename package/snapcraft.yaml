@@ -33,14 +33,23 @@ apps:
       PATH: $JAVA_HOME/bin:$PATH
     plugs:
       - home
+      - audio-playback
       - gsettings
       - joystick
       - pulseaudio
+    slots:
+      - dbus-auale
+
+slots:
+  dbus-auale:
+    bus: session
+    interface: dbus
+    name: com.joansala.auale
 
 parts:
   auale:
     plugin: dump
-    source: auale_2.0.0+develop-1_all.deb
+    source: auale_2.0.0-1_all.deb
     source-type: deb
     build-packages:
       - ca-certificates
