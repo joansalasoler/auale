@@ -1,9 +1,11 @@
-auale (2.0.0+develop-1) UNRELEASED; urgency=medium
-  * Development version
+auale (2.0.0-1) UNRELEASED; urgency=medium
 
- -- Joan Sala Soler <contact@joansala.com>  Tue, 15 Sep 2020 08:21:24 +0100
+  * Initial release of the 2.0 series.
+
+ -- Joan Sala Soler <contact@joansala.com>  Tue, 9 Feb 2021 14:25:43 +0100
 
 auale (1.1.2-1) UNRELEASED; urgency=medium
+
   * Fix issues with SVG rendering
   * Fix Python 3 compatibility issues
   * Update PySDL2 to version 0.9.5

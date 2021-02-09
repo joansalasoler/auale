@@ -41,7 +41,7 @@ class Auale(Gtk.Application):
 
     __gtype_name__ = 'Auale'
 
-    __VERSION = '2.0.0+develop'
+    __VERSION = '2.0.0'
     __DISPLAY_NAME = 'Aualé'
     __ID = 'com.joansala.auale'
     __FLAGS = Gio.ApplicationFlags.HANDLES_OPEN

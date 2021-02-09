@@ -28,7 +28,7 @@ from distutils import dir_util
 
 PACKAGE_CONFIG = dict(
     name='auale',
-    version='2.0.0+develop',
+    version='2.0.0',
     url='https://auale.joansala.com/',
     author='Joan Sala Soler',
     author_email='contact@joansala.com',
