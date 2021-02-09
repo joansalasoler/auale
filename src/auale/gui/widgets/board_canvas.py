@@ -108,6 +108,11 @@ class BoardCanvas(GtkClutter.Embed):
 
         return self._animator.is_playing()
 
+    def get_animator(self):
+        """Obtain the board animator"""
+
+        return self._animator
+
     def get_object(self, name):
         """Obtains a board object given its name"""
 
@@ -191,12 +196,13 @@ class BoardCanvas(GtkClutter.Embed):
     def set_rotation(self, rotation):
         """Sets the board rotation angle"""
 
-        self._rotation = rotation
-        scene_state = self.get_object('scene-rotation')
-        house_state = self.get_object('house-rotation')
-        scene_state.set_state(rotation.nick)
-        house_state.set_state(rotation.nick)
-        self.board_rotated.emit(rotation)
+        if rotation != self._rotation:
+            self._rotation = rotation
+            scene_state = self.get_object('scene-rotation')
+            house_state = self.get_object('house-rotation')
+            scene_state.set_state(rotation.nick)
+            house_state.set_state(rotation.nick)
+            self.board_rotated.emit(rotation)
 
     def show_match(self, match):
         """Displays a match position on the board"""

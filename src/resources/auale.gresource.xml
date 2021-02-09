@@ -22,9 +22,15 @@
     <file>images/auale.ico</file>
     <file>themes/classic/canvas/scene.json</file>
     <file>themes/classic/canvas/states.json</file>
+    <file>themes/classic/sounds/events.json</file>
     <file>themes/classic/images/mosaic.png</file>
     <file>themes/classic/images/scene.svg</file>
-    <file>themes/classic/sounds/events.json</file>
-    <file>themes/classic/sounds/generic.oga</file>
+    <file>themes/classic/sounds/board-rotated.oga</file>
+    <file>themes/classic/sounds/capture-animation.oga</file>
+    <file>themes/classic/sounds/harvest-animation.oga</file>
+    <file>themes/classic/sounds/house-selected.oga</file>
+    <file>themes/classic/sounds/match-finished.oga</file>
+    <file>themes/classic/sounds/sow-animation.oga</file>
+    <file>themes/classic/sounds/silence.oga</file>
   </gresource>
 </gresources>

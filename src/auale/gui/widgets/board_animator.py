@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import GObject
 from ..animation import Capture
 from ..animation import Energize
 from ..animation import Pick
@@ -23,15 +24,38 @@ from ..animation import Ripe
 from ..animation import Sow
 
 
-class BoardAnimator(object):
+class BoardAnimator(GObject.GObject):
     """Animates moves on the board canvas"""
 
+    __gtype_name__ = 'BoardAnimator'
     __STEP_DELAY = 250
 
     def __init__(self, canvas):
+        GObject.GObject.__init__(self)
+
         self._canvas = canvas
         self._is_playing = False
         self._transitions = set()
+
+    @GObject.Signal
+    def capture_animation(self, transition: object):
+        """Emitted when a capture animation starts"""
+
+    @GObject.Signal
+    def harvest_animation(self, transition: object):
+        """Emitted when a harvest animation starts"""
+
+    @GObject.Signal
+    def pick_animation(self, transition: object):
+        """Emitted when a pick animation starts"""
+
+    @GObject.Signal
+    def ripe_animation(self, transition: object):
+        """Emitted when a ripening animation starts"""
+
+    @GObject.Signal
+    def sow_animation(self, transition: object):
+        """Emitted when a sow animation starts"""
 
     def is_playing(self):
         """Check if the animation is playing"""
@@ -87,7 +111,7 @@ class BoardAnimator(object):
 
         steps = self._push_pick_transitions(0, match)
         steps = self._push_sow_transitions(steps, match)
-        steps = self._push_ripening_transitions(steps, match)
+        steps = self._push_ripe_transitions(steps, match)
         steps = self._push_capture_transitions(steps, match)
         steps = self._push_harvest_transitions(steps, match)
 
@@ -97,6 +121,7 @@ class BoardAnimator(object):
         for house in self._canvas.get_children('houses'):
             is_move = match.get_move() == house.get_move()
             transition = Pick(house) if is_move else Energize(house)
+            transition.connect('started', self.pick_animation.emit)
             self._push_transition(transition, match)
 
         return steps + 1
@@ -119,6 +144,7 @@ class BoardAnimator(object):
             transition.set_state(state)
             transition.set_content(content)
             transition.set_delay(step * self.__STEP_DELAY)
+            transition.connect('started', self.sow_animation.emit)
             self._push_transition(transition, match)
 
         return steps + len(sowings)
@@ -140,6 +166,7 @@ class BoardAnimator(object):
 
             transition = Capture(house)
             transition.set_delay(step * self.__STEP_DELAY)
+            transition.connect('started', self.capture_animation.emit)
             self._push_transition(transition, match)
 
         return steps + len(houses)
@@ -160,11 +187,12 @@ class BoardAnimator(object):
             transition = Sow(house)
             transition.set_delay(delay)
             transition.set_content(content)
+            transition.connect('started', self.harvest_animation.emit)
             self._push_transition(transition, match)
 
         return steps + .5
 
-    def _push_ripening_transitions(self, steps, match):
+    def _push_ripe_transitions(self, steps, match):
         """Add animations to show the ripening state"""
 
         move = match.get_move()
@@ -178,6 +206,7 @@ class BoardAnimator(object):
             transition = Ripe(house)
             transition.set_state(state)
             transition.set_delay(delay)
+            transition.connect('started', self.ripe_animation.emit)
             self._push_transition(transition, match)
 
         return steps

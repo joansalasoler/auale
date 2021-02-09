@@ -20,6 +20,7 @@ import os
 
 from gi.repository import Gdk
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 from config import theme
 from i18n import gettext as _
@@ -78,12 +79,25 @@ class AualeWindow(Gtk.ApplicationWindow):
         self.setup_window_widgets()
         self.connect_window_signals()
 
+    @GObject.Signal
+    def match_started(self):
+        """Emitted when a new match starts"""
+
+    @GObject.Signal
+    def match_finished(self):
+        """Emitted when an ongoing match finishes"""
+
+    @GObject.Signal
+    def house_selected(self):
+        """Emitted when a house is selected with the controller"""
+
     def setup_window_widgets(self):
         """Attach an initialize this window's widgets"""
 
         recents_menu = RecentChooserPopoverMenu()
         recents_menu.set_action_name('win.open')
 
+        self.match_started.emit()
         self._match_manager.load_new_match()
         self._recents_menu_box.add(recents_menu)
         self.add(self._board_canvas)
@@ -112,6 +126,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Connects this window to the sound mixer"""
 
         self._sound_context.connect_signals(self._board_canvas)
+        self._sound_context.connect_signals(self._board_canvas.get_animator())
         self._sound_context.connect_signals(self)
 
     def create_opening_book(self):
@@ -238,7 +253,6 @@ class AualeWindow(Gtk.ApplicationWindow):
 
         self._board_canvas.show_match(match)
         self._headerbar.set_subtitle(name)
-        self.set_engine_side(Side.NEITHER)
         GLib.idle_add(self.refresh_view)
 
     def on_match_file_unload(self, manager, match):
@@ -334,6 +348,9 @@ class AualeWindow(Gtk.ApplicationWindow):
             has_cursor = self._board_canvas.get_cursor_visible()
             is_endgame = match.has_ended()
 
+            if is_endgame is True:
+                self.match_finished.emit()
+
             if is_human and not has_cursor and not is_endgame:
                 self._board_canvas.focus_first_house()
 
@@ -407,6 +424,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Focus the previous house on the board"""
 
         if self._board_canvas.get_reactive():
+            self.house_selected.emit()
             self._board_canvas.focus_previous_house()
             self._board_canvas.hide_cursor()
 
@@ -414,6 +432,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Focus the next house on the board"""
 
         if self._board_canvas.get_reactive():
+            self.house_selected.emit()
             self._board_canvas.focus_next_house()
             self._board_canvas.hide_cursor()
 
@@ -421,6 +440,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Focus the first house on the board"""
 
         if self._board_canvas.get_reactive():
+            self.house_selected.emit()
             self._board_canvas.focus_first_house()
             self._board_canvas.hide_cursor()
 
@@ -428,6 +448,7 @@ class AualeWindow(Gtk.ApplicationWindow):
         """Focus the last house on the board"""
 
         if self._board_canvas.get_reactive():
+            self.house_selected.emit()
             self._board_canvas.focus_last_house()
             self._board_canvas.hide_cursor()
 
@@ -444,6 +465,7 @@ class AualeWindow(Gtk.ApplicationWindow):
                 side = self._new_match_dialog.get_engine_side()
                 self.set_engine_side(side)
                 self.toggle_active_player(match)
+                self.match_started.emit()
 
     def on_open_action_activate(self, action, value):
         """Opens a match from a file"""
