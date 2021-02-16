@@ -1,5 +1,8 @@
 <img src="https://raw.githubusercontent.com/joansalasoler/assets/master/logos/auale.png" alt="Aualé" width="258" height="90"/>
 Play <b>Oware Mancala</b> against the computer
+
+[![auale](https://snapcraft.io/auale/badge.svg)](https://snapcraft.io/auale)
+
 <hr>
 
 What is it?
@@ -19,7 +22,8 @@ Implementation details:
 -----------------------
 
 * Multiplatform (GTK 3, Python 3, Java).
-* Linux packaging scripts for debian, rpm, pacman and snap. MS Windows builds with py2exe.
+* Linux packaging scripts for debian, rpm, pacman and snap.
+* Microsoft Windows builds with py2exe.
 * Uses SDL 2 mixer for sound effects.
 * Translations provided into many languages.
 * Strong [engine player](https://github.com/joansalasoler/aalina) written in Java.
@@ -29,7 +33,7 @@ Implementation details:
 Many thanks to:
 ---------------
 
-* My brother, Arnau Sala, for the sounds effects.
+* Arnau Sala, for the original sounds effects.
 * Andrew Dabrowski, for his help with the pacman packages.
 * Rémi Verschelde, for his help with the rpm packages.
 * The amazing Launchpad translators for [translating it](https://translations.launchpad.net/auale).
