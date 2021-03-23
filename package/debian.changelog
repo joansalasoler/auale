@@ -1,3 +1,9 @@
+auale (2.1.0-1) UNRELEASED; urgency=medium
+
+  * Initial release of the 2.0 series.
+
+ -- Joan Sala Soler <contact@joansala.com>  Tue, 23 Mar 2021 12:31:32 +0100
+
 auale (2.0.0-1) UNRELEASED; urgency=medium
 
   * Initial release of the 2.0 series.

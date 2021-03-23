@@ -1,6 +1,6 @@
 name: auale
 base: core18
-version: '2.0.0-1'
+version: '2.1.0-1'
 license: GPL-3.0
 summary: Aualé — The Game of Mancala
 description: |
@@ -21,6 +21,18 @@ description: |
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+  - build-on: i386
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+  - build-on: i386
+
 apps:
   auale:
     command: usr/games/auale
@@ -29,8 +41,9 @@ apps:
     environment:
       LOCPATH: $SNAP/usr/share/locale
       JAVA_HOME: $SNAP/usr/lib/jvm/default-java
-      PYTHONPATH: $PYTHONPATH:$SNAP/lib/python3.6/site-packages
       PATH: $JAVA_HOME/bin:$PATH
+      PYSDL2_DLL_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      PYTHONPATH: $PYTHONPATH:$SNAP/lib/python3.6/site-packages
     plugs:
       - home
       - audio-playback
@@ -49,7 +62,11 @@ slots:
 parts:
   auale:
     plugin: dump
+<<<<<<< HEAD
     source: auale_2.0.0-1_all.deb
+=======
+    source: https://github.com/joansalasoler/auale/releases/download/2.0.0/auale_2.0.0-1_all.deb
+>>>>>>> develop
     source-type: deb
     build-packages:
       - ca-certificates
