@@ -2,7 +2,7 @@ Format: 3.0 (quilt)
 Source: auale
 Binary: auale
 Architecture: all
-Version: 2.0.0-1
+Version: 2.1.0-1
 Maintainer: Joan Sala Soler <contact@joansala.com>
 Homepage: https://auale.joansala.com/
 Standards-Version: 4.5.0

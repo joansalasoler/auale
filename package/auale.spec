@@ -1,5 +1,5 @@
 Name:           auale
-Version:        2.0.0
+Version:        2.1.0
 Release:        1
 Summary:        Aualé — The Game of Mancala
 URL:            https://auale.joansala.com/
