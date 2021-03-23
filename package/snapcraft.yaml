@@ -27,6 +27,12 @@ architectures:
   - build-on: armhf
   - build-on: i386
 
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+  - build-on: i386
+
 apps:
   auale:
     command: usr/games/auale
@@ -56,7 +62,7 @@ slots:
 parts:
   auale:
     plugin: dump
-    source: auale_2.0.0-1_all.deb
+    source: https://github.com/joansalasoler/auale/releases/download/2.0.0/auale_2.0.0-1_all.deb
     source-type: deb
     build-packages:
       - ca-certificates
