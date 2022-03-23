@@ -3,7 +3,7 @@
 # Contributor: Andrew Dabrowski <dabrowsa@indiana.edu>
 
 pkgname=auale
-pkgver=2.0.0+develop
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="Aualé — The Game of Mancala"
 arch=('any')

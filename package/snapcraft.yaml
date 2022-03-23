@@ -1,6 +1,6 @@
 name: auale
 base: core18
-version: '2.0.0+develop-2'
+version: '2.1.0-1'
 license: GPL-3.0
 summary: Aualé — The Game of Mancala
 description: |
@@ -18,8 +18,8 @@ description: |
   Analyze, record, tag and share your own Mancala games. Aualé can save your
   Oware matches in a portable and human-readable format.
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 architectures:
   - build-on: amd64
@@ -62,7 +62,7 @@ slots:
 parts:
   auale:
     plugin: dump
-    source: https://github.com/joansalasoler/auale/releases/download/2.0.0/auale_2.0.0-1_all.deb
+    source: https://github.com/joansalasoler/auale/releases/download/2.1.0/auale_2.1.0-1_all.deb
     source-type: deb
     build-packages:
       - ca-certificates

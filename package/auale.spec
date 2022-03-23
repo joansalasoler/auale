@@ -1,5 +1,5 @@
 Name:           auale
-Version:        2.0.0+develop
+Version:        2.1.0
 Release:        1
 Summary:        Aualé — The Game of Mancala
 URL:            https://auale.joansala.com/
@@ -193,7 +193,7 @@ rm -rf %{buildroot}
 %{_bindir}/update-desktop-database &> /dev/null || :
 
 %changelog
-* Tue Sep 15 2020 Joan Sala <contact@joansala.com> - 2.0.0+develop-1
+* Tue Sep 15 2020 Joan Sala <contact@joansala.com> - 2.0.0-1
 - Development version
 
 * Sat Oct 6 2018 Joan Sala <contact@joansala.com> - 1.1.2-1
