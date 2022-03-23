@@ -25,9 +25,13 @@ import sys
 
 module = locale
 
-if 'win' in sys.platform:
+if 'win32' == sys.platform:
     if not hasattr(locale, 'bindtextdomain'):
         from ctypes import cdll
         module = cdll.LoadLibrary('libintl-8.dll')
 
-gettext = module.gettext
+if 'darwin' != sys.platform:
+    gettext = module.gettext
+else:
+    import gettext as fallback
+    gettext = fallback
