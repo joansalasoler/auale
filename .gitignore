@@ -5,5 +5,6 @@ __pycache__
 /package/debian/*.substvars
 /package/debian/auale
 /package/debian/files
+/package
 /src/auale/build
 *~
