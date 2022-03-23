@@ -28,7 +28,7 @@ class BoardAnimator(GObject.GObject):
     """Animates moves on the board canvas"""
 
     __gtype_name__ = 'BoardAnimator'
-    __STEP_DELAY = 250
+    __STEP_DELAY = 350
 
     def __init__(self, canvas):
         GObject.GObject.__init__(self)
