@@ -10,6 +10,8 @@ What is it?
 
 Oware is a strategy board game of the Mancala family.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F2F8BR4E0)
+
 The goal of Oware is to capture the greatest amount of seeds as possible. To do so, players make moves in alternate turns until one of them has captured more than 24 seeds. The player who captured more seeds than the opponent when the game ends wins the match.
 
 Play against one of the strongest computer players out there, watch it play alone while you learn or choose one of the provided strengths: easy, medium, hard or expert.
