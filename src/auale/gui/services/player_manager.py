@@ -196,6 +196,6 @@ class PlayerManager(GObject.GObject):
         file_path = os.path.dirname(__file__)
         base_path = os.path.abspath(os.path.join(file_path, os.pardir))
         engine_path = os.path.join(base_path, self.__DEFAULT_ENGINE_PATH)
-        command = (shutil.which('java'), '-jar', engine_path)
+        command = (shutil.which('java'), '-jar', engine_path, 'service')
 
         return command
