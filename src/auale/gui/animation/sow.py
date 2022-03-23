@@ -47,7 +47,7 @@ class Sow(Clutter.TransitionGroup):
         self.connect('started', self.on_transition_started)
         self.add_transition(scalex)
         self.add_transition(scaley)
-        self.set_duration(600)
+        self.set_duration(1000)
 
         self._scalex = scalex
 
