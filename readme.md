@@ -5,12 +5,17 @@ Play <b>Oware Mancala</b> against the computer
 
 <hr>
 
+Deprecation notice
+==================
+
+We would like to inform you that as of august 2023, this version of Aualé is no longer supported or maintained. We understand that many of you have enjoyed countless hours playing this version of the game, and we sincerely thank you for your support.
+
+However, we are excited to announce that we have launched a new and improved version of [Aualé for Android devices on the Google Play Store](https://play.google.com/store/apps/details?id=com.joansala.auale)! This new version brings a host of enhancements, improvements, and exciting new features that we believe will enhance your gaming experience even further.
+
 What is it?
 ===========
 
 Oware is a strategy board game of the Mancala family.
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F2F8BR4E0)
 
 The goal of Oware is to capture the greatest amount of seeds as possible. To do so, players make moves in alternate turns until one of them has captured more than 24 seeds. The player who captured more seeds than the opponent when the game ends wins the match.
 
